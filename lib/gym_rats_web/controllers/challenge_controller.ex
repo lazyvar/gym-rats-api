@@ -21,7 +21,7 @@ defmodule GymRatsWeb.ChallengeController do
   end
 
   def create(conn, params) do
-    changeset = Challenge.changeset(%Challenge{}, params)
+    changeset = Challenge.new_changeset(params)
 
     if changeset.valid? do
       success(conn, Repo.insert!(changeset))

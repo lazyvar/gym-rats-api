@@ -2,6 +2,9 @@ defmodule GymRats.Model.Challenge do
   use Ecto.Schema
 
   import Ecto.Changeset
+  
+  alias GymRats.Repo.ChallengeRepo
+  alias GymRats.Model.Challenge
 
   @derive {Jason.Encoder, only: [:name, :code, :profile_picture_url, :start_date, :end_date]}
 
@@ -27,7 +30,22 @@ defmodule GymRats.Model.Challenge do
     |> validate_required(@required)
   end
 
-  # defp generate_code(changeset) do
-  #   inspect changeset
-  # end
+  def new_changeset(params) do
+    params = params |> Map.put("code", generate_code)
+    changeset(%Challenge{}, params)
+  end
+
+  defp generate_code do
+    code = ?A..?Z 
+      |> Enum.to_list 
+      |> Enum.shuffle 
+      |> Enum.take(6)
+      |> List.to_string
+      
+    unless ChallengeRepo.exists?(code: code) do
+      code
+    else
+      generate_code
+    end
+  end
 end

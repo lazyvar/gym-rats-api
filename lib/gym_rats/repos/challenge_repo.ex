@@ -27,4 +27,10 @@ defmodule GymRats.Repo.ChallengeRepo do
     |> where([c], c.start_date > ^now)
     |> Repo.all
   end
+
+  def exists?([code: code]) do
+    Challenge 
+    |> where([c], c.code == ^code) 
+    |> Repo.exists?
+  end
 end
