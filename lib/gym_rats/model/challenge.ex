@@ -1,4 +1,4 @@
-defmodule GymRats.Challenge do
+defmodule GymRats.Model.Challenge do
   use Ecto.Schema
   import Ecto.Changeset
 

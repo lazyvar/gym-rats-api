@@ -1,4 +1,4 @@
-defmodule GymRats.Comment do
+defmodule GymRats.Model.Comment do
   use Ecto.Schema
   import Ecto.Changeset
 

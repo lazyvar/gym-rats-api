@@ -1,4 +1,4 @@
-defmodule GymRats.Device do
+defmodule GymRats.Model.Device do
   use Ecto.Schema
   import Ecto.Changeset
 

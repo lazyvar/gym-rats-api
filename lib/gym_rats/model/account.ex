@@ -1,4 +1,4 @@
-defmodule GymRats.Account do
+defmodule GymRats.Model.Account do
   use Ecto.Schema
   import Ecto.Changeset
 

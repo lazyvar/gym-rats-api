@@ -1,4 +1,4 @@
-defmodule GymRats.MessageStatus do
+defmodule GymRats.Model.MessageStatus do
   use Ecto.Schema
   import Ecto.Changeset
 
