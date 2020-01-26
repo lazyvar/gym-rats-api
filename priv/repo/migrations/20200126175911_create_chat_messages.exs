@@ -4,8 +4,8 @@ defmodule GymRats.Repo.Migrations.CreateChatMessages do
   def change do
     create table(:chat_messages) do
       add :content, :string
-      add :challenge_id, :bigint, null: false,
-      add :gym_rats_user_id, :bigint, null: false,
+      add :challenge_id, :bigint, null: false
+      add :gym_rats_user_id, :bigint, null: false
 
       timestamps()
     end
