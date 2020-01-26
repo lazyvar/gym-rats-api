@@ -23,6 +23,7 @@ defmodule GymRatsWeb do
 
       import Plug.Conn
       import GymRatsWeb.Gettext
+      import GymRatsWeb.Rendering
       alias GymRatsWeb.Router.Helpers, as: Routes
       alias GymRats.Repo
     end

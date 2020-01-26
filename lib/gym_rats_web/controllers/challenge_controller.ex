@@ -3,8 +3,7 @@ defmodule GymRatsWeb.ChallengeController do
   alias GymRats.Model.Challenge
 
   def index(conn, _params) do
-    challenges = Repo.all(Challenge)
-
-    json(conn, %{data: challenges})
+    success(conn, Repo.all(Challenge))
   end
+
 end
