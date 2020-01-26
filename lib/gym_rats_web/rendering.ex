@@ -1,4 +1,14 @@
 defmodule GymRatsWeb.Rendering do
+  @moduledoc """
+  Rendering methods for success and failure responses. 
+
+  ## Example 
+  {
+    "status": "success",
+    "data": { ... }
+  }
+  """
+
   import Phoenix.Controller, only: [json: 2]
 
   @doc """
