@@ -19,4 +19,14 @@ defmodule GymRatsWeb.ChallengeController do
   def index(conn, _params) do
     index(conn, %{"filter" => "all"})
   end
+
+  def create(conn, params) do
+    changeset = Challenge.changeset(%Challenge{}, params)
+
+    if changeset.valid? do
+      success(conn, Repo.insert!(changeset))
+    else
+      failure(conn, "Uh oh")
+    end
+  end
 end
