@@ -2,6 +2,8 @@ defmodule GymRats.Model.Challenge do
   use Ecto.Schema
   import Ecto.Changeset
 
+  @derive {Jason.Encoder, only: [:name, :code, :profile_picture_url, :start_date, :end_date]}
+
   schema "challenges" do
     field :code, :string
     field :end_date, :utc_datetime
