@@ -1,17 +1,28 @@
 defmodule GymRats.Guardian do
-  use Guardian, otp_app: :gym_rats
-
   alias GymRats.Model.Account
   alias GymRats.Repo
+  alias Plug.Conn
+  
+  import Logger
+  import Plug.Conn
 
-  def subject_for_token(account, _claims) do
-    sub = to_string(account.id)
-    {:ok, sub}
+  @behaviour Plug
+
+  def init([]), do: []
+
+  def call(conn, []) do
+    token = conn |> get_req_header("authorization") |> List.first
+    
+    case GymRats.Token.verify_and_validate(token) do
+      {:ok, claims} -> assign(conn, :account, Account |> Repo.get(claims["user_id"]))
+      {:error, _a} -> conn
+    end
+
+    # case Authenticator.find_user(conn) do
+    #   {:ok, user} ->
+    #     assign(conn, :user, user)
+    #   :error ->
+    #     conn |> put_flash(:info, "You must be logged in") |> redirect(to: "/") |> halt()
+    # end
   end
-
-  # def resource_from_claims(claims) do
-  #   id = claims["sub"]
-  #   account = Account |> Repo.get(id)
-  #   {:ok,  account}
-  # end
 end

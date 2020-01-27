@@ -38,7 +38,8 @@ defmodule GymRats.Model.Account do
   end
 
   def with_token(account) do
-    {:ok, jwt, _claims} = GymRats.Guardian.encode_and_sign(account)
+    claims = %{"user_id" => account.id}
+    jwt = GymRats.Token.generate_and_sign!(claims)
     account |> Map.put(:token, jwt)
   end
 

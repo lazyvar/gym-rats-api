@@ -6,7 +6,7 @@ defmodule GymRatsWeb.Router do
   end
 
   pipeline :protected do
-    
+    plug GymRats.Guardian
   end
 
   scope "/", GymRatsWeb do
