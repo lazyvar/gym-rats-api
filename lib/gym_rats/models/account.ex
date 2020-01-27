@@ -4,8 +4,8 @@ defmodule GymRats.Model.Account do
   import Ecto.Changeset
 
   alias GymRats.Model.Account
-
-  @derive {Jason.Encoder, only: [:id, :email, :full_name, :profile_picture_url]}
+  
+  @derive {Jason.Encoder, only: [:id, :email, :full_name, :profile_picture_url, :token]}
 
   schema "gym_rats_users" do
     field :email, :string
@@ -35,6 +35,11 @@ defmodule GymRats.Model.Account do
     |> cast(attrs, [:password])
     |> validate_length(:password, min: 6)
     |> put_password_hash()
+  end
+
+  def with_token(account) do
+    {:ok, jwt, _claims} = GymRats.Guardian.encode_and_sign(account)
+    account |> Map.put(:token, jwt)
   end
 
   defp put_password_hash(changeset) do

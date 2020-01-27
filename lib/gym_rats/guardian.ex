@@ -9,9 +9,9 @@ defmodule GymRats.Guardian do
     {:ok, sub}
   end
 
-  def resource_from_claims(claims) do
-    id = claims["sub"]
-    account = Account |> Repo.get(id)
-    {:ok,  account}
-  end
+  # def resource_from_claims(claims) do
+  #   id = claims["sub"]
+  #   account = Account |> Repo.get(id)
+  #   {:ok,  account}
+  # end
 end
