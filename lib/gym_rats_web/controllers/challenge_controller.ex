@@ -23,10 +23,9 @@ defmodule GymRatsWeb.ChallengeController do
   def create(conn, params) do
     changeset = Challenge.new_changeset(params)
 
-    if changeset.valid? do
-      success(conn, Repo.insert!(changeset))
-    else
-      failure(conn, "Uh oh")
+    case Repo.insert(changeset) do
+      {:ok, challenge} -> success(conn, challenge)
+      {:error, _} -> failure(conn, "Uh oh")
     end
   end
 end

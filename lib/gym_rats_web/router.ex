@@ -27,11 +27,11 @@ defmodule GymRatsWeb.Router do
     end
   end
 
-  scope "/auth", GymRatsWeb, as: :auth do
+  scope "/", GymRatsWeb do
     pipe_through :api
 
-    resources "/accounts", Auth.AccountController, only: [:create]
-    resources "/passwords", Auth.PasswordController, only: [:update, :create]
-    resources "/tokens", Auth.TokenController, only: [:create]
+    resources "/accounts", AccountController, only: [:create]
+    resources "/passwords", PasswordController, only: [:update, :create]
+    resources "/tokens", TokenController, only: [:create]
   end
 end

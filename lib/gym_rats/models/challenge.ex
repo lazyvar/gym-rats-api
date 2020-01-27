@@ -6,9 +6,7 @@ defmodule GymRats.Model.Challenge do
   alias GymRats.Repo.ChallengeRepo
   alias GymRats.Model.Challenge
 
-  @derive {Jason.Encoder, only: [:name, :code, :profile_picture_url, :start_date, :end_date]}
-
-  # before_insert :generate_code
+  @derive {Jason.Encoder, only: [:id, :name, :code, :profile_picture_url, :start_date, :end_date]}
 
   schema "challenges" do
     field :code, :string
