@@ -20,11 +20,13 @@ defmodule GymRatsWeb.ChallengeController do
       _ -> nil
     end
 
-    query = from c in Challenge, join: m in Membership, on: m.challenge_id == c.id, where: m.gym_rats_user_id == ^account_id
-
     challenges = case challenge_query do
       nil -> []
-      _ -> query |> challenge_query.() |> Repo.all
+      _ -> Challenge
+        |> join(:left, [c], m in assoc(c, :memberships))
+        |> where([_, m], m.gym_rats_user_id == ^account_id)
+        |> challenge_query.()
+        |> Repo.all
     end
 
     success(conn, challenges)

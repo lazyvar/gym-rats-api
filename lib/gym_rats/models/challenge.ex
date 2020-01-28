@@ -5,6 +5,7 @@ defmodule GymRats.Model.Challenge do
   
   alias GymRats.Repo.ChallengeRepo
   alias GymRats.Model.Challenge
+  alias GymRats.Model.Membership
 
   @derive {Jason.Encoder, only: [:id, :name, :code, :profile_picture_url, :start_date, :end_date]}
 
@@ -16,6 +17,7 @@ defmodule GymRats.Model.Challenge do
     field :start_date, :utc_datetime
     field :time_zone, :string
 
+    has_many :memberships, Membership
     many_to_many(:accounts, Account, join_through: "memberships", join_keys: [challenge_id: :id, gym_rats_user_id: :id])
 
     timestamps()
