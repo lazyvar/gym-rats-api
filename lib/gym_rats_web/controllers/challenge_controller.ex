@@ -2,21 +2,30 @@ defmodule GymRatsWeb.ChallengeController do
   use GymRatsWeb, :protected_controller
 
   alias GymRats.Model.Challenge
+  alias GymRats.Model.Account
+  alias GymRats.Model.Membership
   alias GymRats.Repo.ChallengeRepo
   alias GymRats.Repo.AccountRepo
+  alias GymRats.Query.ChallengeQuery
 
   import Logger
+  import Ecto.Query
 
   def index(conn, %{"filter" => filter}, account) do
-    challenges = case filter do
-      "all" -> AccountRepo.challenges(account)
-      "active" -> ChallengeRepo.active
-      "complete" -> ChallengeRepo.complete
-      "upcoming" -> ChallengeRepo.upcoming
-      _ -> []
+    challenge_query = case filter do
+      "all" -> ChallengeQuery.all
+      "active" -> ChallengeQuery.active
+      "complete" -> ChallengeQuery.complete
+      "upcoming" -> ChallengeQuery.upcoming
+      _ -> nil
     end
-    
-    Logger.info inspect(account)
+
+    challenges = case challenge_query do
+      nil -> []
+      _ -> account 
+        |> Repo.preload(challenges: from(challenge_query))
+        |> Map.get(:challenges)
+    end
 
     success(conn, challenges)
   end
