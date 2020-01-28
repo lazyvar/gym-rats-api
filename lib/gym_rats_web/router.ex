@@ -10,8 +10,7 @@ defmodule GymRatsWeb.Router do
   end
 
   scope "/", GymRatsWeb do
-    pipe_through :api
-    pipe_through :protected
+    pipe_through [:api, :protected]
 
     resources "/accounts", AccountController, only: [:update]
     resources "/challenges", ChallengeController, only: [:create, :index, :update] do

@@ -12,6 +12,13 @@ defmodule GymRatsWeb do
     end
   end
 
+  def protected_controller do
+    quote do
+      use GymRatsWeb, :controller
+      use GymRats.ProtectedController
+    end
+  end
+
   def view do
     quote do
       use Phoenix.HTML

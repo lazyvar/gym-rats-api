@@ -6,7 +6,7 @@ defmodule GymRats.Repo.ChallengeRepo do
 
   defdelegate now, to: NaiveDateTime, as: :utc_now
 
-  def all do
+  def all(account_id) do
     Challenge |> Repo.all
   end
 

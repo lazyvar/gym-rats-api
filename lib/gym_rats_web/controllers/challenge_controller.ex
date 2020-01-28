@@ -1,14 +1,12 @@
 defmodule GymRatsWeb.ChallengeController do
-  use GymRatsWeb, :controller
+  use GymRatsWeb, :protected_controller
 
   alias GymRats.Model.Challenge
   alias GymRats.Repo.ChallengeRepo
 
   import Logger
 
-  def index(conn, %{"filter" => filter}) do
-    Logger.info inspect(conn.assigns)
-
+  def index(conn, %{"filter" => filter}, account) do
     challenges = case filter do
       "all" -> ChallengeRepo.all
       "active" -> ChallengeRepo.active
@@ -17,14 +15,16 @@ defmodule GymRatsWeb.ChallengeController do
       _ -> []
     end
     
+    Logger.info inspect(account)
+
     success(conn, challenges)
   end
 
-  def index(conn, _params) do
-    index(conn, %{"filter" => "all"})
+  def index(conn, _params, account) do
+    index(conn, %{"filter" => "all"}, account)
   end
 
-  def create(conn, params) do
+  def create(conn, params, account) do
     changeset = Challenge.new_changeset(params)
 
     case Repo.insert(changeset) do
