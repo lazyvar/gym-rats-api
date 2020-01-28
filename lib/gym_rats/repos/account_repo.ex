@@ -9,4 +9,10 @@ defmodule GymRats.Repo.AccountRepo do
     |> where([a], a.email == ^email)
     |> Repo.one
   end
+
+  def challenges(account) do
+    account
+    |> Repo.preload(:challenges)
+    |> Map.get(:challenges)
+  end
 end

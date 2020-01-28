@@ -3,12 +3,13 @@ defmodule GymRatsWeb.ChallengeController do
 
   alias GymRats.Model.Challenge
   alias GymRats.Repo.ChallengeRepo
+  alias GymRats.Repo.AccountRepo
 
   import Logger
 
   def index(conn, %{"filter" => filter}, account) do
     challenges = case filter do
-      "all" -> ChallengeRepo.all
+      "all" -> AccountRepo.challenges(account)
       "active" -> ChallengeRepo.active
       "complete" -> ChallengeRepo.complete
       "upcoming" -> ChallengeRepo.upcoming

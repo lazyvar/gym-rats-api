@@ -4,6 +4,8 @@ defmodule GymRats.Model.Account do
   import Ecto.Changeset
 
   alias GymRats.Model.Account
+  alias GymRats.Model.Challenge
+  alias GymRats.Model.Membership
   
   @derive {Jason.Encoder, only: [:id, :email, :full_name, :profile_picture_url, :token]}
 
@@ -15,6 +17,8 @@ defmodule GymRats.Model.Account do
     field :profile_picture_url, :string
     field :reset_password_token, :string
     field :reset_password_token_expiration, :utc_datetime
+
+    many_to_many(:challenges, Challenge, join_through: "memberships", join_keys: [gym_rats_user_id: :id, challenge_id: :id])
 
     timestamps()
   end

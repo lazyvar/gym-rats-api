@@ -16,6 +16,8 @@ defmodule GymRats.Model.Challenge do
     field :start_date, :utc_datetime
     field :time_zone, :string
 
+    many_to_many(:accounts, Account, join_through: "memberships", join_keys: [challenge_id: :id, gym_rats_user_id: :id])
+
     timestamps()
   end
 
