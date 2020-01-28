@@ -11,30 +11,30 @@ defmodule GymRatsWeb.ChallengeController do
   import Logger
   import Ecto.Query
 
-  def index(conn, %{"filter" => filter}, account) do
+  def index(conn, %{"filter" => filter}, account_id) do
     challenge_query = case filter do
-      "all" -> ChallengeQuery.all
-      "active" -> ChallengeQuery.active
-      "complete" -> ChallengeQuery.complete
-      "upcoming" -> ChallengeQuery.upcoming
+      "all" -> &ChallengeQuery.all/1
+      "active" -> &ChallengeQuery.active/1
+      "complete" -> &ChallengeQuery.complete/1
+      "upcoming" -> &ChallengeQuery.upcoming/1
       _ -> nil
     end
 
+    query = from c in Challenge, join: m in Membership, on: m.challenge_id == c.id, where: m.gym_rats_user_id == ^account_id
+
     challenges = case challenge_query do
       nil -> []
-      _ -> account 
-        |> Repo.preload(challenges: from(challenge_query))
-        |> Map.get(:challenges)
+      _ -> query |> challenge_query.() |> Repo.all
     end
 
     success(conn, challenges)
   end
 
-  def index(conn, _params, account) do
-    index(conn, %{"filter" => "all"}, account)
+  def index(conn, _params, account_id) do
+    index(conn, %{"filter" => "all"}, account_id)
   end
 
-  def create(conn, params, account) do
+  def create(conn, params, account_id) do
     changeset = Challenge.new_changeset(params)
 
     case Repo.insert(changeset) do

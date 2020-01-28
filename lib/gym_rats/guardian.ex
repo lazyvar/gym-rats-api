@@ -15,9 +15,8 @@ defmodule GymRats.Guardian do
     token = conn |> get_req_header("authorization") |> List.first
 
     case GymRats.Token.verify_and_validate(token) do
-      {:ok, claims} -> assign(conn, :account, Account |> Repo.get(claims["user_id"]))
+      {:ok, claims} -> assign(conn, :account_id, claims["user_id"])
       {:error, _} -> json(conn, %{status: "fail", data: "Go away."}) |> halt
     end
   end
 end
-
