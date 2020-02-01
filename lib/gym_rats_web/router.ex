@@ -24,7 +24,7 @@ defmodule GymRatsWeb.Router do
     resources "/devices", DeviceController, only: [:create, :delete] do
       resources "/workouts", Account.WorkoutController, only: [:index]
     end
-    resources "/memberships", MembershipController, param: "challenge_id", only: [:create, :delete]
+    resources "/memberships", MembershipController, only: [:create, :delete]
     resources "/messages", MessageController, only: [:create]
     resources "/workouts", WorkoutController, only: [:create, :delete] do
       resources "/comments", Workout.CommentController, only: [:create, :index]

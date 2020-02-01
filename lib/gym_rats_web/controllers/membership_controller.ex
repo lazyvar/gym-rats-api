@@ -6,8 +6,8 @@ defmodule GymRatsWeb.MembershipController do
   
   import Ecto.Query
 
-  def create(conn, params, account_id) do
-    code = params["code"] |> String.upcase
+  def create(conn, %{"code" => code}, account_id) do
+    code = code |> String.upcase
     challenge = Challenge |> where([c], c.code == ^code) |> Repo.one
 
     case challenge do
@@ -29,7 +29,24 @@ defmodule GymRatsWeb.MembershipController do
     end
   end
 
-  def delete(conn, params, account_id) do
+  def create(conn, _params, _account_id), do: failure(conn, "Code missing.")
 
+  def delete(conn, %{"id" => membership_id}, account_id) do
+    membership = Membership |> Repo.get(membership_id)
+
+    case membership do
+      nil -> failure(conn, "Membership does not exist.")
+      _ ->
+        if membership.gym_rats_user_id == account_id do
+          membership |> Repo.delete!
+          challenge = Challenge |> Repo.get(membership.challenge_id)
+
+          success(conn, challenge)
+        else
+          failure(conn, "You do not have permission to do that.")
+        end
+    end
   end
+
+  def delete(conn, _params, _account_id), do: failure(conn, "Membership id missing.")
 end
