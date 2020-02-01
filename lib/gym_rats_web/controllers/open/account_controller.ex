@@ -1,4 +1,4 @@
-defmodule GymRatsWeb.AccountController do
+defmodule GymRatsWeb.Open.AccountController do
   use GymRatsWeb, :controller
 
   alias GymRats.Model.Account
