@@ -26,4 +26,24 @@ defmodule GymRatsWeb.WorkoutController do
 
     success(conn, workouts |> List.first)
   end
+
+  def delete(conn, %{"id" => workout_id}, account_id) do
+    workout_id = String.to_integer(workout_id)
+    workout = Workout |> Repo.get(workout_id)
+
+    case workout do
+      nil -> failure(conn, "Workout does not exist.")
+      _ ->
+        if workout.gym_rats_user_id != account_id do
+          failure(conn, "You do not have permission to do that.")
+        else
+          case workout |> Repo.delete do
+            {:ok, workout} -> success(conn, workout)
+            {:error, _} -> failure(conn, "Something went wrong.")
+          end
+        end
+    end
+  end
+
+  def delete(conn, _params, _account_id), do: failure(conn, "Missing workout id.")
 end
