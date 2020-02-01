@@ -1,19 +1,20 @@
 defmodule GymRatsWeb.Challenge.MemberController do
   use GymRatsWeb, :protected_controller
 
-  alias GymRats.Model.Membership
   alias GymRats.Model.Account
   alias GymRats.Repo
 
   import Ecto.Query
   
   def index(conn, %{"challenge_id" => challenge_id}, account_id) do
-    members = Membership 
-    |> where([m], m.challenge_id == ^challenge_id) 
-    |> preload(:account) 
-    |> Repo.all 
-    |> Enum.map(fn m -> m.account |> Map.put(:token, nil) end)
-    
+    challenge_id = String.to_integer(challenge_id)
+    members = Account 
+    |> join(:left, [a], c in assoc(a, :challenges)) 
+    |> join(:left, [a, c], w in assoc(c, :workouts)) 
+    |> where([a, c, w], w.gym_rats_user_id == a.id and w.challenge_id == ^challenge_id)
+    |> preload(:workouts) 
+    |> Repo.all
+
     success(conn, members)
   end
 

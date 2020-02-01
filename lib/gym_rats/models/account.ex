@@ -6,8 +6,9 @@ defmodule GymRats.Model.Account do
   alias GymRats.Model.Account
   alias GymRats.Model.Challenge
   alias GymRats.Model.Membership
+  alias GymRats.Model.Workout
   
-  @derive {Jason.Encoder, only: [:id, :email, :full_name, :profile_picture_url]}
+  @derive {Jason.Encoder, only: [:id, :email, :full_name, :profile_picture_url, :token]}
 
   schema "gym_rats_users" do
     field :email, :string
@@ -18,6 +19,7 @@ defmodule GymRats.Model.Account do
     field :reset_password_token, :string
     field :reset_password_token_expiration, :utc_datetime
 
+    has_many :workouts, Workout, foreign_key: :gym_rats_user_id
     many_to_many(:challenges, Challenge, join_through: "memberships", join_keys: [gym_rats_user_id: :id, challenge_id: :id])
 
     timestamps()
