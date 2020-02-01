@@ -1,19 +1,25 @@
 defmodule GymRats.Model.Comment do
   use Ecto.Schema
+
   import Ecto.Changeset
+
+  @derive {Jason.Encoder, only: [:id, :content]}
 
   schema "comments" do
     field :content, :string
-    field :gym_rats_user_id, :integer
-    field :workout_id, :integer
+
+    belongs_to :account, Account, foreign_key: :gym_rats_user_id
+    belongs_to :workout, Workout
 
     timestamps()
   end
 
-  @doc false
+  @required ~w(content)a
+  @optional ~w()a
+
   def changeset(comment, attrs) do
     comment
-    |> cast(attrs, [:content, :workout_id, :gym_rats_user_id])
-    |> validate_required([:content, :workout_id, :gym_rats_user_id])
+    |> cast(attrs, @required ++ @optional)
+    |> validate_required(@required)
   end
 end

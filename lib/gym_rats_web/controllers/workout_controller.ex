@@ -8,7 +8,6 @@ defmodule GymRatsWeb.WorkoutController do
   alias GymRats.Repo
   
   import Ecto.Query
-  import Logger
 
   def create(conn, params, account_id) do 
     {challenges, params} = params |> Map.pop("challenges")
