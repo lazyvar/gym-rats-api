@@ -7,7 +7,7 @@ defmodule GymRats.Model.Account do
   alias GymRats.Model.Challenge
   alias GymRats.Model.Membership
   
-  @derive {Jason.Encoder, only: [:id, :email, :full_name, :profile_picture_url, :token]}
+  @derive {Jason.Encoder, only: [:id, :email, :full_name, :profile_picture_url]}
 
   schema "gym_rats_users" do
     field :email, :string
