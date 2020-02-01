@@ -3,6 +3,7 @@ defmodule GymRatsWeb.WorkoutController do
 
   alias GymRats.Model.Workout
   alias GymRats.Model.Challenge
+  alias GymRats.Model.Membership
   alias GymRats.Query.ChallengeQuery
   alias GymRats.Repo
   
@@ -34,7 +35,9 @@ defmodule GymRatsWeb.WorkoutController do
     case workout do
       nil -> failure(conn, "Workout does not exist.")
       _ ->
-        if workout.gym_rats_user_id != account_id do
+        membership = Membership |> where([m], m.challenge_id == ^workout.challenge_id) |> Repo.one
+
+        if workout.gym_rats_user_id != account_id && (membership == nil || !membership.owner) do
           failure(conn, "You do not have permission to do that.")
         else
           case workout |> Repo.delete do
