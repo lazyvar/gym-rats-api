@@ -12,9 +12,12 @@ defmodule GymRats.Model.Membership do
     timestamps()
   end
 
+  @required ~w(gym_rats_user_id challenge_id code owner)a
+  @optional ~w()a
+
   def changeset(membership, attrs) do
     membership
-    |> cast(attrs, [:owner])
-    |> validate_required([:owner])
+    |> cast(attrs, @required ++ @optional)
+    |> validate_required(@required)
   end
 end

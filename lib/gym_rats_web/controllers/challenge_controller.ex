@@ -2,13 +2,8 @@ defmodule GymRatsWeb.ChallengeController do
   use GymRatsWeb, :protected_controller
 
   alias GymRats.Model.Challenge
-  alias GymRats.Model.Account
-  alias GymRats.Model.Membership
-  alias GymRats.Repo.ChallengeRepo
-  alias GymRats.Repo.AccountRepo
   alias GymRats.Query.ChallengeQuery
 
-  import Logger
   import Ecto.Query
 
   def index(conn, %{"filter" => filter}, account_id) do

@@ -10,7 +10,6 @@ defmodule GymRats.Model.Message do
     timestamps()
   end
 
-  @doc false
   def changeset(message, attrs) do
     message
     |> cast(attrs, [:content])
