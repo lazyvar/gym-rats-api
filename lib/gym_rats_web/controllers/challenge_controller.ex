@@ -2,9 +2,11 @@ defmodule GymRatsWeb.ChallengeController do
   use GymRatsWeb, :protected_controller
 
   alias GymRats.Model.Challenge
+  alias GymRats.Model.Membership
   alias GymRats.Query.ChallengeQuery
 
   import Ecto.Query
+  import Logger
 
   def index(conn, %{"filter" => filter}, account_id) do
     challenge_query = case filter do
@@ -35,8 +37,17 @@ defmodule GymRatsWeb.ChallengeController do
     changeset = Challenge.new_changeset(params)
 
     case Repo.insert(changeset) do
-      {:ok, challenge} -> success(conn, challenge)
-      {:error, _} -> failure(conn, "Uh oh")
+      {:ok, challenge} -> 
+        membership = %Membership{} |> Membership.changeset(%{challenge_id: challenge.id, gym_rats_user_id: account_id, owner: true}) |> Repo.insert
+
+        case membership do
+          {:ok, membership} -> success(conn, challenge)
+          {:error, m} -> Logger.info inspect(m)
+           failure(conn, "Uh oh")
+        end
+       {:error, _} -> failure(conn, "Uh oh")
     end
   end
+
+  def update(conn, params, account)
 end

@@ -22,9 +22,4 @@ defmodule GymRats.Model.Membership do
     |> cast(attrs, @required ++ @optional)
     |> validate_required(@required)
   end
-
-  def join_changeset(challenge_id: challenge_id, account_id: account_id) do
-    %Membership{}
-    |> changeset(%{challenge_id: challenge_id, gym_rats_user_id: account_id})
-  end
 end

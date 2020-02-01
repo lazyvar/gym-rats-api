@@ -6,6 +6,7 @@ defmodule GymRats.Model.Challenge do
   alias GymRats.Repo.ChallengeRepo
   alias GymRats.Model.Challenge
   alias GymRats.Model.Membership
+  alias GymRats.Model.Account
 
   @derive {Jason.Encoder, only: [:id, :name, :code, :profile_picture_url, :start_date, :end_date]}
 

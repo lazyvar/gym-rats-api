@@ -20,7 +20,10 @@ defmodule GymRatsWeb.MembershipController do
         case membership == nil do
           false -> failure(conn, "You are already a part of this challenge.")
           true -> 
-            membership = Membership.join_changeset(challenge_id: challenge.id, account_id: account_id) |> Repo.insert
+            membership = %Membership{} 
+            |> Membership.changeset(%{challenge_id: challenge.id, gym_rats_user_id: account_id, owner: true}) 
+            |> Repo.insert
+            
             case membership do
               {:ok, membership} -> success(conn, challenge)
               {:error, _} -> failure(conn, "Uh oh")
