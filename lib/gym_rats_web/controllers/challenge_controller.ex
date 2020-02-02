@@ -4,6 +4,7 @@ defmodule GymRatsWeb.ChallengeController do
   alias GymRats.Model.Challenge
   alias GymRats.Model.Membership
   alias GymRats.Query.ChallengeQuery
+  alias GymRatsWeb.ChallengeView
 
   import Ecto.Query
 
@@ -40,7 +41,7 @@ defmodule GymRatsWeb.ChallengeController do
         membership = %Membership{} |> Membership.changeset(%{challenge_id: challenge.id, gym_rats_user_id: account_id, owner: true}) |> Repo.insert
 
         case membership do
-          {:ok, membership} -> success(conn, challenge)
+          {:ok, membership} -> success(conn, ChallengeView.default(challenge))
           {:error, m} -> failure(conn, "Uh oh")
         end
        {:error, _} -> failure(conn, "Uh oh")
@@ -65,7 +66,7 @@ defmodule GymRatsWeb.ChallengeController do
               challenge = challenge |> Challenge.changeset(params) |> Repo.update
 
               case challenge do
-                {:ok, challenge} -> success(conn, challenge)
+                {:ok, challenge} -> success(conn, ChallengeView.default(challenge))
                 {:error, _} -> failure(conn, "Something went wrong.")
               end
             else

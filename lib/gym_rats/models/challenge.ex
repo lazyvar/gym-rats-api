@@ -9,8 +9,6 @@ defmodule GymRats.Model.Challenge do
   alias GymRats.Model.Account
   alias GymRats.Model.Workout
 
-  @derive {Jason.Encoder, only: [:id, :name, :code, :profile_picture_url, :start_date, :end_date]}
-
   schema "challenges" do
     field :code, :string
     field :end_date, :utc_datetime

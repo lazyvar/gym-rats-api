@@ -3,7 +3,8 @@ defmodule GymRatsWeb.MembershipController do
 
   alias GymRats.Model.Challenge
   alias GymRats.Model.Membership
-  
+  alias GymRatsWeb.ChallengeView
+
   import Ecto.Query
 
   def create(conn, %{"code" => code}, account_id) do
@@ -25,7 +26,7 @@ defmodule GymRatsWeb.MembershipController do
             |> Repo.insert
             
             case membership do
-              {:ok, membership} -> success(conn, challenge)
+              {:ok, membership} -> success(conn, ChallengeView.default(challenge))
               {:error, _} -> failure(conn, "Uh oh")
             end
       end
@@ -44,7 +45,7 @@ defmodule GymRatsWeb.MembershipController do
           membership |> Repo.delete!
           challenge = Challenge |> Repo.get(membership.challenge_id)
 
-          success(conn, challenge)
+          success(conn, ChallengeView.default(challenge))
         else
           failure(conn, "You do not have permission to do that.")
         end
