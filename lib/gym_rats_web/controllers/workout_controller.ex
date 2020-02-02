@@ -1,6 +1,7 @@
 defmodule GymRatsWeb.WorkoutController do
   use GymRatsWeb, :protected_controller
 
+  alias GymRats.WorkoutView
   alias GymRats.Model.Workout
   alias GymRats.Model.Challenge
   alias GymRats.Model.Membership
@@ -24,7 +25,7 @@ defmodule GymRatsWeb.WorkoutController do
     |> Repo.all
     |> Enum.map(fn (c) -> %Workout{challenge_id: c.id, gym_rats_user_id: account_id} |> Workout.changeset(params) |> Repo.insert! end)
 
-    success(conn, workouts |> List.first)
+    success(conn, WorkoutView.default(workouts |> List.first))
   end
 
   def delete(conn, %{"id" => workout_id}, account_id) do
@@ -40,7 +41,7 @@ defmodule GymRatsWeb.WorkoutController do
           failure(conn, "You do not have permission to do that.")
         else
           case workout |> Repo.delete do
-            {:ok, workout} -> success(conn, workout)
+            {:ok, workout} -> success(conn, WorkoutView.default(workout))
             {:error, _} -> failure(conn, "Something went wrong.")
           end
         end
