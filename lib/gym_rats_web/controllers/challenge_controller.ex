@@ -47,5 +47,31 @@ defmodule GymRatsWeb.ChallengeController do
     end
   end
 
-  def update(conn, params, account)
+  def update(conn, %{"id" => id} = params, account_id) do
+    id = String.to_integer(id)
+    challenge = Challenge |> Repo.get(id)
+
+    case challenge do
+      nil -> failure(conn, "This challenge does not exist.")
+      _ ->
+        membership = Membership |> where([m], m.gym_rats_user_id == ^account_id and m.challenge_id == ^id) |> Repo.one
+
+        case membership do
+          nil -> failure(conn, "That challenge does not exist.")
+          _ -> 
+            if membership.owner do
+              illegal_params = ~w(id created_at updated_at code time_zone profile_picture_url)
+              params = params |> Map.drop(illegal_params)
+              challenge = challenge |> Challenge.changeset(params) |> Repo.update
+
+              case challenge do
+                {:ok, challenge} -> success(conn, challenge)
+                {:error, _} -> failure(conn, "Something went wrong.")
+              end
+            else
+              failure(conn, "You are not authorized edit a challenge. Ask the challenge creator to do so.")
+            end
+        end
+    end
+  end
 end
