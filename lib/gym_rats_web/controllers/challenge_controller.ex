@@ -6,7 +6,6 @@ defmodule GymRatsWeb.ChallengeController do
   alias GymRats.Query.ChallengeQuery
 
   import Ecto.Query
-  import Logger
 
   def index(conn, %{"filter" => filter}, account_id) do
     challenge_query = case filter do
@@ -42,8 +41,7 @@ defmodule GymRatsWeb.ChallengeController do
 
         case membership do
           {:ok, membership} -> success(conn, challenge)
-          {:error, m} -> Logger.info inspect(m)
-           failure(conn, "Uh oh")
+          {:error, m} -> failure(conn, "Uh oh")
         end
        {:error, _} -> failure(conn, "Uh oh")
     end
