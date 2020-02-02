@@ -12,7 +12,8 @@ defmodule GymRatsWeb.Router do
   scope "/", GymRatsWeb do
     pipe_through [:api, :protected]
 
-    resources "/accounts", AccountController, only: [:update] do
+    put "/accounts/self", AccountController, :update_self
+    resources "/accounts", AccountController, only: [] do
       resources "/workouts", Account.WorkoutController, only: [:index]
     end
     resources "/challenges", ChallengeController, only: [:create, :index, :update] do

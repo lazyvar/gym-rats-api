@@ -8,7 +8,7 @@ defmodule GymRats.Model.Account do
   alias GymRats.Model.Membership
   alias GymRats.Model.Workout
   
-  @derive {Jason.Encoder, only: [:id, :email, :full_name, :profile_picture_url, :workouts]}
+  @derive {Jason.Encoder, only: [:id, :email, :full_name, :profile_picture_url]}
 
   schema "gym_rats_users" do
     field :email, :string
@@ -39,6 +39,7 @@ defmodule GymRats.Model.Account do
     %Account{}
     |> changeset(attrs)
     |> cast(attrs, [:password])
+    |> validate_required(:password)
     |> validate_length(:password, min: 6)
     |> put_password_hash()
   end
