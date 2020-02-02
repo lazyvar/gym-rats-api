@@ -13,7 +13,7 @@ defmodule GymRatsWeb.Open.AccountController do
       {:ok, account} -> 
         account = account |> Account.put_token
         success(conn, AccountView.with_token(account))
-      {:error, e} -> failure(conn, "Uh oh")
+      {:error, account} -> failure(conn, account)
     end
   end
 end

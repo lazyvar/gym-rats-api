@@ -16,3 +16,5 @@ config :gym_rats, GymRatsWeb.Endpoint,
 
 # Print only warnings and errors during test
 config :logger, level: :warn
+
+config :joken, default_signer: "secrets secrets are fun"

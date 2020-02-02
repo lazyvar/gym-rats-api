@@ -1,4 +1,8 @@
 defmodule GymRatsWeb.Rendering do
+  import GymRatsWeb.ErrorHelpers
+  import Phoenix.Naming
+  import Plug.Conn
+
   @moduledoc """
   Rendering methods for success and failure responses. 
 
@@ -30,10 +34,29 @@ defmodule GymRatsWeb.Rendering do
 
   ## Examples
 
-      iex> failure(conn, %{message: "Uh-oh!", code: 333})
+      iex> failure(conn, error: "Username is required.")
 
   """
-  def failure(conn, error) do
-    json(conn, %{status: "failure", error: error})
+  def failure(conn, error) when is_bitstring(error) do
+    json(conn |> put_status(:unprocessable_entity), %{status: "failure", error: error})
+  end
+
+  @doc """
+  Sends a failure response using json/2. 
+  Maps the list of errors on changeset to human readable form.
+
+  ## Examples
+
+      iex> failure(conn, error: "Username is required.")
+
+  """
+  def failure(conn, changeset) when is_map(changeset) do
+    failure(conn, error_message(changeset))
+  end
+
+  defp error_message(changeset) do
+    changeset.errors |> Enum.map(fn {key, error} ->
+      humanize(key) <> " " <> translate_error(error)
+    end) |> List.first
   end
 end
