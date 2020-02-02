@@ -1,6 +1,7 @@
 defmodule GymRatsWeb.Challenge.MemberController do
   use GymRatsWeb, :protected_controller
 
+  alias GymRatsWeb.AccountView
   alias GymRats.Model.Account
   alias GymRats.Repo
 
@@ -14,8 +15,8 @@ defmodule GymRatsWeb.Challenge.MemberController do
     |> where([a, c, w], w.gym_rats_user_id == a.id and w.challenge_id == ^challenge_id)
     |> preload(:workouts) 
     |> Repo.all
-
-    success(conn, members)
+    
+    success(conn, AccountView.with_workouts(members))
   end
 
   def index(conn, _params, _account_id), do: failure(conn, "Missing challenge id.")

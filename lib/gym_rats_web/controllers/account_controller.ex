@@ -2,6 +2,7 @@ defmodule GymRatsWeb.AccountController do
   use GymRatsWeb, :protected_controller
 
   alias GymRats.Model.Account
+  alias GymRatsWeb.AccountView
   alias GymRats.Repo
 
   def update_self(conn, params, account_id) do
@@ -11,7 +12,7 @@ defmodule GymRatsWeb.AccountController do
     account = account |> Account.changeset(params) |> Repo.update
 
     case account do
-      {:ok, account} -> success(conn, account)
+      {:ok, account} -> success(conn, AccountView.default(account))
       {:error, _} -> failure(conn, "Something went wrong.")
     end
   end

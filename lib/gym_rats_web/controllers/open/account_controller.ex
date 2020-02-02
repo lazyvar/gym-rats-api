@@ -1,6 +1,7 @@
 defmodule GymRatsWeb.Open.AccountController do
   use GymRatsWeb, :controller
 
+  alias GymRatsWeb.AccountView
   alias GymRats.Model.Account
 
   def create(conn, params) do
@@ -9,7 +10,9 @@ defmodule GymRatsWeb.Open.AccountController do
     changeset = Account.registration_changeset(params)
 
     case Repo.insert(changeset) do
-      {:ok, account} -> success(conn, account |> Account.with_token)
+      {:ok, account} -> 
+        account = account |> Account.put_token
+        success(conn, AccountView.with_token(account))
       {:error, e} -> failure(conn, "Uh oh")
     end
   end

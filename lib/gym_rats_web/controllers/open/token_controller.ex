@@ -1,6 +1,7 @@
 defmodule GymRatsWeb.Open.TokenController do
   use GymRatsWeb, :controller
 
+  alias GymRatsWeb.AccountView
   alias GymRats.Model.Account
   alias GymRats.Repo.AccountRepo
 
@@ -11,7 +12,7 @@ defmodule GymRatsWeb.Open.TokenController do
       account == nil ->
         failure(conn, "Uh oh")
       Bcrypt.verify_pass(password, account.password_digest) ->
-        success(conn, account |> Account.with_token)
+        success(conn, AccountView.with_token(account |> Account.put_token))
       true ->
         failure(conn, "That email and password combination did not work")
     end

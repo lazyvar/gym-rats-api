@@ -6,9 +6,7 @@ defmodule GymRats.Model.Account do
   alias GymRats.Model.Account
   alias GymRats.Model.Challenge
   alias GymRats.Model.Membership
-  alias GymRats.Model.Workout
-  
-  @derive {Jason.Encoder, only: [:id, :email, :full_name, :profile_picture_url]}
+  alias GymRats.Model.Workout  
 
   schema "gym_rats_users" do
     field :email, :string
@@ -24,7 +22,7 @@ defmodule GymRats.Model.Account do
 
     timestamps()
   end
-
+  
   @required ~w(full_name email)a
   @optional ~w(reset_password_token reset_password_token_expiration profile_picture_url)a
 
@@ -44,7 +42,7 @@ defmodule GymRats.Model.Account do
     |> put_password_hash()
   end
 
-  def with_token(account) do
+  def put_token(account) do
     claims = %{"user_id" => account.id}
     jwt = GymRats.Token.generate_and_sign!(claims)
     account |> Map.put(:token, jwt)
