@@ -26,7 +26,7 @@ defmodule GymRatsWeb.ChallengeController do
         |> Repo.all
     end
 
-    success(conn, challenges)
+    success(conn, ChallengeView.default(challenges))
   end
 
   def index(conn, _params, account_id) do

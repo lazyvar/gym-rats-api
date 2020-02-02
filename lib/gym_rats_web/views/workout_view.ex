@@ -3,6 +3,11 @@ defmodule GymRatsWeb.WorkoutView do
 
   @default_attrs ~w(gym_rats_user_id challenge_id title steps points steps calories description distance duration google_place_id photo_url)a
 
+  def default(workouts) when is_list(workouts) do
+    workouts
+    |> Enum.map(fn w -> default(w) end)
+  end
+
   def default(workout) do
     workout |> keep(@default_attrs)
   end

@@ -1,6 +1,7 @@
 defmodule GymRatsWeb.CommentController do
   use GymRatsWeb, :protected_controller
   
+  alias GymRatsWeb.CommentView
   alias GymRats.Model.Comment
 
   import Ecto.Query
@@ -15,7 +16,7 @@ defmodule GymRatsWeb.CommentController do
           failure(conn, "You do not have permission to do that.")
         else
           comment |> Repo.delete!
-          success(conn, comment)
+          success(conn, CommentView.default(comment))
         end
       end
   end

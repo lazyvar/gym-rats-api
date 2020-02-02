@@ -1,6 +1,7 @@
 defmodule GymRatsWeb.Challenge.Member.WorkoutController do
   use GymRatsWeb, :protected_controller
 
+  alias GymRatsWeb.WorkoutView
   alias GymRats.Model.Workout
 
   import Ecto.Query
@@ -10,6 +11,6 @@ defmodule GymRatsWeb.Challenge.Member.WorkoutController do
     |> where([w], w.gym_rats_user_id == ^member_id and w.challenge_id == ^challenge_id) 
     |> Repo.all
 
-    success(conn, workouts)
+    success(conn, WorkoutView.default(workouts))
   end
 end
