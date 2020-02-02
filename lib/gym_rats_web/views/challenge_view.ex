@@ -1,4 +1,4 @@
-defmodule GymRatsWeb.WorkoutView do
+defmodule GymRatsWeb.ChallengeView do
   import GymRatsWeb.JSONView
 
   @default_attrs ~w(id name code profile_picture_url start_date end_date)a

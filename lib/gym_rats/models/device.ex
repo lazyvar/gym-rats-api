@@ -3,8 +3,6 @@ defmodule GymRats.Model.Device do
 
   import Ecto.Changeset
 
-  @derive {Jason.Encoder, only: [:id, :token]}
-
   schema "devices" do
     field :token, :string
 

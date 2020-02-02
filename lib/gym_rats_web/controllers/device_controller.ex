@@ -1,6 +1,7 @@
 defmodule GymRatsWeb.DeviceController do
   use GymRatsWeb, :protected_controller
 
+  alias GymRatsWeb.DeviceView
   alias GymRats.Model.Device
   alias GymRats.Repo
   
@@ -21,7 +22,7 @@ defmodule GymRatsWeb.DeviceController do
     device = device |> Device.changeset(params) |> Repo.insert_or_update
 
     case device do
-      {:ok, device} -> success(conn, device)
+      {:ok, device} -> success(conn, DeviceView.default(device))
       {:error, _} -> failure(conn, "Something went wrong.")
     end
   end
