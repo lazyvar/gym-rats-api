@@ -16,7 +16,9 @@ defmodule GymRatsWeb.Router do
       resources "/workouts", Account.WorkoutController, only: [:index]
     end
     resources "/challenges", ChallengeController, only: [:create, :index, :update] do
-      resources "/members", Challenge.MemberController, only: [:index]
+      resources "/members", Challenge.MemberController, only: [:index] do
+        resources "/workouts", Challenge.Member.WorkoutController, only: [:index]
+      end
       resources "/messages", Challenge.MessageController, only: [:index]
       resources "/workouts", Challenge.WorkoutController, only: [:index]
     end
