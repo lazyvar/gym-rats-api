@@ -10,7 +10,7 @@ defmodule GymRatsWeb.Open.TokenController do
 
     cond do
       account == nil ->
-        failure(conn, "Uh oh")
+        failure(conn, "That email and password combination did not work")
       Bcrypt.verify_pass(password, account.password_digest) ->
         success(conn, AccountView.with_token(account |> Account.put_token))
       true ->
