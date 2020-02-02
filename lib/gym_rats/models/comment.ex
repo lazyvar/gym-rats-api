@@ -1,9 +1,10 @@
 defmodule GymRats.Model.Comment do
   use Ecto.Schema
 
+  alias GymRats.Model.Account
+  alias GymRats.Model.Workout
+  
   import Ecto.Changeset
-
-  @derive {Jason.Encoder, only: [:id, :content]}
 
   schema "comments" do
     field :content, :string

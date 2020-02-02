@@ -3,11 +3,8 @@ defmodule GymRats.Model.Membership do
   
   alias GymRats.Model.Account
   alias GymRats.Model.Challenge
-  alias GymRats.Model.Membership
 
   import Ecto.Changeset
-
-  @derive {Jason.Encoder, only: []}
 
   schema "memberships" do
     field :owner, :boolean, default: false

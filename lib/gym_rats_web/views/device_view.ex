@@ -3,7 +3,7 @@ defmodule GymRatsWeb.DeviceView do
 
   @default_attrs ~w(id token)a
 
-  def default(challenge) do
-    challenge |> keep(@default_attrs)
+  def default(device) do
+    device |> keep(@default_attrs)
   end
 end

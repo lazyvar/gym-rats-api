@@ -1,17 +1,20 @@
 defmodule GymRatsWeb.Workout.CommentController do
   use GymRatsWeb, :protected_controller
   
+  alias GymRatsWeb.CommentView
   alias GymRats.Model.Comment
-
+  alias GymRats.Repo
+  
   import Ecto.Query
   
   def index(conn, %{"workout_id" => workout_id}, account_id) do
     comments = Comment
     |> where([c], c.workout_id == ^workout_id)
     |> order_by(asc: :inserted_at)
+    |> preload(:account)
     |> Repo.all
 
-    success(conn, comments)
+    success(conn, CommentView.with_commenter(comments))
   end
 
   def create(conn, %{"workout_id" => workout_id} = params, account_id) do
@@ -21,7 +24,7 @@ defmodule GymRatsWeb.Workout.CommentController do
     |> Repo.insert
 
     case comment do
-      {:ok, comment} -> success(conn, comment)
+      {:ok, comment} -> success(conn, CommentView.default(comment))
       {:error, message} -> failure(conn, "Something went wrong")
     end
   end
