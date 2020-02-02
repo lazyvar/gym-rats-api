@@ -12,16 +12,17 @@ defmodule GymRatsWeb.Router do
   scope "/", GymRatsWeb do
     pipe_through [:api, :protected]
 
-    resources "/accounts", AccountController, only: [:update]
+    resources "/accounts", AccountController, only: [:update] do
+      resources "/workouts", Account.WorkoutController, only: [:index]
+    end
     resources "/challenges", ChallengeController, only: [:create, :index, :update] do
       resources "/members", Challenge.MemberController, only: [:index]
       resources "/messages", Challenge.MessageController, only: [:index]
       resources "/workouts", Challenge.WorkoutController, only: [:index]
     end
     resources "/comments", CommentController, only: [:delete]
-    resources "/devices", DeviceController, only: [:create, :delete] do
-      resources "/workouts", Account.WorkoutController, only: [:index]
-    end
+    resources "/devices", DeviceController, only: [:create]
+    delete "/devices", DeviceController, :delete_all
     resources "/memberships", MembershipController, only: [:create, :delete]
     resources "/messages", MessageController, only: [:create]
     resources "/workouts", WorkoutController, only: [:create, :delete] do

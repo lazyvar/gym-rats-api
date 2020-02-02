@@ -1,18 +1,24 @@
 defmodule GymRats.Model.Device do
   use Ecto.Schema
+
   import Ecto.Changeset
 
+  @derive {Jason.Encoder, only: [:id, :token]}
+
   schema "devices" do
-    field :gym_rats_user_id, :integer
     field :token, :string
+
+    belongs_to :account, Account, foreign_key: :gym_rats_user_id
 
     timestamps()
   end
 
-  @doc false
+  @required ~w(gym_rats_user_id token)a
+  @optional ~w()a
+  
   def changeset(device, attrs) do
     device
-    |> cast(attrs, [:gym_rats_user_id, :token])
-    |> validate_required([:gym_rats_user_id, :token])
+    |> cast(attrs, @required ++ @optional)
+    |> validate_required(@required)
   end
 end
