@@ -42,9 +42,9 @@ defmodule GymRatsWeb.ChallengeController do
 
         case membership do
           {:ok, membership} -> success(conn, ChallengeView.default(challenge))
-          {:error, m} -> failure(conn, "Uh oh")
+          {:error, membership} -> failure(conn, membership)
         end
-       {:error, _} -> failure(conn, "Uh oh")
+       {:error, challenge} -> failure(conn, challenge)
     end
   end
 
