@@ -61,7 +61,7 @@ defmodule GymRatsWeb.ChallengeController do
           nil -> failure(conn, "That challenge does not exist.")
           _ -> 
             if membership.owner do
-              illegal_params = ~w(id created_at updated_at code time_zone profile_picture_url)
+              illegal_params = ~w(id created_at updated_at code time_zone)
               params = params |> Map.drop(illegal_params)
               challenge = challenge |> Challenge.changeset(params) |> Repo.update
 

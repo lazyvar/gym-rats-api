@@ -147,4 +147,51 @@ defmodule GymRatsWeb.Open.ChallengeControllerTests do
       assert data |> Enum.any?(fn c -> c["id"] == upcoming_challenge.id end)
     end
   end
+
+  describe "update/3" do
+    test "Updates challenge successfuly" do
+      params = [start_date: "1999-01-23T13:27:32Z", end_date: "3999-01-29T12:47:00Z", name: "yooo", profile_picture_url: nil]
+      account = insert(:account) |> Account.put_token
+      upcoming_challenge = insert(:upcoming_challenge)
+
+      insert(:membership, account: account, challenge: upcoming_challenge, owner: true)
+
+      conn = put(build_conn() |> put_req_header("authorization", account.token), "/challenges/#{upcoming_challenge.id}", params)
+
+      response = json_response(conn, 200)      
+      data = response["data"]
+
+      assert data["start_date"] == "1999-01-23T13:27:32Z"
+      assert data["end_date"] == "3999-01-29T12:47:00Z"
+      assert data["name"] == "yooo"
+      assert data["profile_picture_url"] == nil
+    end
+
+    test "Failure if not in challenge" do
+      params = [start_date: "1999-01-23T13:27:32Z", end_date: "3999-01-29T12:47:00Z", name: "yooo", profile_picture_url: nil]
+      account = insert(:account) |> Account.put_token
+      upcoming_challenge = insert(:upcoming_challenge)
+      conn = put(build_conn() |> put_req_header("authorization", account.token), "/challenges/#{upcoming_challenge.id}", params)
+
+      assert %{
+        "status" => "failure",
+        "error" => "That challenge does not exist."
+      } = json_response(conn, 422)
+    end
+
+    test "Failure if not owner" do
+      params = [start_date: "1999-01-23T13:27:32Z", end_date: "3999-01-29T12:47:00Z", name: "yooo", profile_picture_url: nil]
+      account = insert(:account) |> Account.put_token
+      upcoming_challenge = insert(:upcoming_challenge)
+
+      insert(:membership, account: account, challenge: upcoming_challenge, owner: false)
+
+      conn = put(build_conn() |> put_req_header("authorization", account.token), "/challenges/#{upcoming_challenge.id}", params)
+
+      assert %{
+        "status" => "failure",
+        "error" => "You are not authorized edit a challenge. Ask the challenge creator to do so."
+      } = json_response(conn, 422)
+    end
+  end
 end
