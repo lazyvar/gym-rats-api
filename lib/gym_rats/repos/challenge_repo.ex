@@ -12,19 +12,19 @@ defmodule GymRats.Repo.ChallengeRepo do
 
   def active do
     Challenge
-    |> where([c], c.start_date < ^now and c.end_date > ^now)
+    |> where([c], c.start_date < ^now() and c.end_date > ^now())
     |> Repo.all
   end
 
   def complete do
     Challenge
-    |> where([c], c.end_date < ^now)
+    |> where([c], c.end_date < ^now())
     |> Repo.all
   end
 
   def upcoming do
     Challenge
-    |> where([c], c.start_date > ^now)
+    |> where([c], c.start_date > ^now())
     |> Repo.all
   end
 
