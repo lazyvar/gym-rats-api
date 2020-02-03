@@ -4,10 +4,7 @@ defmodule GymRats.Model.Challenge do
   import Ecto.Changeset
   
   alias GymRats.Repo.ChallengeRepo
-  alias GymRats.Model.Challenge
-  alias GymRats.Model.Membership
-  alias GymRats.Model.Account
-  alias GymRats.Model.Workout
+  alias GymRats.Model.{Challenge, Membership, Account, Workout}
 
   schema "challenges" do
     field :code, :string
@@ -34,7 +31,7 @@ defmodule GymRats.Model.Challenge do
   end
 
   def new_changeset(params) do
-    params = params |> Map.put("code", generate_code)
+    params = params |> Map.put("code", generate_code())
     changeset(%Challenge{}, params)
   end
 
@@ -48,7 +45,7 @@ defmodule GymRats.Model.Challenge do
     unless ChallengeRepo.exists?(code: code) do
       code
     else
-      generate_code
+      generate_code()
     end
   end
 end

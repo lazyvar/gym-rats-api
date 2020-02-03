@@ -1,8 +1,7 @@
 defmodule GymRats.Model.Comment do
   use Ecto.Schema
 
-  alias GymRats.Model.Account
-  alias GymRats.Model.Workout
+  alias GymRats.Model.{Account, Workout}
   
   import Ecto.Changeset
 

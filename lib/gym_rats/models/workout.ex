@@ -2,8 +2,7 @@ defmodule GymRats.Model.Workout do
   use Ecto.Schema
   import Ecto.Changeset
 
-  alias GymRats.Model.Account
-  alias GymRats.Model.Challenge
+  alias GymRats.Model.{Account, Challenge}
 
   schema "workouts" do
     field :calories, :integer

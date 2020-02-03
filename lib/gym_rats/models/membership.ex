@@ -1,8 +1,7 @@
 defmodule GymRats.Model.Membership do
   use Ecto.Schema
   
-  alias GymRats.Model.Account
-  alias GymRats.Model.Challenge
+  alias GymRats.Model.{Account, Challenge}
 
   import Ecto.Changeset
 
