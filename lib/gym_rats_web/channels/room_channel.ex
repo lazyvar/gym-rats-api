@@ -1,9 +1,7 @@
 defmodule GymRatsWeb.RoomChannel do
   use GymRatsWeb, :channel
 
-  import Logger
-
-  def join(ok, params, socket) do
+  def join(_, _params, socket) do
     {:ok, socket}
   end
 

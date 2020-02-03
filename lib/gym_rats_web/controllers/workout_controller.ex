@@ -2,9 +2,7 @@ defmodule GymRatsWeb.WorkoutController do
   use GymRatsWeb, :protected_controller
 
   alias GymRatsWeb.WorkoutView
-  alias GymRats.Model.Workout
-  alias GymRats.Model.Challenge
-  alias GymRats.Model.Membership
+  alias GymRats.Model.{Workout, Challenge, Membership}
   alias GymRats.Query.ChallengeQuery
   alias GymRats.Repo
   

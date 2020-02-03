@@ -1,9 +1,4 @@
-defmodule GymRats.Guardian do
-  alias GymRats.Model.Account
-  alias GymRats.Repo
-  alias Plug.Conn
-  
-  import Logger
+defmodule GymRats.Guardian do  
   import Plug.Conn
   import Phoenix.Controller, only: [json: 2]
 

@@ -27,7 +27,7 @@ defmodule GymRatsWeb.DeviceController do
     end
   end
 
-  def delete_all(conn, params, account_id) do
+  def delete_all(conn, _params, account_id) do
     Device 
     |> where([d], d.gym_rats_user_id == ^account_id) 
     |> Repo.delete_all

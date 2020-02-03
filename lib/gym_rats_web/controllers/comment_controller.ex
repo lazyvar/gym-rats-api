@@ -4,8 +4,6 @@ defmodule GymRatsWeb.CommentController do
   alias GymRatsWeb.CommentView
   alias GymRats.Model.Comment
 
-  import Ecto.Query
-
   def delete(conn, %{"id" => id}, account_id) do
     comment = Comment |> Repo.get(id)
 

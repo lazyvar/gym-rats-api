@@ -7,7 +7,7 @@ defmodule GymRatsWeb.Workout.CommentController do
   
   import Ecto.Query
   
-  def index(conn, %{"workout_id" => workout_id}, account_id) do
+  def index(conn, %{"workout_id" => workout_id}, _account_id) do
     comments = Comment
     |> where([c], c.workout_id == ^workout_id)
     |> order_by(asc: :inserted_at)
@@ -25,7 +25,7 @@ defmodule GymRatsWeb.Workout.CommentController do
 
     case comment do
       {:ok, comment} -> success(conn, CommentView.default(comment))
-      {:error, message} -> failure(conn, "Something went wrong")
+      {:error, comment} -> failure(conn, comment)
     end
   end
 end

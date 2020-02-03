@@ -12,17 +12,17 @@ defmodule GymRats.Query.ChallengeQuery do
 
   def active(query \\ Challenge) do
     query
-    |> where([c], c.start_date < ^now and c.end_date > ^now)
+    |> where([c], c.start_date < ^now() and c.end_date > ^now())
   end
 
   def complete(query \\ Challenge) do
     query
-    |> where([c], c.end_date < ^now)
+    |> where([c], c.end_date < ^now())
   end
 
   def upcoming(query \\ Challenge) do
     query
-    |> where([c], c.start_date > ^now)
+    |> where([c], c.start_date > ^now())
   end
 
   def exists?(query \\ Challenge, [code: code]) do

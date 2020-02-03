@@ -1,8 +1,7 @@
 defmodule GymRatsWeb.ChallengeController do
   use GymRatsWeb, :protected_controller
 
-  alias GymRats.Model.Challenge
-  alias GymRats.Model.Membership
+  alias GymRats.Model.{Challenge, Membership}
   alias GymRats.Query.ChallengeQuery
   alias GymRatsWeb.ChallengeView
 
@@ -41,7 +40,7 @@ defmodule GymRatsWeb.ChallengeController do
         membership = %Membership{} |> Membership.changeset(%{challenge_id: challenge.id, gym_rats_user_id: account_id, owner: true}) |> Repo.insert
 
         case membership do
-          {:ok, membership} -> success(conn, ChallengeView.default(challenge))
+          {:ok, _} -> success(conn, ChallengeView.default(challenge))
           {:error, membership} -> failure(conn, membership)
         end
        {:error, challenge} -> failure(conn, challenge)

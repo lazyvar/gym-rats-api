@@ -1,8 +1,7 @@
 defmodule GymRatsWeb.Open.ChallengeControllerTests do
   use GymRatsWeb.ConnCase
 
-  alias GymRats.Model.Account
-  alias GymRats.Model.Membership
+  alias GymRats.Model.{Account, Membership}
   alias GymRats.Repo
 
   import GymRats.Factory

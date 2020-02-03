@@ -1,6 +1,8 @@
 defmodule GymRats.Model.Device do
   use Ecto.Schema
 
+  alias GymRats.Model.Account
+
   import Ecto.Changeset
 
   schema "devices" do

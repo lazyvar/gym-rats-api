@@ -2,7 +2,6 @@ defmodule GymRatsWeb.AccountView do
   alias GymRatsWeb.WorkoutView
 
   import GymRatsWeb.JSONView
-  import Logger
 
   @default_attrs ~w(id full_name email profile_picture_url)a
   

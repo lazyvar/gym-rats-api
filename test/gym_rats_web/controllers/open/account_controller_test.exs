@@ -30,7 +30,7 @@ defmodule GymRatsWeb.Open.AccountControllerTest do
 
     test "Returns an error if email taken" do
       new_user = [full_name: "Mack", profile_picture_url: "https://google.com", email: "mack@dad.ie", password: "yikessss"]
-      conn = post(build_conn(), "/accounts", new_user)
+      _conn = post(build_conn(), "/accounts", new_user)
       conn = post(build_conn(), "/accounts", new_user)
 
       assert %{
@@ -41,7 +41,6 @@ defmodule GymRatsWeb.Open.AccountControllerTest do
 
     test "Returns an error if password less than 6" do
       new_user = [full_name: "Mack", profile_picture_url: "https://google.com", email: "mack@dad.ie", password: "123"]
-      conn = post(build_conn(), "/accounts", new_user)
       conn = post(build_conn(), "/accounts", new_user)
 
       assert %{

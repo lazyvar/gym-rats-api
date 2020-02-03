@@ -3,10 +3,7 @@ defmodule GymRats.Model.Account do
 
   import Ecto.Changeset
 
-  alias GymRats.Model.Account
-  alias GymRats.Model.Challenge
-  alias GymRats.Model.Membership
-  alias GymRats.Model.Workout  
+  alias GymRats.Model.{Account, Challenge, Workout}
 
   schema "gym_rats_users" do
     field :email, :string

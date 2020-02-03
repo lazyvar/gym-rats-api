@@ -7,7 +7,7 @@ defmodule GymRatsWeb.Challenge.MemberController do
 
   import Ecto.Query
   
-  def index(conn, %{"challenge_id" => challenge_id}, account_id) do
+  def index(conn, %{"challenge_id" => challenge_id}, _account_id) do
     challenge_id = String.to_integer(challenge_id)
     members = Account 
     |> join(:left, [a], c in assoc(a, :challenges)) 

@@ -1,8 +1,7 @@
 defmodule GymRatsWeb.MembershipController do
   use GymRatsWeb, :protected_controller
 
-  alias GymRats.Model.Challenge
-  alias GymRats.Model.Membership
+  alias GymRats.Model.{Challenge, Membership}
   alias GymRatsWeb.ChallengeView
 
   import Ecto.Query
@@ -26,7 +25,7 @@ defmodule GymRatsWeb.MembershipController do
             |> Repo.insert
             
             case membership do
-              {:ok, membership} -> success(conn, ChallengeView.default(challenge))
+              {:ok, _} -> success(conn, ChallengeView.default(challenge))
               {:error, _} -> failure(conn, "Uh oh")
             end
       end
