@@ -12,7 +12,7 @@ defmodule GymRats.Guardian do
 
     case token do
       nil ->
-        json(conn |> put_status(401), %{status: "failure", data: "Go away."}) |> halt
+        json(conn |> put_status(401), %{status: "failure", error: "Go away."}) |> halt
 
       _ ->
         case GymRats.Token.verify_and_validate(token) do
@@ -20,7 +20,7 @@ defmodule GymRats.Guardian do
             assign(conn, :account_id, claims["user_id"])
 
           {:error, _} ->
-            json(conn |> put_status(401), %{status: "failure", data: "Go away."}) |> halt
+            json(conn |> put_status(401), %{status: "failure", error: "Go away."}) |> halt
         end
     end
   end

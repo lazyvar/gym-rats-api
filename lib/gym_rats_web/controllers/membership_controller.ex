@@ -30,13 +30,13 @@ defmodule GymRatsWeb.MembershipController do
               |> Membership.changeset(%{
                 challenge_id: challenge.id,
                 gym_rats_user_id: account_id,
-                owner: true
+                owner: false
               })
               |> Repo.insert()
 
             case membership do
               {:ok, _} -> success(conn, ChallengeView.default(challenge))
-              {:error, _} -> failure(conn, "Uh oh")
+              {:error, membership} -> failure(conn, membership)
             end
         end
     end
@@ -44,22 +44,21 @@ defmodule GymRatsWeb.MembershipController do
 
   def create(conn, _params, _account_id), do: failure(conn, "Code missing.")
 
-  def delete(conn, %{"id" => membership_id}, account_id) do
-    membership = Membership |> Repo.get(membership_id)
+  def delete(conn, %{"id" => challenge_id}, account_id) do
+    membership =
+      Membership
+      |> where([m], m.challenge_id == ^challenge_id and m.gym_rats_user_id == ^account_id)
+      |> Repo.one()
 
     case membership do
       nil ->
         failure(conn, "Membership does not exist.")
 
       _ ->
-        if membership.gym_rats_user_id == account_id do
-          membership |> Repo.delete!()
-          challenge = Challenge |> Repo.get(membership.challenge_id)
+        membership |> Repo.delete!()
+        challenge = Challenge |> Repo.get(membership.challenge_id)
 
-          success(conn, ChallengeView.default(challenge))
-        else
-          failure(conn, "You do not have permission to do that.")
-        end
+        success(conn, ChallengeView.default(challenge))
     end
   end
 
