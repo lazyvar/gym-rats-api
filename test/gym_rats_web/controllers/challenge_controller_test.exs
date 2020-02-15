@@ -1,4 +1,4 @@
-defmodule GymRatsWeb.Open.ChallengeControllerTests do
+defmodule GymRatsWeb.ChallengeControllerTest do
   use GymRatsWeb.ConnCase
 
   alias GymRats.Model.{Account, Membership}

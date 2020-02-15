@@ -1,4 +1,4 @@
-defmodule GymRatsWeb.Open.CommentControllerTests do
+defmodule GymRatsWeb.CommentControllerTest do
   use GymRatsWeb.ConnCase
 
   alias GymRats.Model.{Account, Comment}
