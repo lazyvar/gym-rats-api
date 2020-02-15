@@ -55,8 +55,10 @@ defmodule GymRatsWeb.Rendering do
   end
 
   defp error_message(changeset) do
-    changeset.errors |> Enum.map(fn {key, error} ->
+    changeset.errors
+    |> Enum.map(fn {key, error} ->
       humanize(key) <> " " <> translate_error(error)
-    end) |> List.first
+    end)
+    |> List.first()
   end
 end

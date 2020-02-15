@@ -6,16 +6,18 @@ defmodule GymRatsWeb.Challenge.MemberController do
   alias GymRats.Repo
 
   import Ecto.Query
-  
+
   def index(conn, %{"challenge_id" => challenge_id}, _account_id) do
     challenge_id = String.to_integer(challenge_id)
-    members = Account 
-    |> join(:left, [a], c in assoc(a, :challenges)) 
-    |> join(:left, [a, c], w in assoc(c, :workouts)) 
-    |> where([a, c, w], w.gym_rats_user_id == a.id and w.challenge_id == ^challenge_id)
-    |> preload(:workouts) 
-    |> Repo.all
-    
+
+    members =
+      Account
+      |> join(:left, [a], c in assoc(a, :challenges))
+      |> join(:left, [a, c], w in assoc(c, :workouts))
+      |> where([a, c, w], w.gym_rats_user_id == a.id and w.challenge_id == ^challenge_id)
+      |> preload(:workouts)
+      |> Repo.all()
+
     success(conn, AccountView.with_workouts(members))
   end
 

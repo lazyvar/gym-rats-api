@@ -4,11 +4,11 @@ defmodule GymRatsWeb.Open.TokenControllerTest do
   import GymRats.Factory
 
   @endpoint GymRatsWeb.Endpoint
-  
+
   describe "create/2" do
     test "Returns the user and a token if credentials match" do
       account = insert(:account)
-      conn = post(build_conn(), "/tokens", [email: account.email, password: "password"])
+      conn = post(build_conn(), "/tokens", email: account.email, password: "password")
       response = json_response(conn, 200)
       data = response["data"]
 
@@ -21,21 +21,21 @@ defmodule GymRatsWeb.Open.TokenControllerTest do
 
     test "Returns error if account does not exist" do
       account = insert(:account)
-      conn = post(build_conn(), "/tokens", [email: account.email, password: "password_wrong"])
+      conn = post(build_conn(), "/tokens", email: account.email, password: "password_wrong")
 
       assert %{
-        "status" => "failure",
-        "error" => "That email and password combination did not work"
-      } = json_response(conn, 422)
+               "status" => "failure",
+               "error" => "That email and password combination did not work"
+             } = json_response(conn, 422)
     end
 
     test "Returns error if password does not match" do
-      conn = post(build_conn(), "/tokens", [email: "does@not.exist", password: "password"])
+      conn = post(build_conn(), "/tokens", email: "does@not.exist", password: "password")
 
       assert %{
-        "status" => "failure",
-        "error" => "That email and password combination did not work"
-      } = json_response(conn, 422)
+               "status" => "failure",
+               "error" => "That email and password combination did not work"
+             } = json_response(conn, 422)
     end
   end
 end

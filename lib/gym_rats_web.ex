@@ -22,6 +22,7 @@ defmodule GymRatsWeb do
   def view do
     quote do
       use Phoenix.HTML
+
       use Phoenix.View,
         root: "lib/gym_rats_web/templates",
         namespace: GymRatsWeb

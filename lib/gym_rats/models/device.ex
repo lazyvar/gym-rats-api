@@ -15,7 +15,7 @@ defmodule GymRats.Model.Device do
 
   @required ~w(gym_rats_user_id token)a
   @optional ~w()a
-  
+
   def changeset(device, attrs) do
     device
     |> cast(attrs, @required ++ @optional)

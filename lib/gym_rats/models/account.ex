@@ -15,11 +15,15 @@ defmodule GymRats.Model.Account do
     field :reset_password_token_expiration, :utc_datetime
 
     has_many :workouts, Workout, foreign_key: :gym_rats_user_id
-    many_to_many(:challenges, Challenge, join_through: "memberships", join_keys: [gym_rats_user_id: :id, challenge_id: :id])
+
+    many_to_many(:challenges, Challenge,
+      join_through: "memberships",
+      join_keys: [gym_rats_user_id: :id, challenge_id: :id]
+    )
 
     timestamps()
   end
-  
+
   @required ~w(full_name email)a
   @optional ~w(reset_password_token reset_password_token_expiration profile_picture_url)a
 
@@ -47,9 +51,10 @@ defmodule GymRats.Model.Account do
 
   defp put_password_hash(changeset) do
     case changeset do
-      %Ecto.Changeset{valid?: true, changes: %{password: pass}} -> 
+      %Ecto.Changeset{valid?: true, changes: %{password: pass}} ->
         put_change(changeset, :password_digest, Bcrypt.hash_pwd_salt(pass))
-      _ -> 
+
+      _ ->
         changeset
     end
   end

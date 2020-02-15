@@ -1,6 +1,6 @@
 defmodule GymRats.Model.MessageStatus do
   use Ecto.Schema
-  
+
   import Ecto.Changeset
 
   schema "user_read_messages" do

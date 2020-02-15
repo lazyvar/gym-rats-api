@@ -37,10 +37,10 @@ defmodule GymRats.Factory do
     %GymRats.Model.Challenge{
       name: "Challenge accepted!",
       code: sequence(:code, &"#{&1}#{&1}#{&1}#{&1}#{&1}#{&1}"),
-      start_date: DateTime.utc_now |> DateTime.truncate(:second),
-      end_date: DateTime.utc_now |> DateTime.truncate(:second),
+      start_date: DateTime.utc_now() |> DateTime.truncate(:second),
+      end_date: DateTime.utc_now() |> DateTime.truncate(:second),
       time_zone: "PST",
-      profile_picture_url: "i.reddit.com/woop",
+      profile_picture_url: "i.reddit.com/woop"
     }
   end
 
@@ -55,8 +55,9 @@ defmodule GymRats.Factory do
     struct!(
       challenge_factory(),
       %{
-        start_date: DateTime.utc_now |> DateTime.add(-1 * 60 * 60 * 60) |> DateTime.truncate(:second),
-        end_date: DateTime.utc_now |> DateTime.add(60 * 60 * 60) |> DateTime.truncate(:second),
+        start_date:
+          DateTime.utc_now() |> DateTime.add(-1 * 60 * 60 * 60) |> DateTime.truncate(:second),
+        end_date: DateTime.utc_now() |> DateTime.add(60 * 60 * 60) |> DateTime.truncate(:second)
       }
     )
   end
@@ -65,8 +66,10 @@ defmodule GymRats.Factory do
     struct!(
       challenge_factory(),
       %{
-        start_date: DateTime.utc_now |> DateTime.add(-1 * 60 * 60 * 60) |> DateTime.truncate(:second),
-        end_date: DateTime.utc_now |> DateTime.add(-1 * 60 * 60 * 60) |> DateTime.truncate(:second),
+        start_date:
+          DateTime.utc_now() |> DateTime.add(-1 * 60 * 60 * 60) |> DateTime.truncate(:second),
+        end_date:
+          DateTime.utc_now() |> DateTime.add(-1 * 60 * 60 * 60) |> DateTime.truncate(:second)
       }
     )
   end
@@ -75,8 +78,9 @@ defmodule GymRats.Factory do
     struct!(
       challenge_factory(),
       %{
-        start_date: DateTime.utc_now |> DateTime.add(60 * 60 * 60) |> DateTime.truncate(:second),
-        end_date: DateTime.utc_now |> DateTime.add(60 * 60 * 60) |> DateTime.truncate(:second),
+        start_date:
+          DateTime.utc_now() |> DateTime.add(60 * 60 * 60) |> DateTime.truncate(:second),
+        end_date: DateTime.utc_now() |> DateTime.add(60 * 60 * 60) |> DateTime.truncate(:second)
       }
     )
   end

@@ -6,7 +6,7 @@ defmodule GymRats.Query.ChallengeQuery do
   defdelegate now, to: NaiveDateTime, as: :utc_now
 
   def all(query \\ Challenge) do
-    query 
+    query
     |> select([c], c)
   end
 
@@ -25,8 +25,8 @@ defmodule GymRats.Query.ChallengeQuery do
     |> where([c], c.start_date > ^now())
   end
 
-  def exists?(query \\ Challenge, [code: code]) do
-    query 
+  def exists?(query \\ Challenge, code: code) do
+    query
     |> where([c], c.code == ^code)
   end
 end

@@ -17,7 +17,7 @@ defmodule GymRats.Model.Workout do
 
     belongs_to :account, Account, foreign_key: :gym_rats_user_id
     belongs_to :challenge, Challenge
-    
+
     timestamps()
   end
 

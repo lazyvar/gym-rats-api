@@ -7,7 +7,7 @@ defmodule GymRats.Repo.AccountRepo do
   def find_by_email(email) do
     Account
     |> where([a], a.email == ^email)
-    |> Repo.one
+    |> Repo.one()
   end
 
   def challenges(account) do

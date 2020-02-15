@@ -7,9 +7,10 @@ defmodule GymRatsWeb.Challenge.Member.WorkoutController do
   import Ecto.Query
 
   def index(conn, %{"member_id" => member_id, "challenge_id" => challenge_id}, _) do
-    workouts = Workout 
-    |> where([w], w.gym_rats_user_id == ^member_id and w.challenge_id == ^challenge_id) 
-    |> Repo.all
+    workouts =
+      Workout
+      |> where([w], w.gym_rats_user_id == ^member_id and w.challenge_id == ^challenge_id)
+      |> Repo.all()
 
     success(conn, WorkoutView.default(workouts))
   end

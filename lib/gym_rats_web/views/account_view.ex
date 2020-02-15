@@ -4,9 +4,9 @@ defmodule GymRatsWeb.AccountView do
   import GymRatsWeb.JSONView
 
   @default_attrs ~w(id full_name email profile_picture_url)a
-  
+
   def default(account) do
-    account 
+    account
     |> keep(@default_attrs)
   end
 
@@ -21,12 +21,14 @@ defmodule GymRatsWeb.AccountView do
   end
 
   def with_workouts(account) do
-    account = account 
-    |> keep([:workouts | @default_attrs]) 
+    account =
+      account
+      |> keep([:workouts | @default_attrs])
 
-    workouts = account 
-    |> Map.get(:workouts)
-    |> Enum.map(fn w -> WorkoutView.default(w) end)
+    workouts =
+      account
+      |> Map.get(:workouts)
+      |> Enum.map(fn w -> WorkoutView.default(w) end)
 
     Map.put(account, :workouts, workouts)
   end

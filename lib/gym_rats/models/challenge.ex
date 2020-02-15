@@ -2,7 +2,7 @@ defmodule GymRats.Model.Challenge do
   use Ecto.Schema
 
   import Ecto.Changeset
-  
+
   alias GymRats.Repo.ChallengeRepo
   alias GymRats.Model.{Challenge, Membership, Account, Workout}
 
@@ -16,7 +16,11 @@ defmodule GymRats.Model.Challenge do
 
     has_many :workouts, Workout
     has_many :memberships, Membership
-    many_to_many(:accounts, Account, join_through: "memberships", join_keys: [challenge_id: :id, gym_rats_user_id: :id])
+
+    many_to_many(:accounts, Account,
+      join_through: "memberships",
+      join_keys: [challenge_id: :id, gym_rats_user_id: :id]
+    )
 
     timestamps()
   end
@@ -36,12 +40,13 @@ defmodule GymRats.Model.Challenge do
   end
 
   defp generate_code do
-    code = ?A..?Z 
-      |> Enum.to_list 
-      |> Enum.shuffle 
+    code =
+      ?A..?Z
+      |> Enum.to_list()
+      |> Enum.shuffle()
       |> Enum.take(6)
-      |> List.to_string
-      
+      |> List.to_string()
+
     unless ChallengeRepo.exists?(code: code) do
       code
     else

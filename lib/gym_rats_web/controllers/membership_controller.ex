@@ -7,28 +7,38 @@ defmodule GymRatsWeb.MembershipController do
   import Ecto.Query
 
   def create(conn, %{"code" => code}, account_id) do
-    code = code |> String.upcase
-    challenge = Challenge |> where([c], c.code == ^code) |> Repo.one
+    code = code |> String.upcase()
+    challenge = Challenge |> where([c], c.code == ^code) |> Repo.one()
 
     case challenge do
-      nil -> failure(conn, "A challenge does not exist with that code.")
+      nil ->
+        failure(conn, "A challenge does not exist with that code.")
+
       _ ->
-        membership = Membership 
-        |> where([m], m.challenge_id == ^challenge.id and m.gym_rats_user_id == ^account_id) 
-        |> Repo.one
-        
+        membership =
+          Membership
+          |> where([m], m.challenge_id == ^challenge.id and m.gym_rats_user_id == ^account_id)
+          |> Repo.one()
+
         case membership == nil do
-          false -> failure(conn, "You are already a part of this challenge.")
-          true -> 
-            membership = %Membership{} 
-            |> Membership.changeset(%{challenge_id: challenge.id, gym_rats_user_id: account_id, owner: true}) 
-            |> Repo.insert
-            
+          false ->
+            failure(conn, "You are already a part of this challenge.")
+
+          true ->
+            membership =
+              %Membership{}
+              |> Membership.changeset(%{
+                challenge_id: challenge.id,
+                gym_rats_user_id: account_id,
+                owner: true
+              })
+              |> Repo.insert()
+
             case membership do
               {:ok, _} -> success(conn, ChallengeView.default(challenge))
               {:error, _} -> failure(conn, "Uh oh")
             end
-      end
+        end
     end
   end
 
@@ -38,10 +48,12 @@ defmodule GymRatsWeb.MembershipController do
     membership = Membership |> Repo.get(membership_id)
 
     case membership do
-      nil -> failure(conn, "Membership does not exist.")
+      nil ->
+        failure(conn, "Membership does not exist.")
+
       _ ->
         if membership.gym_rats_user_id == account_id do
-          membership |> Repo.delete!
+          membership |> Repo.delete!()
           challenge = Challenge |> Repo.get(membership.challenge_id)
 
           success(conn, ChallengeView.default(challenge))

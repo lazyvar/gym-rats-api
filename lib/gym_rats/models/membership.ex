@@ -1,13 +1,13 @@
 defmodule GymRats.Model.Membership do
   use Ecto.Schema
-  
+
   alias GymRats.Model.{Account, Challenge}
 
   import Ecto.Changeset
 
   schema "memberships" do
     field :owner, :boolean, default: false
-    
+
     belongs_to :account, Account, foreign_key: :gym_rats_user_id
     belongs_to :challenge, Challenge
 
