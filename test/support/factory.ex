@@ -84,4 +84,12 @@ defmodule GymRats.Factory do
       }
     )
   end
+
+  def comment_factory do
+    %GymRats.Model.Comment{
+      content: "Nice calves!",
+      account: build(:account),
+      workout: build(:workout)
+    }
+  end
 end
