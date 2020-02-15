@@ -9,9 +9,15 @@ defmodule GymRats.Guardian do
   def call(conn, []) do
     token = conn |> get_req_header("authorization") |> List.first()
 
-    case GymRats.Token.verify_and_validate(token) do
-      {:ok, claims} -> assign(conn, :account_id, claims["user_id"])
-      {:error, _} -> json(conn, %{status: "fail", data: "Go away."}) |> halt
+    case token do
+      nil ->
+        json(conn, %{status: "fail", data: "Go away."}) |> halt
+
+      _ ->
+        case GymRats.Token.verify_and_validate(token) do
+          {:ok, claims} -> assign(conn, :account_id, claims["user_id"])
+          {:error, _} -> json(conn, %{status: "fail", data: "Go away."}) |> halt
+        end
     end
   end
 end
