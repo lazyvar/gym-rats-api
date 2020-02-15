@@ -1,6 +1,7 @@
 defmodule GymRats.Guardian do
   import Plug.Conn
   import Phoenix.Controller, only: [json: 2]
+  import GymRatsWeb.Rendering
 
   @behaviour Plug
 
@@ -11,12 +12,15 @@ defmodule GymRats.Guardian do
 
     case token do
       nil ->
-        json(conn, %{status: "fail", data: "Go away."}) |> halt
+        json(conn |> put_status(401), %{status: "failure", data: "Go away."}) |> halt
 
       _ ->
         case GymRats.Token.verify_and_validate(token) do
-          {:ok, claims} -> assign(conn, :account_id, claims["user_id"])
-          {:error, _} -> json(conn, %{status: "fail", data: "Go away."}) |> halt
+          {:ok, claims} ->
+            assign(conn, :account_id, claims["user_id"])
+
+          {:error, _} ->
+            json(conn |> put_status(401), %{status: "failure", data: "Go away."}) |> halt
         end
     end
   end
