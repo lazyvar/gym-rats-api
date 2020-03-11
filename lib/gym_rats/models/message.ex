@@ -8,7 +8,7 @@ defmodule GymRats.Model.Message do
     field :challenge_id, :integer
     field :gym_rats_user_ud, :integer
 
-    timestamps()
+    timestamps(inserted_at: :created_at)
   end
 
   def changeset(message, attrs) do

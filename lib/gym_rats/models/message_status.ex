@@ -9,7 +9,7 @@ defmodule GymRats.Model.MessageStatus do
     field :challenge_id, :integer
     field :chat_message_id, :integer
 
-    timestamps()
+    timestamps(inserted_at: :created_at)
   end
 
   @doc false

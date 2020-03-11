@@ -7,7 +7,7 @@ defmodule GymRats.Repo.Migrations.CreateMemberships do
       add :gym_rats_user_id, :bigint, null: false
       add :challenge_id, :bigint, null: false
 
-      timestamps()
+      timestamps(inserted_at: :created_at)
     end
 
     create index(:memberships, [:gym_rats_user_id])

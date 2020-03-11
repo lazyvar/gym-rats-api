@@ -11,7 +11,7 @@ defmodule GymRatsWeb.Workout.CommentController do
     comments =
       Comment
       |> where([c], c.workout_id == ^workout_id)
-      |> order_by(asc: :inserted_at)
+      |> order_by(asc: :created_at)
       |> preload(:account)
       |> Repo.all()
 

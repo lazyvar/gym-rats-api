@@ -7,7 +7,7 @@ defmodule GymRats.Repo.Migrations.CreateComments do
       add :workout_id, :bigint, null: false
       add :gym_rats_user_id, :bigint, null: false
 
-      timestamps()
+      timestamps(inserted_at: :created_at)
     end
 
     create index(:comments, [:workout_id])

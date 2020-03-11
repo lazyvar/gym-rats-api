@@ -7,7 +7,7 @@ defmodule GymRats.Repo.Migrations.CreateChatMessages do
       add :challenge_id, :bigint, null: false
       add :gym_rats_user_id, :bigint, null: false
 
-      timestamps()
+      timestamps(inserted_at: :created_at)
     end
 
     create index(:chat_messages, [:challenge_id])

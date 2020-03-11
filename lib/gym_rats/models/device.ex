@@ -10,7 +10,7 @@ defmodule GymRats.Model.Device do
 
     belongs_to :account, Account, foreign_key: :gym_rats_user_id
 
-    timestamps()
+    timestamps(inserted_at: :created_at)
   end
 
   @required ~w(gym_rats_user_id token)a

@@ -6,7 +6,7 @@ defmodule GymRats.Repo.Migrations.CreateDevices do
       add :gym_rats_user_id, :bigint, null: false
       add :token, :string, null: false
 
-      timestamps()
+      timestamps(inserted_at: :created_at)
     end
 
     create index(:devices, [:gym_rats_user_id])

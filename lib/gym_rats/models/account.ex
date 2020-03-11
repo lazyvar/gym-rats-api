@@ -21,7 +21,7 @@ defmodule GymRats.Model.Account do
       join_keys: [gym_rats_user_id: :id, challenge_id: :id]
     )
 
-    timestamps()
+    timestamps(inserted_at: :created_at)
   end
 
   @required ~w(full_name email)a

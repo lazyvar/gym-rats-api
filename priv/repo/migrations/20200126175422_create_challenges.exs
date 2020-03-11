@@ -10,7 +10,7 @@ defmodule GymRats.Repo.Migrations.CreateChallenges do
       add :end_date, :utc_datetime, null: false
       add :time_zone, :string, null: false
 
-      timestamps()
+      timestamps(inserted_at: :created_at)
     end
 
     create unique_index(:challenges, [:code])

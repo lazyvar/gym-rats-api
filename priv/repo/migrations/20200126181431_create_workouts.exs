@@ -15,7 +15,7 @@ defmodule GymRats.Repo.Migrations.CreateWorkouts do
       add :calories, :integer
       add :points, :integer
 
-      timestamps()
+      timestamps(inserted_at: :created_at)
     end
 
     create index(:workouts, [:gym_rats_user_id])

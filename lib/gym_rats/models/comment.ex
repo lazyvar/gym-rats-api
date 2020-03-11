@@ -11,7 +11,7 @@ defmodule GymRats.Model.Comment do
     belongs_to :account, Account, foreign_key: :gym_rats_user_id
     belongs_to :workout, Workout
 
-    timestamps()
+    timestamps(inserted_at: :created_at)
   end
 
   @required ~w(content)a

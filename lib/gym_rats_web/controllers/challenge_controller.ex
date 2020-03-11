@@ -37,6 +37,9 @@ defmodule GymRatsWeb.ChallengeController do
     index(conn, %{"filter" => "all"}, account_id)
   end
 
+  def show(conn, %{"id" => id}, account_id) do
+  end
+
   def create(conn, params, account_id) do
     changeset = Challenge.new_changeset(params)
 

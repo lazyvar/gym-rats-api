@@ -22,7 +22,7 @@ defmodule GymRats.Model.Challenge do
       join_keys: [challenge_id: :id, gym_rats_user_id: :id]
     )
 
-    timestamps()
+    timestamps(inserted_at: :created_at)
   end
 
   @required ~w(name code start_date end_date time_zone)a

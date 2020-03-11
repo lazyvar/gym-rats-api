@@ -10,7 +10,7 @@ defmodule GymRats.Repo.Migrations.CreateGymRatsUsers do
       add :reset_password_token, :string
       add :reset_password_token_expiration, :utc_datetime
 
-      timestamps()
+      timestamps(inserted_at: :created_at)
     end
 
     create unique_index(:gym_rats_users, [:email])
