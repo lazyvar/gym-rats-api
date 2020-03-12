@@ -5,25 +5,24 @@ defmodule GymRatsWeb.AccountView do
 
   @default_attrs ~w(id full_name email profile_picture_url)a
 
+  def default(accounts) when is_list(accounts) do
+    accounts |> Enum.map(fn a -> default(a) end)
+  end
+
   def default(account) do
-    account
-    |> keep(@default_attrs)
+    account |> keep(@default_attrs)
   end
 
   def with_token(account) do
-    account
-    |> keep([:token | @default_attrs])
+    account |> keep([:token | @default_attrs])
   end
 
   def with_workouts(accounts) when is_list(accounts) do
-    accounts
-    |> Enum.map(fn a -> with_workouts(a) end)
+    accounts |> Enum.map(fn a -> with_workouts(a) end)
   end
 
   def with_workouts(account) do
-    account =
-      account
-      |> keep([:workouts | @default_attrs])
+    account = account |> keep([:workouts | @default_attrs])
 
     workouts =
       account

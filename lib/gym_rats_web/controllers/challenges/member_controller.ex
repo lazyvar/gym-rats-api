@@ -12,13 +12,11 @@ defmodule GymRatsWeb.Challenge.MemberController do
 
     members =
       Account
-      |> join(:left, [a], c in assoc(a, :challenges))
-      |> join(:left, [a, c], w in assoc(c, :workouts))
-      |> where([a, c, w], w.gym_rats_user_id == a.id and w.challenge_id == ^challenge_id)
-      |> preload(:workouts)
+      |> join(:left, [a], c in assoc(a, :memberships))
+      |> where([a, m], a.id == m.gym_rats_user_id and m.challenge_id == ^challenge_id)
       |> Repo.all()
 
-    success(conn, AccountView.with_workouts(members))
+    success(conn, AccountView.default(members))
   end
 
   def index(conn, _params, _account_id), do: failure(conn, "Missing challenge id.")
