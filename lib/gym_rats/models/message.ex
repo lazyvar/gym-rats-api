@@ -1,19 +1,25 @@
 defmodule GymRats.Model.Message do
   use Ecto.Schema
 
+  alias GymRats.Model.{Account, Challenge}
+
   import Ecto.Changeset
 
   schema "chat_messages" do
     field :content, :string
-    field :challenge_id, :integer
-    field :gym_rats_user_ud, :integer
+
+    belongs_to :account, Account, foreign_key: :gym_rats_user_id
+    belongs_to :challenge, Challenge
 
     timestamps(inserted_at: :created_at)
   end
 
-  def changeset(message, attrs) do
-    message
-    |> cast(attrs, [:content])
-    |> validate_required([:content])
+  @required ~w(content)a
+  @optional ~w()a
+
+  def changeset(comment, attrs) do
+    comment
+    |> cast(attrs, @required ++ @optional)
+    |> validate_required(@required)
   end
 end

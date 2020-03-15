@@ -7,7 +7,7 @@ defmodule GymRatsWeb.Endpoint do
     signing_salt: "fchr2Rrf"
   ]
 
-  socket "/socket", GymRatsWeb.UserSocket,
+  socket "/chat", GymRatsWeb.UserSocket,
     websocket: true,
     longpoll: false
 

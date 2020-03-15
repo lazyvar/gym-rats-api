@@ -3,11 +3,17 @@ defmodule GymRatsWeb.UserSocket do
 
   channel "room:*", GymRatsWeb.RoomChannel
 
-  def connect(%{"name" => name}, socket, _connect_info) do
-    # {:ok, assign(socket, :user_id, verified_user_id)}
-    # To deny connection, return `:error`.
-    {:ok, assign(socket, :name, name)}
+  def connect(%{"token" => token}, socket, _connect_info) do
+    case GymRats.Token.verify_and_validate(token) do
+      {:ok, claims} ->
+        {:ok, assign(socket, :account_id, claims["user_id"])}
+
+      {:error, _} ->
+        :error
+    end
   end
+
+  def connect(_, _socket, _connect_info), do: {:error, "Unauthorized"}
 
   # Socket id's are topics that allow you to identify all sockets for a given user:
   #
