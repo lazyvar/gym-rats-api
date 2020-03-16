@@ -8,7 +8,7 @@ defmodule GymRatsWeb.Endpoint do
   ]
 
   socket "/chat", GymRatsWeb.UserSocket,
-    websocket: true,
+    websocket: [timeout: 45_000],
     longpoll: false
 
   plug Plug.Static,

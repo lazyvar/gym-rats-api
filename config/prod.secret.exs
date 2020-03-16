@@ -4,16 +4,12 @@
 # remember to add this file to your .gitignore.
 use Mix.Config
 
-database_url =
-  System.get_env("DATABASE_URL") ||
-    raise """
-    environment variable DATABASE_URL is missing.
-    For example: ecto://USER:PASS@HOST/DATABASE
-    """
-
 config :gym_rats, GymRats.Repo,
-  # ssl: true,
-  url: database_url,
+  ssl: true,
+  username: System.get_env("DATABASE_USERNAME") || raise("DATABASE_USERNAME is missing"),
+  password: System.get_env("DATABASE_PASSWORD") || raise("DATABASE_PASSWORD is missing"),
+  database: System.get_env("DATABASE_DATABASE") || raise("DATABASE_DATABASE is missing"),
+  hostname: System.get_env("DATABASE_HOSTNAME") || raise("DATABASE_HOSTNAME is missing"),
   pool_size: String.to_integer(System.get_env("POOL_SIZE") || "10")
 
 secret_key_base =
@@ -29,6 +25,8 @@ config :gym_rats, GymRatsWeb.Endpoint,
     transport_options: [socket_opts: [:inet6]]
   ],
   secret_key_base: secret_key_base
+
+config :joken, default_signer: System.get_env("SIGNING_SECRET")
 
 # ## Using releases (Elixir v1.9+)
 #
