@@ -7,7 +7,7 @@ defmodule GymRatsWeb.RoomChannel do
 
   import Ecto.Query
 
-  def join("room:challenge:" <> challenge_id, _params, socket) do
+  def join("room:challenge:" <> _challenge_id, _params, socket) do
     {:ok, socket}
   end
 
@@ -19,7 +19,7 @@ defmodule GymRatsWeb.RoomChannel do
 
     message = %Message{
       content: message,
-      gym_rats_user_id: socket.assigns.account_id,
+      gym_rats_user_id: account_id,
       challenge_id: challenge_id
     }
 
