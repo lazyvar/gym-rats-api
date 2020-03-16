@@ -26,7 +26,8 @@ config :gym_rats, GymRatsWeb.Endpoint,
   ],
   secret_key_base: secret_key_base
 
-config :joken, default_signer: System.get_env("SIGNING_SECRET")
+config :joken,
+  default_signer: System.get_env("SIGNING_SECRET") || raise("SIGNING_SECRET is missing")
 
 # ## Using releases (Elixir v1.9+)
 #
