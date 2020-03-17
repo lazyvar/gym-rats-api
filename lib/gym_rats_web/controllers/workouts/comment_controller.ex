@@ -3,7 +3,7 @@ defmodule GymRatsWeb.Workout.CommentController do
 
   alias GymRatsWeb.CommentView
   alias GymRats.Model.{Account, Comment}
-  alias GymRats.Repo
+  alias GymRats.{Notification, Repo}
 
   import Ecto.Query
 
@@ -28,6 +28,8 @@ defmodule GymRatsWeb.Workout.CommentController do
 
     account = Account |> Repo.get!(account_id)
     comment = Map.put(comment, :account, account)
+
+    Notification.send_workout_comment(comment)
 
     success(conn, CommentView.with_commenter(comment))
   end

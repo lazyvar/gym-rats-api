@@ -10,6 +10,7 @@ defmodule GymRats.Repo.Migrations.CreateDevices do
     end
 
     create index(:devices, [:gym_rats_user_id])
+    create index(:devices, [:token])
     create index(:devices, [:gym_rats_user_id, :token])
   end
 end

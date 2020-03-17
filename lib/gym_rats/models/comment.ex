@@ -1,7 +1,7 @@
 defmodule GymRats.Model.Comment do
   use Ecto.Schema
 
-  alias GymRats.Model.{Account, Workout}
+  alias GymRats.Model.{Account, Workout, Comment}
 
   import Ecto.Changeset
 
@@ -10,6 +10,7 @@ defmodule GymRats.Model.Comment do
 
     belongs_to :account, Account, foreign_key: :gym_rats_user_id
     belongs_to :workout, Workout
+    has_many :comments, Comment
 
     timestamps(inserted_at: :created_at)
   end

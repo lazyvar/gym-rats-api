@@ -47,7 +47,9 @@ defmodule GymRats.MixProject do
       {:joken, "~> 2.0"},
       {:ex_machina, "~> 2.3", only: :test},
       {:bamboo, "~> 1.4"},
-      {:ex_twilio, "~> 0.8.1"}
+      {:ex_twilio, "~> 0.8.1"},
+      {:pigeon, "~> 1.5.0"},
+      {:kadabra, "~> 0.4.4"}
     ]
   end
 

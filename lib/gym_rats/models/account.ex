@@ -3,7 +3,7 @@ defmodule GymRats.Model.Account do
 
   import Ecto.Changeset
 
-  alias GymRats.Model.{Account, Challenge, Workout, Membership}
+  alias GymRats.Model.{Account, Challenge, Workout, Membership, Comment}
 
   schema "gym_rats_users" do
     field :email, :string
@@ -15,6 +15,7 @@ defmodule GymRats.Model.Account do
     field :reset_password_token_expiration, :utc_datetime
 
     has_many :workouts, Workout, foreign_key: :gym_rats_user_id
+    has_many :comments, Comment, foreign_key: :gym_rats_user_id
     has_many :memberships, Membership, foreign_key: :gym_rats_user_id
 
     many_to_many(:challenges, Challenge,
