@@ -22,6 +22,11 @@ config :gym_rats, GymRatsWeb.Endpoint,
 # Do not print debug messages in production
 config :logger, level: :info
 
+config :gym_rats, GymRats.Mailer,
+  adapter: Bamboo.MailgunAdapter,
+  api_key: {:system, "MAILGUN_API_KEY"},
+  domain: {:system, "MAILGUN_DOMAIN"}
+
 # ## SSL Support
 #
 # To get SSL working, you will need to add the `https` key

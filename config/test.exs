@@ -14,6 +14,8 @@ config :gym_rats, GymRatsWeb.Endpoint,
   http: [port: 4002],
   server: false
 
+config :gym_rats, GymRats.Mailer, adapter: Bamboo.TestAdapter
+
 # Print only warnings and errors during test
 config :logger, level: :warn
 

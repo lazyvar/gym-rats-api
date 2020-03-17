@@ -30,6 +30,8 @@ config :gym_rats, GymRatsWeb.Endpoint,
     ]
   ]
 
+config :gym_rats, GymRats.Mailer, adapter: Bamboo.LocalAdapter
+
 # ## SSL Support
 #
 # In order to use HTTPS in development, a self-signed

@@ -35,8 +35,8 @@ defmodule GymRats.Model.Account do
     |> unique_constraint(:email)
   end
 
-  def registration_changeset(attrs) do
-    %Account{}
+  def registration_changeset(account \\ %Account{}, attrs) do
+    account
     |> changeset(attrs)
     |> cast(attrs, [:password])
     |> validate_required(:password)

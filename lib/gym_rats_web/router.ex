@@ -44,4 +44,8 @@ defmodule GymRatsWeb.Router do
     resources "/passwords", Open.PasswordController, only: [:update, :create]
     resources "/tokens", Open.TokenController, only: [:create]
   end
+
+  if Mix.env() == :dev do
+    forward "/sent_emails", Bamboo.SentEmailViewerPlug
+  end
 end
