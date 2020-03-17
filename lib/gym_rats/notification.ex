@@ -1,13 +1,45 @@
 defmodule GymRats.Notification do
   alias Pigeon.APNS
-  alias GymRats.Model.{Workout, Device, Account}
+  alias GymRats.Model.{Workout, Device, Account, Challenge}
   alias GymRats.Repo
 
   require Logger
 
   import Ecto.Query
 
+  def send_chat_message(chat_message) do
+    Task.async(fn -> send_chat_message_sync(chat_message) end)
+  end
+
+  def send_chat_message_sync(chat_message) do
+    challenge = Challenge |> Repo.get!(chat_message.challenge_id)
+
+    alert = %{
+      "title" => challenge.name,
+      "subtitle" => chat_message.account.full_name,
+      "body" => chat_message.content
+    }
+
+    payload = %{"challenge_id" => challenge.id}
+
+    peeps =
+      Account
+      |> join(:left, [a], m in assoc(a, :memberships))
+      |> where(
+        [a, m],
+        a.id == m.gym_rats_user_id and m.challenge_id == ^challenge.id and
+          a.id != ^chat_message.account.id
+      )
+      |> Repo.all()
+
+    Enum.map(peeps, fn peep -> send_notification_to_account(alert, payload, peep.id) end)
+  end
+
   def send_workout_comment(comment) do
+    Task.async(fn -> send_workout_comment_sync(comment) end)
+  end
+
+  defp send_workout_comment_sync(comment) do
     workout = Workout |> preload(:account) |> Repo.get!(comment.workout_id)
     payload = %{"workout_id" => workout.id}
 
@@ -37,10 +69,6 @@ defmodule GymRats.Notification do
   end
 
   defp send_notification_to_account(alert, payload, account_id) do
-    Task.async(fn -> send_notification_to_account_sync(alert, payload, account_id) end)
-  end
-
-  defp send_notification_to_account_sync(alert, payload, account_id) do
     device = Device |> where([d], d.gym_rats_user_id == ^account_id) |> Repo.one()
 
     if device != nil do

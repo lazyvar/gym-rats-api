@@ -3,7 +3,7 @@ defmodule GymRatsWeb.RoomChannel do
 
   alias GymRatsWeb.MessageView
   alias GymRats.Model.{Account, Message}
-  alias GymRats.Repo
+  alias GymRats.{Notification, Repo}
 
   import Ecto.Query
 
@@ -26,6 +26,8 @@ defmodule GymRatsWeb.RoomChannel do
     message = Message.changeset(message, %{}) |> Repo.insert!()
     account = Account |> Repo.get!(account_id)
     message = Map.put(message, :account, account)
+
+    Notification.send_chat_message(message)
 
     broadcast!(socket, "new_msg", MessageView.with_account(message))
 
