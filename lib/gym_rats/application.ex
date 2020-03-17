@@ -11,9 +11,10 @@ defmodule GymRats.Application do
       # Start the Ecto repository
       GymRats.Repo,
       # Start the endpoint when the application starts
-      GymRatsWeb.Endpoint
+      GymRatsWeb.Endpoint,
       # Starts a worker by calling: GymRats.Worker.start_link(arg)
       # {GymRats.Worker, arg},
+      GymRatsWeb.Presence
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

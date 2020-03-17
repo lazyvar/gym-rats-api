@@ -1,13 +1,16 @@
 defmodule GymRatsWeb.RoomChannel do
   use GymRatsWeb, :channel
 
-  alias GymRatsWeb.MessageView
+  alias GymRatsWeb.{Presence, MessageView}
   alias GymRats.Model.{Account, Message}
   alias GymRats.{Notification, Repo}
 
   import Ecto.Query
 
+  require Logger
+
   def join("room:challenge:" <> _challenge_id, _params, socket) do
+    send(self(), :after_join)
     {:ok, socket}
   end
 
@@ -33,4 +36,17 @@ defmodule GymRatsWeb.RoomChannel do
 
     {:noreply, socket}
   end
+
+  def handle_info(:after_join, socket) do
+    push(socket, "presence_state", Presence.list(socket))
+
+    {:ok, _} =
+      Presence.track(socket, "account:#{socket.assigns.account_id}", %{
+        online_at: System.system_time(:second)
+      })
+
+    {:noreply, socket}
+  end
+
+  def handle_info(_thing, socket), do: {:noreply, socket}
 end
