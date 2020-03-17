@@ -5,11 +5,12 @@ defmodule GymRats.Model.Membership do
 
   import Ecto.Changeset
 
+  @primary_key false
   schema "memberships" do
     field :owner, :boolean, default: false
 
-    belongs_to :account, Account, foreign_key: :gym_rats_user_id
-    belongs_to :challenge, Challenge
+    belongs_to :account, Account, foreign_key: :gym_rats_user_id, primary_key: true
+    belongs_to :challenge, Challenge, primary_key: true
 
     timestamps(inserted_at: :created_at)
   end

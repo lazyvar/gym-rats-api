@@ -62,5 +62,5 @@ defmodule GymRatsWeb.MembershipController do
     end
   end
 
-  def delete(conn, _params, _account_id), do: failure(conn, "Membership id missing.")
+  def delete(conn, _params, _account_id), do: failure(conn, "Challenge id missing.")
 end
