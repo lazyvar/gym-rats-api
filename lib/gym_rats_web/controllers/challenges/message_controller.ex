@@ -26,9 +26,3 @@ defmodule GymRatsWeb.Challenge.MessageController do
 
   def index(conn, _params, _account_id), do: failure(conn, "Missing challenge id.")
 end
-
-# unread_chats = UserReadMessage.where(gym_rats_user_id: @user.id, challenge_id: challenge.id, read: false)
-# unread_chats.each do |chat|
-#     chat.read = true
-#     chat.save
-# end

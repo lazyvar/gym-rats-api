@@ -2,7 +2,7 @@ defmodule GymRatsWeb.WorkoutController do
   use GymRatsWeb, :protected_controller
 
   alias GymRatsWeb.WorkoutView
-  alias GymRats.Model.{Workout, Challenge, Membership}
+  alias GymRats.Model.{Workout, Challenge, Membership, Account}
   alias GymRats.Query.ChallengeQuery
   alias GymRats.Repo
 
@@ -30,7 +30,11 @@ defmodule GymRatsWeb.WorkoutController do
         |> Repo.insert!()
       end)
 
-    success(conn, WorkoutView.default(workouts |> List.first()))
+    workout = workouts |> List.first()
+    account = Account |> Repo.get!(account_id)
+    workout = Map.put(workout, :account, account)
+
+    success(conn, WorkoutView.with_account(workout))
   end
 
   def delete(conn, %{"id" => workout_id}, account_id) do
