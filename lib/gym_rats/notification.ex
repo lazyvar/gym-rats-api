@@ -9,6 +9,7 @@ defmodule GymRats.Notification do
 
   def send_workout_comment(comment) do
     workout = Workout |> preload(:account) |> Repo.get!(comment.workout_id)
+    payload = %{"workout_id" => workout.id}
 
     alert = %{
       "title" => workout.title,
@@ -28,22 +29,25 @@ defmodule GymRats.Notification do
       )
       |> Repo.all()
 
-    Enum.map(talkers, fn talker -> send_notification_to_account(alert, talker.id) end)
+    Enum.map(talkers, fn talker -> send_notification_to_account(alert, payload, talker.id) end)
 
     if workout.account.id != comment.account.id do
-      send_notification_to_account(alert, workout.account.id)
+      send_notification_to_account(alert, payload, workout.account.id)
     end
   end
 
-  defp send_notification_to_account(alert, account_id) do
-    Task.async(fn -> send_notification_to_account_sync(alert, account_id) end)
+  defp send_notification_to_account(alert, payload, account_id) do
+    Task.async(fn -> send_notification_to_account_sync(alert, payload, account_id) end)
   end
 
-  defp send_notification_to_account_sync(alert, account_id) do
+  defp send_notification_to_account_sync(alert, payload, account_id) do
     device = Device |> where([d], d.gym_rats_user_id == ^account_id) |> Repo.one()
 
     if device != nil do
       apns = APNS.Notification.new(alert, device.token, "com.hasz.GymRats")
+      payload = apns.payload |> Map.put("gr", payload)
+      apns = apns |> Map.put("payload", payload)
+
       Pigeon.APNS.push(apns)
     end
   end
