@@ -46,7 +46,8 @@ defmodule GymRats.MixProject do
       {:bcrypt_elixir, "~> 2.0"},
       {:joken, "~> 2.0"},
       {:ex_machina, "~> 2.3", only: :test},
-      {:bamboo, "~> 1.4"}
+      {:bamboo, "~> 1.4"},
+      {:ex_twilio, "~> 0.8.1"}
     ]
   end
 

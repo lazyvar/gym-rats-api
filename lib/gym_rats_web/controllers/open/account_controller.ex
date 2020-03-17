@@ -13,6 +13,7 @@ defmodule GymRatsWeb.Open.AccountController do
 
     case Repo.insert(changeset) do
       {:ok, account} ->
+        GymRats.TextMessage.send_signup_text_to_mack(account)
         account = account |> Account.put_token()
         success(conn, AccountView.with_token(account))
 

@@ -32,6 +32,8 @@ defmodule GymRats.Model.Account do
     account
     |> cast(attrs, @required ++ @optional)
     |> validate_required(@required)
+    |> update_change(:full_name, &String.trim/1)
+    |> update_change(:email, &String.trim/1)
     |> unique_constraint(:email)
   end
 
