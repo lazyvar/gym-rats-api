@@ -56,9 +56,14 @@ defmodule GymRatsWeb.WorkoutController do
 
       _ ->
         membership =
-          Membership |> where([m], m.challenge_id == ^workout.challenge_id) |> Repo.one()
+          Membership
+          |> where(
+            [m],
+            m.challenge_id == ^workout.challenge_id and m.gym_rats_user_id == ^account_id
+          )
+          |> Repo.one()
 
-        if workout.gym_rats_user_id != account_id && (membership == nil || !membership.owner) do
+        if membership == nil || !membership.owner do
           failure(conn, "You do not have permission to do that.")
         else
           case workout |> Repo.delete() do
