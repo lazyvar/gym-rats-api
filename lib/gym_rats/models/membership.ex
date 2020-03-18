@@ -11,8 +11,6 @@ defmodule GymRats.Model.Membership do
 
     belongs_to :account, Account, foreign_key: :gym_rats_user_id, primary_key: true
     belongs_to :challenge, Challenge, primary_key: true
-
-    timestamps(inserted_at: :created_at)
   end
 
   @required ~w(gym_rats_user_id challenge_id owner)a
