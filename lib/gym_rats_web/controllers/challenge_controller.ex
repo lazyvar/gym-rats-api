@@ -38,6 +38,12 @@ defmodule GymRatsWeb.ChallengeController do
   end
 
   def show(conn, %{"id" => id}, account_id) do
+    challenge = Challenge |> Repo.get(id)
+
+    case challenge do
+      nil -> failure(conn, "A challenge with id (#{id}) does not exist.")
+      _ -> success(conn, ChallengeView.default(challenge))
+    end
   end
 
   def create(conn, params, account_id) do

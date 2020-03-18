@@ -37,6 +37,15 @@ defmodule GymRatsWeb.WorkoutController do
     success(conn, WorkoutView.with_account(workout))
   end
 
+  def show(conn, %{"id" => id}, account_id) do
+    workout = Workout |> preload(:account) |> Repo.get(id)
+
+    case workout do
+      nil -> failure(conn, "A workout with id (#{id}) does not exist.")
+      _ -> success(conn, WorkoutView.with_account(workout))
+    end
+  end
+
   def delete(conn, %{"id" => workout_id}, account_id) do
     workout_id = String.to_integer(workout_id)
     workout = Workout |> Repo.get(workout_id)

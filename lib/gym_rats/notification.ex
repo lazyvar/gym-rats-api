@@ -21,7 +21,7 @@ defmodule GymRats.Notification do
       "body" => chat_message.content
     }
 
-    payload = %{"challenge_id" => challenge.id}
+    payload = %{"challenge_id" => challenge.id, "notification_type" => "chat_message"}
 
     members =
       Account
@@ -46,7 +46,7 @@ defmodule GymRats.Notification do
 
   defp send_workout_comment_sync(comment) do
     workout = Workout |> preload(:account) |> Repo.get!(comment.workout_id)
-    payload = %{"workout_id" => workout.id}
+    payload = %{"workout_id" => workout.id, "notification_type" => "workout_comment"}
 
     alert = %{
       "title" => workout.title,
