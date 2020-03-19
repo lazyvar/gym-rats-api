@@ -2,10 +2,11 @@ use Mix.Config
 
 # Configure your database
 config :gym_rats, GymRats.Repo,
-  username: "postgres",
-  password: "postgres",
-  database: "gym_rats_test",
-  hostname: "localhost",
+  adapter: Ecto.Adapters.Postgres,
+  username: System.get_env("POSTGRES_USER") || "postgres",
+  password: System.get_env("POSTGRES_PASSWORD") || "postgres",
+  database: System.get_env("POSTGRES_DB") || "gym_rats_test",
+  hostname: System.get_env("POSTGRES_HOST") || "localhost",
   pool: Ecto.Adapters.SQL.Sandbox
 
 # We don't run a server during test. If one is required,
