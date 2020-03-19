@@ -24,11 +24,4 @@ config :sentry,
   included_environments: [:prod],
   environment_name: Mix.env()
 
-# config :pigeon, :apns,
-#   apns_default: %{
-#     cert: "cert.pem",
-#     key: "key.pem",
-#     mode: Mix.env()
-#   }
-
 import_config "#{Mix.env()}.exs"
