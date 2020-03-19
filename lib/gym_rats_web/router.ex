@@ -1,5 +1,7 @@
 defmodule GymRatsWeb.Router do
   use GymRatsWeb, :router
+  use Plug.ErrorHandler
+  use Sentry.Plug
 
   pipeline :api do
     plug :accepts, ["json"]

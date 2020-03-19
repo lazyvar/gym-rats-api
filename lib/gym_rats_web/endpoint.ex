@@ -1,5 +1,6 @@
 defmodule GymRatsWeb.Endpoint do
   use Phoenix.Endpoint, otp_app: :gym_rats
+  use Sentry.Phoenix.Endpoint
 
   @session_options [
     store: :cookie,

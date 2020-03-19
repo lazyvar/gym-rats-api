@@ -49,7 +49,8 @@ defmodule GymRats.MixProject do
       {:bamboo, "~> 1.4"},
       {:ex_twilio, "~> 0.8.1"},
       {:pigeon, "~> 1.5.0"},
-      {:kadabra, "~> 0.4.4"}
+      {:kadabra, "~> 0.4.4"},
+      {:sentry, "~> 7.0"}
     ]
   end
 
