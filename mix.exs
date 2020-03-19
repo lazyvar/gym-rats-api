@@ -7,6 +7,13 @@ defmodule GymRats.MixProject do
       version: "0.1.0",
       elixir: "~> 1.5",
       elixirc_paths: elixirc_paths(Mix.env()),
+      test_coverage: [tool: ExCoveralls],
+      preferred_cli_env: [
+        coveralls: :test,
+        "coveralls.detail": :test,
+        "coveralls.post": :test,
+        "coveralls.html": :test
+      ],
       compilers: [:phoenix, :gettext] ++ Mix.compilers(),
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
@@ -50,7 +57,8 @@ defmodule GymRats.MixProject do
       {:ex_twilio, "~> 0.8.1"},
       {:pigeon, "~> 1.5.0"},
       {:kadabra, "~> 0.4.4"},
-      {:sentry, "~> 7.0"}
+      {:sentry, "~> 7.0"},
+      {:excoveralls, "~> 0.10", only: :test}
     ]
   end
 
