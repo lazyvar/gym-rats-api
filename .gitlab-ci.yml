@@ -9,8 +9,12 @@ before_script:
   - mix deps.get
   
 variables:
+  POSTGRES_DB: gym_rats_test
+  POSTGRES_HOST: postgres
+  POSTGRES_USER: postgres
+  POSTGRES_PASSWORD: "postgres"
   MIX_ENV: "test"
-  
+
 mix:
   script:
     - mix test
