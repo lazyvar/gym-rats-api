@@ -2,6 +2,7 @@ image: elixir:latest
 
 stages:
   - test
+  - deploy
 
 test:
   stage: test
@@ -25,9 +26,16 @@ test:
   only:
     - merge_requests
     - master
-    - pre-production
     - production
     
-
-
-
+deploy_pre_production:
+  stage: deploy
+  script:
+    - echo "Deploying to pre-production"
+    - git remote add gigalixir $GIGALIXIR_REMOTE_URL
+    - git push -f gigalixir HEAD:refs/heads/master
+  environment:
+    name: pre-production
+    url: https://pre.gymratsapi.com
+  only:
+    - master
