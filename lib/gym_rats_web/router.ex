@@ -42,7 +42,6 @@ defmodule GymRatsWeb.Router do
   scope "/", GymRatsWeb do
     pipe_through :api
 
-    get "/raise", Open.RaiseController, :go
     resources "/accounts", Open.AccountController, only: [:create]
     resources "/passwords", Open.PasswordController, only: [:update, :create]
     resources "/tokens", Open.TokenController, only: [:create]
