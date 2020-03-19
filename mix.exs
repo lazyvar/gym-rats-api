@@ -58,7 +58,8 @@ defmodule GymRats.MixProject do
       {:pigeon, "~> 1.5.0"},
       {:kadabra, "~> 0.4.4"},
       {:sentry, "~> 7.0"},
-      {:excoveralls, "~> 0.10", only: :test}
+      {:excoveralls, "~> 0.10", only: :test},
+      {:distillery, "~> 2.1"}
     ]
   end
 

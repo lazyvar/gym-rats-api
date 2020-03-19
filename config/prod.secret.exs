@@ -4,31 +4,6 @@
 # remember to add this file to your .gitignore.
 use Mix.Config
 
-config :gym_rats, GymRats.Repo,
-  ssl: true,
-  username: System.get_env("DATABASE_USERNAME") || raise("DATABASE_USERNAME is missing"),
-  password: System.get_env("DATABASE_PASSWORD") || raise("DATABASE_PASSWORD is missing"),
-  database: System.get_env("DATABASE_DATABASE") || raise("DATABASE_DATABASE is missing"),
-  hostname: System.get_env("DATABASE_HOSTNAME") || raise("DATABASE_HOSTNAME is missing"),
-  pool_size: String.to_integer(System.get_env("POOL_SIZE") || "10")
-
-secret_key_base =
-  System.get_env("SECRET_KEY_BASE") ||
-    raise """
-    environment variable SECRET_KEY_BASE is missing.
-    You can generate one by calling: mix phx.gen.secret
-    """
-
-config :gym_rats, GymRatsWeb.Endpoint,
-  http: [
-    port: String.to_integer(System.get_env("PORT") || "4000"),
-    transport_options: [socket_opts: [:inet6]]
-  ],
-  secret_key_base: secret_key_base
-
-config :joken,
-  default_signer: System.get_env("SIGNING_SECRET") || raise("SIGNING_SECRET is missing")
-
 # ## Using releases (Elixir v1.9+)
 #
 # If you are doing OTP releases, you need to instruct Phoenix
