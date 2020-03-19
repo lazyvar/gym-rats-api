@@ -3,11 +3,6 @@ image: elixir:latest
 services:
   - postgres:latest
 
-before_script:
-  - mix local.rebar --force
-  - mix local.hex --force
-  - mix deps.get
-  
 variables:
   POSTGRES_DB: gym_rats_test
   POSTGRES_HOST: postgres
@@ -22,7 +17,8 @@ before_script:
   - mix ecto.create
   - mix ecto.migrate
 
-mix:
+test:
   script:
     - mix coveralls
+  coverage: '/\[TOTAL\]\s+(\d+\.\d+%)$/'
 
