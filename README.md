@@ -1,4 +1,6 @@
 # GymRats
+[![pipeline status](https://gitlab.com/gym-rats/www.gymratsapi.com/badges/master/pipeline.svg)](https://gitlab.com/gym-rats/www.gymratsapi.com/-/commits/master)
+[![coverage report](https://gitlab.com/gym-rats/www.gymratsapi.com/badges/master/coverage.svg)](https://gitlab.com/gym-rats/www.gymratsapi.com/-/commits/master)
 
 To start your Phoenix server:
 
