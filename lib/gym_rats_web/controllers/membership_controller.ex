@@ -7,7 +7,6 @@ defmodule GymRatsWeb.MembershipController do
   import Ecto.Query
 
   def create(conn, %{"code" => code}, account_id) do
-    code = code |> String.upcase()
     challenge = Challenge |> where([c], c.code == ^code) |> Repo.one()
 
     case challenge do
