@@ -19,4 +19,4 @@ config :gym_rats, GymRats.Mailer, adapter: Bamboo.TestAdapter
 # Print only warnings and errors during test
 config :logger, level: :warn
 
-config :joken, default_signer: "secrets secrets are fun"
+config :joken, default_signer: "secrets secrets are fun let's tell everyone!!!"

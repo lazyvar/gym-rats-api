@@ -63,13 +63,13 @@ defmodule GymRatsWeb.WorkoutController do
           )
           |> Repo.one()
 
-        if membership == nil || !membership.owner do
-          failure(conn, "You do not have permission to do that.")
-        else
+        if account_id == workout.gym_rats_user_id || (membership != nil && membership.owner) do
           case workout |> Repo.delete() do
             {:ok, workout} -> success(conn, WorkoutView.default(workout))
             {:error, _} -> failure(conn, "Something went wrong.")
           end
+        else
+          failure(conn, "You do not have permission to do that.")
         end
     end
   end

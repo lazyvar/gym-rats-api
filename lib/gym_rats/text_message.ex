@@ -13,15 +13,15 @@ defmodule GymRats.TextMessage do
     message = "#{account.full_name} is a Gym Rat! #{count} in the nest."
 
     case Mix.env() do
-      :dev ->
-        Logger.info(message)
-
       :prod ->
         ExTwilio.Message.create(
           to: "+14849476052",
           from: System.get_env("TWILIO_PHONE_NUMBER"),
           body: message
         )
+
+      _ ->
+        Logger.info(message)
     end
   end
 end
