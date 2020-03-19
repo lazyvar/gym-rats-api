@@ -9,7 +9,7 @@ secret_key_base =
 
 config :gym_rats, GymRatsWeb.Endpoint,
   http: [
-    port: String.to_integer(System.get_env("PORT") || "4000"),
+    port: "80",
     transport_options: [socket_opts: [:inet6]]
   ],
   url: [
@@ -17,8 +17,8 @@ config :gym_rats, GymRatsWeb.Endpoint,
     host: System.get_env("HOST") || raise("HOST missing"),
     port: 443
   ],
+  server: true,
   force_ssl: [rewrite_on: [:x_forwarded_proto]],
-  cache_static_manifest: "priv/static/cache_manifest.json",
   secret_key_base: secret_key_base
 
 config :gym_rats, GymRats.Repo,
@@ -39,9 +39,9 @@ config :gym_rats, GymRats.Mailer,
 config :joken,
   default_signer: System.get_env("SIGNING_SECRET") || raise("SIGNING_SECRET is missing")
 
-config :pigeon, :apns,
-  apns_default: %{
-    cert: "apns/cert",
-    key: "apns/key",
-    mode: System.get_env("APNS_MODE")
-  }
+# config :pigeon, :apns,
+#   apns_default: %{
+#     cert: "apns/cert",
+#     key: "apns/key",
+#     mode: System.get_env("APNS_MODE")
+#   }
