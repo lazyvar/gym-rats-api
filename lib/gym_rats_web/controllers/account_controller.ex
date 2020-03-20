@@ -15,8 +15,12 @@ defmodule GymRatsWeb.AccountController do
     account = account |> Account.changeset(params) |> Repo.update()
 
     case account do
-      {:ok, account} -> success(conn, AccountView.default(account))
-      {:error, _} -> failure(conn, "Something went wrong.")
+      {:ok, account} ->
+        account = account |> Account.put_token()
+        success(conn, AccountView.with_token(account))
+
+      {:error, account} ->
+        failure(conn, account)
     end
   end
 end
