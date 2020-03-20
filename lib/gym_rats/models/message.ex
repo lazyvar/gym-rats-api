@@ -16,7 +16,7 @@ defmodule GymRats.Model.Message do
     timestamps(inserted_at: :created_at, type: :utc_datetime_usec)
   end
 
-  @required ~w(content account_id challenge_id)a
+  @required ~w(content gym_rats_user_id challenge_id)a
   @optional ~w()a
 
   def changeset(comment, attrs) do
