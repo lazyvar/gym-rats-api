@@ -18,7 +18,7 @@ defmodule GymRats.Model.Workout do
     belongs_to :account, Account, foreign_key: :gym_rats_user_id
     belongs_to :challenge, Challenge
 
-    timestamps(inserted_at: :created_at)
+    timestamps(inserted_at: :created_at, type: :utc_datetime_usec)
   end
 
   @required ~w(gym_rats_user_id challenge_id title)a

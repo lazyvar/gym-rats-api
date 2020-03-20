@@ -13,10 +13,10 @@ defmodule GymRats.Model.Message do
 
     has_many :chat_notifications, ChatNotification
 
-    timestamps(inserted_at: :created_at)
+    timestamps(inserted_at: :created_at, type: :utc_datetime_usec)
   end
 
-  @required ~w(content)a
+  @required ~w(content account_id challenge_id)a
   @optional ~w()a
 
   def changeset(comment, attrs) do

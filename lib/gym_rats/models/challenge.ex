@@ -8,10 +8,10 @@ defmodule GymRats.Model.Challenge do
 
   schema "challenges" do
     field :code, :string
-    field :end_date, :utc_datetime
+    field :end_date, :utc_datetime_usec
     field :name, :string
     field :profile_picture_url, :string
-    field :start_date, :utc_datetime
+    field :start_date, :utc_datetime_usec
     field :time_zone, :string
 
     has_many :workouts, Workout
@@ -22,7 +22,7 @@ defmodule GymRats.Model.Challenge do
       join_keys: [challenge_id: :id, gym_rats_user_id: :id]
     )
 
-    timestamps(inserted_at: :created_at)
+    timestamps(inserted_at: :created_at, type: :utc_datetime_usec)
   end
 
   @required ~w(name code start_date end_date time_zone)a

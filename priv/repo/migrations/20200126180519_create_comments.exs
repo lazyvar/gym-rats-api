@@ -2,15 +2,18 @@ defmodule GymRats.Repo.Migrations.CreateComments do
   use Ecto.Migration
 
   def change do
-    create table(:comments) do
-      add :content, :string
-      add :workout_id, :bigint, null: false
-      add :gym_rats_user_id, :bigint, null: false
+    create_if_not_exists table(:comments)
 
-      timestamps(inserted_at: :created_at)
+    alter table(:comments) do
+      add_if_not_exists :content, :varchar
+      add_if_not_exists :gym_rats_user_id, :bigint
+      add_if_not_exists :workout_id, :bigint
+
+      add_if_not_exists :created_at, :utc_datetime_usec, null: false
+      add_if_not_exists :updated_at, :utc_datetime_usec, null: false
     end
 
-    create index(:comments, [:workout_id])
-    create index(:comments, [:gym_rats_user_id])
+    create_if_not_exists unique_index(:comments, [:workout_id], name: "index_comments_on_workout_id")
+    create_if_not_exists unique_index(:comments, [:gym_rats_user_id], name: "index_comments_on_gym_rats_user_id")
   end
 end

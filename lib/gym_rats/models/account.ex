@@ -12,7 +12,7 @@ defmodule GymRats.Model.Account do
     field :password, :string, virtual: true
     field :profile_picture_url, :string
     field :reset_password_token, :string
-    field :reset_password_token_expiration, :utc_datetime
+    field :reset_password_token_expiration, :utc_datetime_usec
 
     has_many :workouts, Workout, foreign_key: :gym_rats_user_id
     has_many :comments, Comment, foreign_key: :gym_rats_user_id
@@ -23,7 +23,7 @@ defmodule GymRats.Model.Account do
       join_keys: [gym_rats_user_id: :id, challenge_id: :id]
     )
 
-    timestamps(inserted_at: :created_at)
+    timestamps(inserted_at: :created_at, type: :utc_datetime_usec)
   end
 
   @required ~w(full_name email)a
