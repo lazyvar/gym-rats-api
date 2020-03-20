@@ -12,9 +12,9 @@ defmodule GymRatsWeb.MembershipControllerTest do
   describe "create/3" do
     test "joins a challenge" do
       account = insert(:account) |> Account.put_token()
-      challenge = insert(:challenge, %{code: "123456"})
+      challenge = insert(:challenge)
 
-      params = [code: "123456"]
+      params = [code: challenge.code]
 
       conn =
         post(
@@ -25,7 +25,6 @@ defmodule GymRatsWeb.MembershipControllerTest do
 
       assert %{
                "data" => %{
-                 "code" => "123456",
                  "name" => "Challenge accepted!",
                  "profile_picture_url" => "i.reddit.com/woop"
                },
@@ -42,7 +41,7 @@ defmodule GymRatsWeb.MembershipControllerTest do
 
     test "handles missing code" do
       account = insert(:account) |> Account.put_token()
-      challenge = insert(:challenge, %{code: "123456"})
+      challenge = insert(:challenge)
 
       conn =
         post(
@@ -71,9 +70,9 @@ defmodule GymRatsWeb.MembershipControllerTest do
 
     test "cant join twice" do
       account = insert(:account) |> Account.put_token()
-      challenge = insert(:challenge, %{code: "123456"})
+      challenge = insert(:challenge)
 
-      params = [code: "123456"]
+      params = [code: challenge.code]
 
       conn =
         post(
