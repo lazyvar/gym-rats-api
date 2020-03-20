@@ -1,6 +1,6 @@
 defmodule GymRats.Notification do
   alias Pigeon.APNS
-  alias GymRats.Model.{Workout, Device, Account, Challenge}
+  alias GymRats.Model.{Workout, Device, Account, Challenge, ChatNotification}
   alias GymRats.Repo
   alias GymRatsWeb.Presence
 
@@ -21,7 +21,11 @@ defmodule GymRats.Notification do
       "body" => chat_message.content
     }
 
-    payload = %{"challenge_id" => challenge.id, "notification_type" => "chat_message"}
+    payload = %{
+      "challenge_id" => challenge.id,
+      "notification_type" => "chat_message",
+      "message_id" => chat_message.id
+    }
 
     members =
       Account
@@ -86,6 +90,16 @@ defmodule GymRats.Notification do
       apns = apns |> Map.put("payload", payload)
 
       Pigeon.APNS.push(apns)
+    end
+
+    if payload["notification_type"] == "chat_message" do
+      %ChatNotification{}
+      |> ChatNotification.changeset(%{
+        seen: false,
+        message_id: payload["message_id"],
+        account_id: account_id
+      })
+      |> Repo.insert!()
     end
   end
 end

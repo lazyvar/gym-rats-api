@@ -26,6 +26,9 @@ defmodule GymRatsWeb.Router do
       end
 
       resources "/messages", Challenge.MessageController, only: [:index]
+      get "/chat_notifications/count", Challenge.ChatNotificationController, :count
+      post "/chat_notifications/seen", Challenge.ChatNotificationController, :seen
+
       resources "/workouts", Challenge.WorkoutController, only: [:index]
     end
 

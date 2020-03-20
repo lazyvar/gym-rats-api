@@ -1,7 +1,7 @@
 defmodule GymRats.Model.Message do
   use Ecto.Schema
 
-  alias GymRats.Model.{Account, Challenge}
+  alias GymRats.Model.{Account, Challenge, ChatNotification}
 
   import Ecto.Changeset
 
@@ -10,6 +10,8 @@ defmodule GymRats.Model.Message do
 
     belongs_to :account, Account, foreign_key: :gym_rats_user_id
     belongs_to :challenge, Challenge
+
+    has_many :chat_notifications, ChatNotification
 
     timestamps(inserted_at: :created_at)
   end

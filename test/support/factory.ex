@@ -92,4 +92,16 @@ defmodule GymRats.Factory do
       workout: build(:workout)
     }
   end
+
+  def message_factory do
+    %GymRats.Model.Message{
+      content: "Hi."
+    }
+  end
+
+  def chat_notification_factory do
+    %GymRats.Model.ChatNotification{
+      seen: false
+    }
+  end
 end
