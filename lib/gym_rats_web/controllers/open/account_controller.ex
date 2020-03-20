@@ -9,7 +9,7 @@ defmodule GymRatsWeb.Open.AccountController do
       ~w(id created_at updated_at password_digest reset_password_token reset_password_token_expiration)
 
     params = params |> Map.drop(illegal_params)
-    changeset = Account.registration_changeset(params)
+    changeset = Account.registration_changeset(%Account{}, params)
 
     case Repo.insert(changeset) do
       {:ok, account} ->

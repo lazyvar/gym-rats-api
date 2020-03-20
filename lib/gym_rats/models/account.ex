@@ -35,10 +35,10 @@ defmodule GymRats.Model.Account do
     |> validate_required(@required)
     |> update_change(:full_name, &String.trim/1)
     |> update_change(:email, &String.trim/1)
-    |> unique_constraint(:email)
+    |> unique_constraint(:email, name: "index_gym_rats_users_on_email")
   end
 
-  def registration_changeset(account \\ %Account{}, attrs) do
+  def registration_changeset(account, attrs) do
     account
     |> changeset(attrs)
     |> cast(attrs, [:password])

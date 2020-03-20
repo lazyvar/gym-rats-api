@@ -12,7 +12,7 @@ defmodule GymRats.Repo.Migrations.CreateDevices do
       add_if_not_exists :updated_at, :utc_datetime_usec, null: false
     end
 
-    create_if_not_exists unique_index(:devices, [:gym_rats_user_id], name: "index_devices_on_gym_rats_user_id")
+    create_if_not_exists index(:devices, [:gym_rats_user_id], name: "index_devices_on_gym_rats_user_id")
   end
 end
 

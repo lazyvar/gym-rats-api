@@ -3,6 +3,8 @@ use Mix.Config
 config :gym_rats,
   ecto_repos: [GymRats.Repo]
 
+config :gym_rats, GymRats.Repo, migration_source: "ecto_schema_migrations"
+
 config :gym_rats, GymRatsWeb.Endpoint,
   url: [host: "localhost"],
   secret_key_base: "YsZeGi6q/Mlj0Onlr2I5gsmzhqsmDPMEpAvpN9zffocH7wth9mRX4OxLL+ZWm0Wa",

@@ -31,7 +31,7 @@ defmodule GymRatsWeb.ChallengeControllerTest do
       assert %{
                "status" => "success",
                "data" => %{
-                 "start_date" => "2020-01-23T13:27:32Z",
+                 "start_date" => "2020-01-23T13:27:32.000000Z",
                  "name" => "Challenge",
                  "profile_picture_url" => "k"
                }
@@ -240,8 +240,8 @@ defmodule GymRatsWeb.ChallengeControllerTest do
       response = json_response(conn, 200)
       data = response["data"]
 
-      assert data["start_date"] == "1999-01-23T13:27:32Z"
-      assert data["end_date"] == "3999-01-29T12:47:00Z"
+      assert data["start_date"] == "1999-01-23T13:27:32.000000Z"
+      assert data["end_date"] == "3999-01-29T12:47:00.000000Z"
       assert data["name"] == "yooo"
       assert data["profile_picture_url"] == nil
     end

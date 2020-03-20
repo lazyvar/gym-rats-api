@@ -13,7 +13,7 @@ defmodule GymRats.Repo.Migrations.CreateChatMessages do
       add_if_not_exists :updated_at, :utc_datetime_usec, null: false
     end
 
-    create_if_not_exists unique_index(:chat_messages, [:challenge_id], name: "index_chat_messages_on_challenge_id")
-    create_if_not_exists unique_index(:chat_messages, [:gym_rats_user_id], name: "index_chat_messages_on_gym_rats_user_id")
+    create_if_not_exists index(:chat_messages, [:challenge_id], name: "index_chat_messages_on_challenge_id")
+    create_if_not_exists index(:chat_messages, [:gym_rats_user_id], name: "index_chat_messages_on_gym_rats_user_id")
   end
 end

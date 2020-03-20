@@ -12,6 +12,6 @@ defmodule GymRats.Repo.Migrations.CreateMemberships do
 
     create_if_not_exists index(:memberships, [:gym_rats_user_id], name: "index_memberships_on_gym_rats_user_id")
     create_if_not_exists index(:memberships, [:challenge_id], name: "index_memberships_on_challenge_id")
-    create_if_not_exists unique_index(:memberships, [:gym_rats_user_id, :challenge_id], name: "index_memberships_on_challenge_id_and_gym_rats_user_id")
+    create_if_not_exists unique_index(:memberships, [:challenge_id, :gym_rats_user_id], name: "index_memberships_on_challenge_id_and_gym_rats_user_id")
   end
 end

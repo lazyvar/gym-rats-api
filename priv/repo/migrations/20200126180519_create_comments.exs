@@ -13,7 +13,7 @@ defmodule GymRats.Repo.Migrations.CreateComments do
       add_if_not_exists :updated_at, :utc_datetime_usec, null: false
     end
 
-    create_if_not_exists unique_index(:comments, [:workout_id], name: "index_comments_on_workout_id")
-    create_if_not_exists unique_index(:comments, [:gym_rats_user_id], name: "index_comments_on_gym_rats_user_id")
+    create_if_not_exists index(:comments, [:workout_id], name: "index_comments_on_workout_id")
+    create_if_not_exists index(:comments, [:gym_rats_user_id], name: "index_comments_on_gym_rats_user_id")
   end
 end
