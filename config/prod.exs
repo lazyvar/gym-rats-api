@@ -27,6 +27,7 @@ config :gym_rats, GymRats.Repo,
   password: System.get_env("DATABASE_PASSWORD") || raise("DATABASE_PASSWORD is missing"),
   database: System.get_env("DATABASE_DATABASE") || raise("DATABASE_DATABASE is missing"),
   hostname: System.get_env("DATABASE_HOSTNAME") || raise("DATABASE_HOSTNAME is missing"),
+  # 10 is good
   pool_size: String.to_integer(System.get_env("POOL_SIZE") || "10")
 
 config :logger, level: :info
