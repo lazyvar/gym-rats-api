@@ -11,6 +11,7 @@ config :gym_rats, GymRats.Repo,
 
 config :gym_rats, GymRatsWeb.Endpoint,
   http: [port: 4000],
+  url: [host: "localhost"],
   debug_errors: true,
   code_reloader: true,
   check_origin: false
