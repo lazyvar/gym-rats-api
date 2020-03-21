@@ -10,7 +10,7 @@ config :gym_rats, GymRats.Repo,
   pool_size: 10
 
 config :gym_rats, GymRatsWeb.Endpoint,
-  http: [port: 4000],
+  http: [port: 4000  host: "localhost"],
   debug_errors: true,
   code_reloader: true,
   check_origin: false
