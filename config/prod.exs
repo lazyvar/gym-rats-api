@@ -10,8 +10,7 @@ secret_key_base =
 config :gym_rats, GymRatsWeb.Endpoint,
   http: [
     port: System.get_env("PORT") || "4000",
-    transport_options: [socket_opts: [:inet6]],
-    host: System.get_env("HOST") || raise("HOST missing")
+    transport_options: [socket_opts: [:inet6]]
   ],
   url: [
     scheme: "https",
