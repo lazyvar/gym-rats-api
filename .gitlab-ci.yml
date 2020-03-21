@@ -34,7 +34,6 @@ deploy_pre_production:
     - echo "Deploying to pre-production"
     - git remote add gigalixir $GIGALIXIR_REMOTE_URL
     - git push -f gigalixir HEAD:refs/heads/master
-    - gigalixir ps:migrate --ssh_opts "-i gigalixir_pem"
   environment:
     name: pre-production
     url: https://pre.gymratsapi.com
