@@ -6,7 +6,11 @@ config :gym_rats,
 config :gym_rats, GymRats.Repo, migration_source: "ecto_schema_migrations"
 
 config :gym_rats, GymRatsWeb.Endpoint,
-  check_origin: ["*gym*"],
+  check_origin: [
+    "https://www.gymratsapi.com",
+    "https://pre.gymratsapi.com",
+    "https://gym-rats-api-pre-production.gigalixirapp.com"
+  ],
   secret_key_base: "YsZeGi6q/Mlj0Onlr2I5gsmzhqsmDPMEpAvpN9zffocH7wth9mRX4OxLL+ZWm0Wa",
   render_errors: [view: GymRatsWeb.ErrorView, accepts: ~w(html json)],
   pubsub: [name: GymRats.PubSub, adapter: Phoenix.PubSub.PG2]
