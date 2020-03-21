@@ -39,9 +39,9 @@ config :gym_rats, GymRats.Mailer,
 config :joken,
   default_signer: System.get_env("SIGNING_SECRET") || raise("SIGNING_SECRET is missing")
 
-# config :pigeon, :apns,
-#   apns_default: %{
-#     cert: "apns/cert",
-#     key: "apns/key",
-#     mode: System.get_env("APNS_MODE")
-#   }
+config :pigeon, :apns,
+  apns_default: %{
+    cert: "apns_cert",
+    key: "apns_key",
+    mode: System.get_env("APNS_MODE")
+  }
