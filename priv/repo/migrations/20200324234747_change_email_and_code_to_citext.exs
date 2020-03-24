@@ -10,4 +10,5 @@ defmodule GymRats.Repo.Migrations.ChangeEmailAndCodeToCitext do
 	  modify :code, :citext
 	end
   end
+
 end
