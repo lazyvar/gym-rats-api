@@ -25,9 +25,4 @@ config :ex_twilio,
   account_sid: {:system, "TWILIO_ACCOUNT_SID"},
   auth_token: {:system, "TWILIO_AUTH_TOKEN"}
 
-config :sentry,
-  dsn: System.get_env("SENTRY_DSN"),
-  included_environments: [:prod],
-  environment_name: Mix.env()
-
 import_config "#{Mix.env()}.exs"
