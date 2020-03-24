@@ -12,8 +12,6 @@ defmodule GymRats.TextMessage do
     count = Repo.aggregate(Account, :count, :id)
     message = "#{account.full_name} is a Gym Rat! #{count} in the nest."
 
-    Logger.warn(Mix.env())
-
     case Mix.env() do
       :prod ->
         ExTwilio.Message.create(
