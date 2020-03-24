@@ -28,7 +28,7 @@ defmodule GymRatsWeb.Challenge.WorkoutController do
 
   defp paginate(query, page) do
     case Integer.parse(page || "") do
-      {p, _} -> query |> offset(100 * ^p) |> limit(100)
+      {p, _} -> query |> offset(40 * ^p) |> limit(40)
       _ -> query
     end
   end
