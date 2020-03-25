@@ -36,13 +36,9 @@ config :sentry,
   included_environments: [:prod],
   environment_name: :prod
 
-config :pigeon, :apns,
-  apns_default: %{
-    key: System.get_env("APNS_TOKEN"),
-    key_identifier: "FW985G67H6",
-    team_id: "24MV8D7ZU8",
-    mode: System.get_env("APNS_MODE") || :dev
-  }
+config :pigeon, workers: [
+  {GymRats.Pigeon, :apns_config}
+]
 
 config :gym_rats, GymRats.Mailer,
   adapter: Bamboo.MailgunAdapter,
