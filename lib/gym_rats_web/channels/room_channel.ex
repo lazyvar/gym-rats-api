@@ -5,8 +5,6 @@ defmodule GymRatsWeb.RoomChannel do
   alias GymRats.Model.{Account, Message}
   alias GymRats.{Notification, Repo}
 
-  import Ecto.Query
-
   require Logger
 
   def join("room:challenge:" <> _challenge_id, _params, socket) do

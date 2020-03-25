@@ -37,7 +37,7 @@ defmodule GymRatsWeb.WorkoutController do
     success(conn, WorkoutView.with_account(workout))
   end
 
-  def show(conn, %{"id" => id}, account_id) do
+  def show(conn, %{"id" => id}, _account_id) do
     workout = Workout |> preload(:account) |> Repo.get(id)
 
     case workout do

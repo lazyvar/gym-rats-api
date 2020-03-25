@@ -5,7 +5,6 @@ defmodule GymRatsWeb.CommentControllerTest do
   alias GymRats.Repo
 
   import GymRats.Factory
-  import Ecto.Query
 
   @endpoint GymRatsWeb.Endpoint
 
@@ -42,11 +41,10 @@ defmodule GymRatsWeb.CommentControllerTest do
           "/comments/#{comment.id}"
         )
 
-      expectation =
-        assert %{
-                 "status" => "failure",
-                 "error" => "You do not have permission to do that."
-               } = json_response(conn, 422)
+      assert %{
+               "status" => "failure",
+               "error" => "You do not have permission to do that."
+             } = json_response(conn, 422)
 
       comment = Comment |> Repo.get(comment.id)
 
