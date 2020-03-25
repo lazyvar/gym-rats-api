@@ -89,7 +89,7 @@ defmodule GymRats.Notification do
       payload = apns.payload |> Map.put("gr", payload)
       apns = apns |> Map.put("payload", payload)
 
-      Pigeon.APNS.push(apns)
+      Pigeon.APNS.push(n, on_response: fn x -> IO.inspect(x) end)
     end
 
     if payload["notification_type"] == "chat_message" do
