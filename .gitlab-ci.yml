@@ -39,3 +39,15 @@ deploy_pre_production:
     url: https://pre.gymratsapi.com
   only:
     - master
+
+deploy_production:
+  stage: deploy
+  script:
+    - echo "Deploying to production"
+    - git remote add gigalixir $GIGALIXIR_REMOTE_URL
+    - git push -f gigalixir HEAD:refs/heads/master
+  environment:
+    name: production
+    url: https://www..gymratsapi.com
+  only:
+    - production
