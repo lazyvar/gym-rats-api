@@ -1,14 +1,13 @@
 defmodule GymRatsWeb.Open.PasswordController do
   use GymRatsWeb, :controller
 
-  alias GymRatsWeb.AccountView
   alias GymRats.Model.Account
   alias GymRats.Repo.AccountRepo
   alias GymRats.{Mailer, Random}
 
   import Ecto.Query
 
-  def create(conn, %{"email" => email} = params) do
+  def create(conn, %{"email" => email}) do
     account = Account |> where([a], a.email == ^email) |> Repo.one()
 
     case account do
@@ -16,7 +15,7 @@ defmodule GymRatsWeb.Open.PasswordController do
         failure(conn, "An account with that email does not exist.")
 
       _ ->
-        token = generate_token
+        token = generate_token()
         expiration = DateTime.utc_now() |> DateTime.add(1_800, :second)
         update = %{reset_password_token: token, reset_password_token_expiration: expiration}
         account = account |> Account.changeset(update) |> Repo.update()
@@ -37,7 +36,7 @@ defmodule GymRatsWeb.Open.PasswordController do
 
   def create(conn, _params), do: failure(conn, "Missing email.")
 
-  def update(conn, %{"id" => token, "password" => password} = params) do
+  def update(conn, %{"id" => token, "password" => password}) do
     account = AccountRepo.find_by(reset_password_token: token)
 
     case account do
@@ -59,7 +58,7 @@ defmodule GymRatsWeb.Open.PasswordController do
             account = account |> Account.registration_changeset(update) |> Repo.update()
 
             case account do
-              {:ok, account} -> success(conn, %{})
+              {:ok, _} -> success(conn, %{})
               {:error, account} -> failure(conn, account)
             end
         end

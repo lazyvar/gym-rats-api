@@ -1,11 +1,9 @@
 defmodule GymRatsWeb.Challenge.ChatNotificationControllerTest do
   use GymRatsWeb.ConnCase
 
-  alias GymRats.Model.{Account, ChatNotification}
-  alias GymRats.Repo
+  alias GymRats.Model.Account
 
   import GymRats.Factory
-  import Ecto.Query
 
   @endpoint GymRatsWeb.Endpoint
 

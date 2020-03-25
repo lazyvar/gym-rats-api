@@ -116,11 +116,10 @@ defmodule GymRatsWeb.WorkoutControllerTest do
           "/workouts/#{workout.id}"
         )
 
-      expectation =
-        assert %{
-                 "status" => "failure",
-                 "error" => "You do not have permission to do that."
-               } = json_response(conn, 422)
+      assert %{
+               "status" => "failure",
+               "error" => "You do not have permission to do that."
+             } = json_response(conn, 422)
 
       workout = Workout |> Repo.get(workout.id)
 
