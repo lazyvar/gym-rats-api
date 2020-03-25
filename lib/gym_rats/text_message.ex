@@ -12,16 +12,14 @@ defmodule GymRats.TextMessage do
     count = Repo.aggregate(Account, :count, :id)
     message = "#{account.full_name} is a Gym Rat! #{count} in the nest."
 
-    case Mix.env() do
-      :prod ->
-        ExTwilio.Message.create(
-          to: "+14849476052",
-          from: System.get_env("TWILIO_PHONE_NUMBER"),
-          body: message
-        )
-
-      _ ->
-        Logger.info(message)
+    if Application.get_env(:gym_rats, :environment) == :prod do
+      ExTwilio.Message.create(
+        to: "+14849476052",
+        from: System.get_env("TWILIO_PHONE_NUMBER"),
+        body: message
+      )
+    else
+      Logger.info(message)
     end
   end
 end
