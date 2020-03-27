@@ -6,7 +6,6 @@ defmodule GymRatsWeb.Open.PasswordControllerTest do
   alias GymRats.Repo
 
   import GymRats.Factory
-  import Ecto.Query
 
   @endpoint GymRatsWeb.Endpoint
 
@@ -61,7 +60,7 @@ defmodule GymRatsWeb.Open.PasswordControllerTest do
 
     test "Token has expired" do
       account = insert(:account)
-      conn = post(build_conn(), "/passwords", email: account.email)
+      post(build_conn(), "/passwords", email: account.email)
       update = %{reset_password_token_expiration: DateTime.utc_now()}
       account = account |> Account.changeset(update) |> Repo.update!()
       account = Account |> Repo.get(account.id)
@@ -77,7 +76,7 @@ defmodule GymRatsWeb.Open.PasswordControllerTest do
 
     test "Token is valid" do
       account = insert(:account)
-      conn = post(build_conn(), "/passwords", email: account.email)
+      post(build_conn(), "/passwords", email: account.email)
       account = Account |> Repo.get(account.id)
 
       conn =

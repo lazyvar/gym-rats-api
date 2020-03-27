@@ -37,7 +37,7 @@ defmodule GymRatsWeb.ChallengeController do
     index(conn, %{"filter" => "all"}, account_id)
   end
 
-  def show(conn, %{"id" => id}, account_id) do
+  def show(conn, %{"id" => id}, _account_id) do
     challenge = Challenge |> Repo.get(id)
 
     case challenge do

@@ -1,7 +1,6 @@
 defmodule GymRats.Guardian do
   import Plug.Conn
   import Phoenix.Controller, only: [json: 2]
-  import GymRatsWeb.Rendering
 
   @behaviour Plug
 

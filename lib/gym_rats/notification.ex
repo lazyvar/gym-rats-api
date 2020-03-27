@@ -5,6 +5,7 @@ defmodule GymRats.Notification do
   alias GymRatsWeb.Presence
 
   import Ecto.Query
+  import Pigeon.APNS.Notification
 
   require Logger
 
@@ -14,12 +15,6 @@ defmodule GymRats.Notification do
 
   defp send_chat_message_sync(chat_message) do
     challenge = Challenge |> Repo.get!(chat_message.challenge_id)
-
-    alert = %{
-      "title" => challenge.name,
-      "subtitle" => chat_message.account.full_name,
-      "body" => chat_message.content
-    }
 
     payload = %{
       "challenge_id" => challenge.id,
@@ -39,7 +34,13 @@ defmodule GymRats.Notification do
 
     Enum.map(members, fn member ->
       if Presence.get_by_key("room:challenge:#{challenge.id}", "account:#{member.id}") == [] do
-        send_notification_to_account(alert, payload, member.id)
+        send_notification_to_account(
+          challenge.name,
+          chat_message.account.full_name,
+          chat_message.content,
+          payload,
+          member.id
+        )
       end
     end)
   end
@@ -50,12 +51,11 @@ defmodule GymRats.Notification do
 
   defp send_workout_comment_sync(comment) do
     workout = Workout |> preload(:account) |> Repo.get!(comment.workout_id)
-    payload = %{"workout_id" => workout.id, "notification_type" => "workout_comment"}
 
-    alert = %{
-      "title" => workout.title,
-      "subtitle" => comment.account.full_name,
-      "body" => comment.content
+    payload = %{
+      "workout_id" => workout.id,
+      "notification_type" => "workout_comment",
+      "challenge_id" => workout.challenge_id
     }
 
     talkers =
@@ -70,33 +70,54 @@ defmodule GymRats.Notification do
       )
       |> Repo.all()
 
-    Enum.map(talkers, fn talker -> send_notification_to_account(alert, payload, talker.id) end)
+    Enum.map(talkers, fn talker ->
+      send_notification_to_account(
+        workout.title,
+        comment.account.full_name,
+        comment.content,
+        payload,
+        talker.id
+      )
+    end)
 
     if workout.account.id != comment.account.id do
-      send_notification_to_account(alert, payload, workout.account.id)
+      send_notification_to_account(
+        workout.title,
+        comment.account.full_name,
+        comment.content,
+        payload,
+        workout.account.id
+      )
     end
   end
 
-  defp send_notification_to_account(alert, payload, account_id) do
-    Task.async(fn -> send_notification_to_account_sync(alert, payload, account_id) end)
+  defp send_notification_to_account(title, subtitle, body, gr_payload, account_id) do
+    Task.async(fn ->
+      send_notification_to_account_sync(title, subtitle, body, gr_payload, account_id)
+    end)
   end
 
-  defp send_notification_to_account_sync(alert, payload, account_id) do
+  defp send_notification_to_account_sync(title, subtitle, body, gr_payload, account_id) do
     device = Device |> where([d], d.gym_rats_user_id == ^account_id) |> Repo.one()
 
     if device != nil do
-      apns = APNS.Notification.new(alert, device.token, "com.hasz.GymRats")
-      payload = apns.payload |> Map.put("gr", payload)
-      apns = apns |> Map.put("payload", payload)
+      apns =
+        APNS.Notification.new(%{}, device.token, "com.hasz.GymRats")
+        |> put_alert(%{
+          "title" => title,
+          "subtitle" => subtitle,
+          "body" => body
+        })
+        |> put_custom(%{"gr" => gr_payload})
 
-      Pigeon.APNS.push(apns)
+      Pigeon.APNS.push(apns, on_response: fn response -> Logger.info(inspect(response)) end)
     end
 
-    if payload["notification_type"] == "chat_message" do
+    if gr_payload["notification_type"] == "chat_message" do
       %ChatNotification{}
       |> ChatNotification.changeset(%{
         seen: false,
-        message_id: payload["message_id"],
+        message_id: gr_payload["message_id"],
         account_id: account_id
       })
       |> Repo.insert!()

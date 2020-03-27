@@ -6,7 +6,7 @@ defmodule GymRatsWeb.Challenge.InfoController do
 
   import Ecto.Query
 
-  def info(conn, %{"challenge_id" => challenge_id}, account_id) do
+  def info(conn, %{"challenge_id" => challenge_id}, _account_id) do
     member_count =
       Account
       |> join(:left, [a], c in assoc(a, :memberships))

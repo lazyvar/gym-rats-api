@@ -1,7 +1,7 @@
 defmodule GymRatsWeb.MembershipControllerTest do
   use GymRatsWeb.ConnCase
 
-  alias GymRats.Model.{Account, Challenge, Membership}
+  alias GymRats.Model.{Account, Membership}
   alias GymRats.Repo
 
   import GymRats.Factory
@@ -41,7 +41,7 @@ defmodule GymRatsWeb.MembershipControllerTest do
 
     test "handles missing code" do
       account = insert(:account) |> Account.put_token()
-      challenge = insert(:challenge)
+      insert(:challenge)
 
       conn =
         post(
@@ -54,7 +54,7 @@ defmodule GymRatsWeb.MembershipControllerTest do
 
     test "handles bad code" do
       account = insert(:account) |> Account.put_token()
-      challenge = insert(:challenge, %{code: "abc"})
+      insert(:challenge, %{code: "abc"})
       params = [code: "666"]
 
       conn =
@@ -74,12 +74,11 @@ defmodule GymRatsWeb.MembershipControllerTest do
 
       params = [code: challenge.code]
 
-      conn =
-        post(
-          build_conn() |> put_req_header("authorization", account.token),
-          "/memberships",
-          params
-        )
+      post(
+        build_conn() |> put_req_header("authorization", account.token),
+        "/memberships",
+        params
+      )
 
       conn =
         post(
