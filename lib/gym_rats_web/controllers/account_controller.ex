@@ -9,10 +9,18 @@ defmodule GymRatsWeb.AccountController do
     account = Account |> Repo.get(account_id)
 
     illegal_params =
-      ~w(id created_at updated_at password_digest password reset_password_token reset_password_token_expiration)
+      ~w(id created_at updated_at password_digest reset_password_token reset_password_token_expiration)
 
     params = params |> Map.drop(illegal_params)
-    account = account |> Account.changeset(params) |> Repo.update()
+
+    account =
+      if Map.get(params, "password") != nil do
+        account |> Account.update_password_changeset(params)
+      else
+        account |> Account.changeset(params)
+      end
+
+    account = account |> Repo.update()
 
     case account do
       {:ok, account} ->
