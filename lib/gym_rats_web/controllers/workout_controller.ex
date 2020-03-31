@@ -22,7 +22,6 @@ defmodule GymRatsWeb.WorkoutController do
       |> join(:left, [c], m in assoc(c, :memberships))
       |> where([_, m], m.gym_rats_user_id == ^account_id)
       |> challenge_filter.()
-      |> ChallengeQuery.active()
       |> Repo.all()
       |> Enum.map(fn c ->
         %Workout{challenge_id: c.id, gym_rats_user_id: account_id}
