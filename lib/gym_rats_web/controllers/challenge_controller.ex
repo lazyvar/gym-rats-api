@@ -7,6 +7,18 @@ defmodule GymRatsWeb.ChallengeController do
 
   import Ecto.Query
 
+  def index(conn, %{"code" => code}, account_id) do
+    challenge =
+      Challenge
+      |> where([c], c.code == ^code)
+      |> Repo.one()
+
+    case challenge do
+      nil -> failure(conn, "A challenge with that code does not exist.")
+      _ -> success(conn, [ChallengeView.default(challenge)])
+    end
+  end
+
   def index(conn, %{"filter" => filter}, account_id) do
     challenge_query =
       case filter do
