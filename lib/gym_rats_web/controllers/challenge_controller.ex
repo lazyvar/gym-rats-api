@@ -73,8 +73,12 @@ defmodule GymRatsWeb.ChallengeController do
           |> Repo.insert()
 
         case membership do
-          {:ok, _} -> success(conn, ChallengeView.default(challenge))
-          {:error, membership} -> failure(conn, membership)
+          {:ok, _} ->
+            challenge = Challenge |> Repo.get!(challenge.id)
+            success(conn, ChallengeView.default(challenge))
+
+          {:error, membership} ->
+            failure(conn, membership)
         end
 
       {:error, challenge} ->
