@@ -36,8 +36,8 @@ defmodule GymRats.Model.Challenge do
     |> validate_required(@required)
     |> validate_inclusion(:score_by, [
       "workouts",
-      "minutes",
-      "miles",
+      "duration",
+      "distance",
       "steps",
       "calories",
       "points"
