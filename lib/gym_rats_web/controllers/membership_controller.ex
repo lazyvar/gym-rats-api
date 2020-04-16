@@ -41,6 +41,21 @@ defmodule GymRatsWeb.MembershipController do
     end
   end
 
+  def show(conn, %{"id" => challenge_id}, account_id) do
+    membership =
+      Membership
+      |> where([m], m.challenge_id == ^challenge_id and m.gym_rats_user_id == ^account_id)
+      |> Repo.one()
+
+    case membership do
+      nil ->
+        failure(conn, "Membership does not exist.")
+
+      _ ->
+        success(conn, %{owner: membership.owner})
+    end
+  end
+
   def create(conn, _params, _account_id), do: failure(conn, "Code missing.")
 
   def delete(conn, %{"id" => challenge_id}, account_id) do

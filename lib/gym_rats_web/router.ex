@@ -30,13 +30,14 @@ defmodule GymRatsWeb.Router do
       end
 
       resources "/messages", Challenge.MessageController, only: [:index]
+      resources "/permissions", Challenge.PermissionController, only: [:index]
       resources "/workouts", Challenge.WorkoutController, only: [:index]
     end
 
     resources "/comments", CommentController, only: [:delete]
     resources "/devices", DeviceController, only: [:create]
     delete "/devices", DeviceController, :delete_all
-    resources "/memberships", MembershipController, only: [:create, :delete]
+    resources "/memberships", MembershipController, only: [:create, :delete, :show]
 
     resources "/workouts", WorkoutController, only: [:create, :delete, :show] do
       resources "/comments", Workout.CommentController, only: [:create, :index]
