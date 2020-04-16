@@ -1,12 +1,14 @@
 defmodule GymRatsWeb.Challenge.InfoController do
   use GymRatsWeb, :protected_controller
 
-  alias GymRats.Model.{Account, Workout}
+  alias GymRats.Model.{Account, Workout, Challenge}
+  alias GymRatsWeb.AccountView
   alias GymRats.Repo
 
   import Ecto.Query
+  import Logger
 
-  def info(conn, %{"challenge_id" => challenge_id}, _account_id) do
+  def info(conn, %{"challenge_id" => challenge_id}, account_id) do
     member_count =
       Account
       |> join(:left, [a], c in assoc(a, :memberships))
@@ -21,6 +23,108 @@ defmodule GymRatsWeb.Challenge.InfoController do
       |> select(count("*"))
       |> Repo.one()
 
-    success(conn, %{member_count: member_count, workout_count: workout_count})
+    challenge = Challenge |> Repo.get!(challenge_id)
+
+    leader_q =
+      case challenge.score_by do
+        "workouts" -> workouts_leader_query(challenge)
+        _ -> leader_query(challenge)
+      end
+
+    current_account_q =
+      case challenge.score_by do
+        "workouts" -> workouts_for_account(challenge, account_id)
+        _ -> score_for_account(challenge, account_id)
+      end
+
+    if workout_count != 0 do
+      %{:rows => [[leader_score | [leader_id | _]]]} =
+        Ecto.Adapters.SQL.query!(Repo, leader_q, [])
+
+      %{:rows => [[current_account_score] | _]} =
+        Ecto.Adapters.SQL.query!(Repo, current_account_q, [])
+
+      leader = Account |> Repo.get!(leader_id)
+
+      success(conn, %{
+        member_count: member_count,
+        workout_count: workout_count,
+        leader: AccountView.default(leader),
+        leader_score: "#{leader_score}",
+        current_account_score: "#{current_account_score}"
+      })
+    else
+      leader_id = account_id
+      leader_score = "-"
+      current_account_score = "-"
+
+      leader = Account |> Repo.get!(leader_id)
+
+      success(conn, %{
+        member_count: member_count,
+        workout_count: workout_count,
+        leader: AccountView.default(leader),
+        leader_score: "#{leader_score}",
+        current_account_score: "#{current_account_score}"
+      })
+    end
+  end
+
+  defp workouts_leader_query(challenge) do
+    """
+      SELECT 
+        COUNT(*) as total, 
+        gym_rats_user_id
+      FROM 
+        workouts
+      WHERE
+        challenge_id = #{challenge.id}
+      GROUP BY gym_rats_user_id
+      ORDER BY
+        total DESC
+      LIMIT 1
+    """
+  end
+
+  defp workouts_for_account(challenge, account_id) do
+    """
+      SELECT 
+        COUNT(*) as total
+      FROM 
+        workouts
+      WHERE
+        challenge_id = #{challenge.id}
+      AND
+        gym_rats_user_id = #{account_id}
+    """
+  end
+
+  defp leader_query(challenge) do
+    """
+      SELECT 
+        SUM(COALESCE(CAST(#{challenge.score_by} as float), 0)) as total, 
+        gym_rats_user_id
+      FROM 
+        workouts
+      WHERE
+        challenge_id = #{challenge.id}
+      GROUP BY gym_rats_user_id
+      ORDER BY
+        total DESC
+      LIMIT 1
+    """
+  end
+
+  defp score_for_account(challenge, account_id) do
+    """
+      SELECT 
+        SUM(COALESCE(CAST(#{challenge.score_by} as float), 0))
+      FROM 
+        workouts
+      WHERE
+        challenge_id = #{challenge.id}
+      AND
+        gym_rats_user_id = #{account_id}
+    """
   end
 end
