@@ -6,7 +6,6 @@ defmodule GymRatsWeb.Challenge.InfoController do
   alias GymRats.Repo
 
   import Ecto.Query
-  import Logger
 
   def info(conn, %{"challenge_id" => challenge_id}, account_id) do
     member_count =
