@@ -13,6 +13,8 @@ defmodule GymRats.Model.Challenge do
     field :profile_picture_url, :string
     field :start_date, :utc_datetime_usec
     field :time_zone, :string
+    field :description, :string
+    field :score_by, :string
 
     has_many :workouts, Workout
     has_many :memberships, Membership
@@ -26,12 +28,20 @@ defmodule GymRats.Model.Challenge do
   end
 
   @required ~w(name code start_date end_date time_zone)a
-  @optional ~w(profile_picture_url code)a
+  @optional ~w(profile_picture_url code description score_by)a
 
   def changeset(challenge, attrs) do
     challenge
     |> cast(attrs, @required ++ @optional)
     |> validate_required(@required)
+    |> validate_inclusion(:score_by, [
+      "workouts",
+      "duration",
+      "distance",
+      "steps",
+      "calories",
+      "points"
+    ])
   end
 
   def new_changeset(params) do
