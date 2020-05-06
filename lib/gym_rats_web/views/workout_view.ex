@@ -3,7 +3,11 @@ defmodule GymRatsWeb.WorkoutView do
 
   alias GymRatsWeb.AccountView
 
-  @default_attrs ~w(id gym_rats_user_id created_at challenge_id title steps points steps calories description distance duration google_place_id photo_url)a
+  @default_attrs ~w(
+    id gym_rats_user_id created_at challenge_id title steps points 
+    steps calories description distance duration google_place_id photo_url
+    apple_device_name apple_source_name apple_workout_uuid activity_type
+  )a
 
   def default(workouts) when is_list(workouts) do
     workouts |> Enum.map(fn w -> default(w) end)
