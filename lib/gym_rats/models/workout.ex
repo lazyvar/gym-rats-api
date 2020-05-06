@@ -35,5 +35,14 @@ defmodule GymRats.Model.Workout do
     workout
     |> cast(attrs, @required ++ @optional)
     |> validate_required(@required)
+    |> validate_inclusion(:activity_type, [
+      "walking",
+      "running",
+      "cycling",
+      "hiit",
+      "yoga",
+      "hiking",
+      "other"
+    ])
   end
 end
