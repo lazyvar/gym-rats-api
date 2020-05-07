@@ -3,7 +3,7 @@ defmodule GymRatsWeb.MessageView do
 
   alias GymRatsWeb.AccountView
 
-  @default_attrs ~w(id content created_at challenge_id)a
+  @default_attrs ~w(id content created_at challenge_id message_type)a
 
   def default(message) do
     message |> keep(@default_attrs)
