@@ -32,12 +32,19 @@ defmodule GymRats.Notification do
       )
       |> Repo.all()
 
+    notification_message =
+      if chat_message.message_type = "image" do
+        "Shared a photo"
+      else
+        chat_message.content
+      end
+
     Enum.map(members, fn member ->
       if Presence.get_by_key("room:challenge:#{challenge.id}", "account:#{member.id}") == [] do
         send_notification_to_account(
           challenge.name,
           chat_message.account.full_name,
-          chat_message.content,
+          notification_message,
           payload,
           member.id
         )
