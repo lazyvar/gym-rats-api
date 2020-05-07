@@ -33,7 +33,7 @@ defmodule GymRats.Notification do
       |> Repo.all()
 
     notification_message =
-      if chat_message.message_type = "image" do
+      if chat_message.message_type == "image" do
         "Shared a photo"
       else
         chat_message.content
