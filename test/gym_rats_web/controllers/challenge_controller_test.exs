@@ -119,6 +119,35 @@ defmodule GymRatsWeb.ChallengeControllerTest do
   end
 
   describe "index/3" do
+    test "find by code" do
+      account = insert(:account) |> Account.put_token()
+      upcoming_challenge = insert(:upcoming_challenge)
+
+      conn =
+        get(
+          build_conn() |> put_req_header("authorization", account.token),
+          "/challenges?code=#{upcoming_challenge.code}"
+        )
+
+      response = json_response(conn, 200)
+
+      data = response["data"]
+
+      assert is_list(data)
+      assert data |> Enum.any?(fn c -> c["id"] == upcoming_challenge.id end)
+
+      conn =
+        get(
+          build_conn() |> put_req_header("authorization", account.token),
+          "/challenges?code=123asda12"
+        )
+
+      assert %{
+               "status" => "failure",
+               "error" => "A challenge with that code does not exist."
+             } = json_response(conn, 422)
+    end
+
     test "Returns all the challenges if no filter provided" do
       account = insert(:account) |> Account.put_token()
       upcoming_challenge = insert(:upcoming_challenge)
@@ -213,6 +242,36 @@ defmodule GymRatsWeb.ChallengeControllerTest do
       assert is_list(data)
       assert length(data) == 1
       assert data |> Enum.any?(fn c -> c["id"] == upcoming_challenge.id end)
+    end
+  end
+
+  describe "show/3" do
+    test "Returns the challenge preview" do
+      account = insert(:account) |> Account.put_token()
+      upcoming_challenge = insert(:upcoming_challenge)
+
+      conn =
+        get(
+          build_conn() |> put_req_header("authorization", account.token),
+          "/challenges/#{upcoming_challenge.id}"
+        )
+
+      response = json_response(conn, 200)
+      data = response["data"]
+
+      assert data["name"] == "Challenge accepted!"
+      assert data["profile_picture_url"] == "i.reddit.com/woop"
+
+      conn =
+        get(
+          build_conn() |> put_req_header("authorization", account.token),
+          "/challenges/1235"
+        )
+
+      assert %{
+               "status" => "failure",
+               "error" => "A challenge with id (1235) does not exist."
+             } = json_response(conn, 422)
     end
   end
 
