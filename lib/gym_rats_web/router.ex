@@ -30,7 +30,6 @@ defmodule GymRatsWeb.Router do
       end
 
       resources "/messages", Challenge.MessageController, only: [:index]
-      resources "/permissions", Challenge.PermissionController, only: [:index]
       resources "/workouts", Challenge.WorkoutController, only: [:index]
     end
 
