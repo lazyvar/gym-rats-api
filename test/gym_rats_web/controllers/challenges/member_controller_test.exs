@@ -34,6 +34,7 @@ defmodule GymRatsWeb.Challenge.MemberControllerTest do
       assert data |> Enum.any?(fn c -> c["id"] == account1.id end)
       assert data |> Enum.any?(fn c -> c["id"] == account2.id end)
       assert data |> Enum.any?(fn c -> c["id"] == account3.id end)
+      assert !(data |> Enum.any?(fn c -> c["id"] == account4.id end))
     end
   end
 end
