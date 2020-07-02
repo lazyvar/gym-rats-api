@@ -4,6 +4,7 @@ defmodule GymRatsWeb.AccountView do
   import GymRatsWeb.JSONView
 
   @default_attrs ~w(id full_name email profile_picture_url)a
+  @current_user_attrs ~w(token workout_notifications_enabled comment_notifications_enabled chat_message_notifications_enabled)a
 
   def default(accounts) when is_list(accounts) do
     accounts |> Enum.map(fn a -> default(a) end)
@@ -13,8 +14,8 @@ defmodule GymRatsWeb.AccountView do
     account |> keep(@default_attrs)
   end
 
-  def with_token(account) do
-    account |> keep([:token | @default_attrs])
+  def for_current_user(account) do
+    account |> keep(@default_attrs ++ @current_user_attrs)
   end
 
   def with_workouts(accounts) when is_list(accounts) do

@@ -14,6 +14,9 @@ defmodule GymRats.Model.Account do
     field :profile_picture_url, :string
     field :reset_password_token, :string
     field :reset_password_token_expiration, :utc_datetime_usec
+    field :workout_notifications_enabled, :boolean
+    field :comment_notifications_enabled, :boolean
+    field :chat_message_notifications_enabled, :boolean
 
     has_many :workouts, Workout, foreign_key: :gym_rats_user_id
     has_many :comments, Comment, foreign_key: :gym_rats_user_id
@@ -28,7 +31,7 @@ defmodule GymRats.Model.Account do
   end
 
   @required ~w(full_name email)a
-  @optional ~w(reset_password_token reset_password_token_expiration profile_picture_url)a
+  @optional ~w(reset_password_token reset_password_token_expiration profile_picture_url workout_notifications_enabled comment_notifications_enabled chat_message_notifications_enabled)a
 
   def changeset(account, attrs) do
     account
@@ -65,14 +68,13 @@ defmodule GymRats.Model.Account do
   end
 
   defp validate_password_update(changeset) do
-    account =
-      validate_change(changeset, :current_password, fn _field, value ->
-        if Bcrypt.verify_pass(value, changeset.data.password_digest) do
-          []
-        else
-          [{:current_password, "is incorrect."}]
-        end
-      end)
+    validate_change(changeset, :current_password, fn _field, value ->
+      if Bcrypt.verify_pass(value, changeset.data.password_digest) do
+        []
+      else
+        [{:current_password, "is incorrect."}]
+      end
+    end)
   end
 
   defp put_password_hash(changeset) do

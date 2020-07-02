@@ -106,8 +106,9 @@ defmodule GymRats.Notification do
 
   defp send_notification_to_account_sync(title, subtitle, body, gr_payload, account_id) do
     device = Device |> where([d], d.gym_rats_user_id == ^account_id) |> Repo.one()
-
-    if device != nil do
+    account = Account |> Repo.get!(account_id)
+    
+    if device != nil && notification_type_enabled(gr_payload["notification_type"], account) do
       apns =
         APNS.Notification.new(%{}, device.token, "com.hasz.GymRats")
         |> put_alert(%{
@@ -128,6 +129,14 @@ defmodule GymRats.Notification do
         account_id: account_id
       })
       |> Repo.insert!()
+    end
+  end
+
+  defp notification_type_enabled(notification_type, account) do
+    case notification_type do
+      "workout_comment" -> account.comment_notifications_enabled
+      "chat_message" -> account.chat_message_notifications_enabled
+      _ -> false
     end
   end
 end
