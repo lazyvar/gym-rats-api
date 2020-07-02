@@ -14,6 +14,9 @@ defmodule GymRats.Model.Account do
     field :profile_picture_url, :string
     field :reset_password_token, :string
     field :reset_password_token_expiration, :utc_datetime_usec
+    field :workout_notifications_enabled, :boolean
+    field :comment_notifications_enabled, :boolean
+    field :chat_message_notifications_enabled, :boolean
 
     has_many :workouts, Workout, foreign_key: :gym_rats_user_id
     has_many :comments, Comment, foreign_key: :gym_rats_user_id
