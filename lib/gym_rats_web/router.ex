@@ -14,13 +14,14 @@ defmodule GymRatsWeb.Router do
   scope "/", GymRatsWeb do
     pipe_through [:api, :protected]
 
-    put "/accounts/self", AccountController, :update_self
+    get "/account", AccountController, :show
+    put "/account", AccountController, :update
+
+    put "/accounts/self", AccountController, :update # <- deprecated
 
     resources "/accounts", AccountController, only: [] do
       resources "/workouts", Account.WorkoutController, only: [:index]
     end
-
-    get "/account_settings", AccountSettingsController, :show
 
     resources "/challenges", ChallengeController, only: [:create, :index, :update, :show] do
       get "/chat_notifications/count", Challenge.ChatNotificationController, :count

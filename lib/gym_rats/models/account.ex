@@ -31,7 +31,7 @@ defmodule GymRats.Model.Account do
   end
 
   @required ~w(full_name email)a
-  @optional ~w(reset_password_token reset_password_token_expiration profile_picture_url)a
+  @optional ~w(reset_password_token reset_password_token_expiration profile_picture_url workout_notifications_enabled comment_notifications_enabled chat_message_notifications_enabled)a
 
   def changeset(account, attrs) do
     account
