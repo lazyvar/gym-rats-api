@@ -20,6 +20,8 @@ defmodule GymRatsWeb.Router do
       resources "/workouts", Account.WorkoutController, only: [:index]
     end
 
+    get "/account_settings", AccountSettingsController, :show
+
     resources "/challenges", ChallengeController, only: [:create, :index, :update, :show] do
       get "/chat_notifications/count", Challenge.ChatNotificationController, :count
       post "/chat_notifications/seen", Challenge.ChatNotificationController, :seen

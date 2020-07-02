@@ -68,14 +68,13 @@ defmodule GymRats.Model.Account do
   end
 
   defp validate_password_update(changeset) do
-    account =
-      validate_change(changeset, :current_password, fn _field, value ->
-        if Bcrypt.verify_pass(value, changeset.data.password_digest) do
-          []
-        else
-          [{:current_password, "is incorrect."}]
-        end
-      end)
+    validate_change(changeset, :current_password, fn _field, value ->
+      if Bcrypt.verify_pass(value, changeset.data.password_digest) do
+        []
+      else
+        [{:current_password, "is incorrect."}]
+      end
+    end)
   end
 
   defp put_password_hash(changeset) do
