@@ -9,6 +9,44 @@ defmodule GymRats.Notification do
 
   require Logger
 
+  def send_workouts(workouts) do
+    Task.async(fn -> send_workouts_sync(workouts) end)
+  end
+
+  defp send_workouts_sync(workouts) do
+    workouts
+    |> Repo.preload([:challenge, :account])
+    |> Enum.flat_map(fn workout ->
+      Account
+      |> join(:left, [a], m in assoc(a, :memberships))
+      |> where(
+        [a, m],
+        a.id == m.gym_rats_user_id and m.challenge_id == ^workout.challenge_id and
+          a.id != ^workout.account.id
+      )
+      |> Repo.all()
+      |> Enum.map(fn member ->
+        {member, workout}
+      end)
+    end)
+    |> Enum.uniq_by(fn {member, _} -> member.id end)
+    |> Enum.map(fn {member, workout} ->
+      payload = %{
+        "workout_id" => workout.id,
+        "notification_type" => "workout",
+        "challenge_id" => workout.challenge_id
+      }
+
+      send_notification_to_account(
+        workout.challenge.name,
+        workout.account.full_name,
+        workout.title,
+        payload,
+        member.id
+      )
+    end)
+  end
+
   def send_chat_message(chat_message) do
     Task.async(fn -> send_chat_message_sync(chat_message) end)
   end
@@ -107,7 +145,7 @@ defmodule GymRats.Notification do
   defp send_notification_to_account_sync(title, subtitle, body, gr_payload, account_id) do
     device = Device |> where([d], d.gym_rats_user_id == ^account_id) |> Repo.one()
     account = Account |> Repo.get!(account_id)
-    
+
     if device != nil && notification_type_enabled(gr_payload["notification_type"], account) do
       apns =
         APNS.Notification.new(%{}, device.token, "com.hasz.GymRats")
@@ -136,6 +174,7 @@ defmodule GymRats.Notification do
     case notification_type do
       "workout_comment" -> account.comment_notifications_enabled
       "chat_message" -> account.chat_message_notifications_enabled
+      "workout" -> account.workout_notifications_enabled
       _ -> false
     end
   end
