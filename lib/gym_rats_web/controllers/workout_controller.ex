@@ -3,7 +3,6 @@ defmodule GymRatsWeb.WorkoutController do
 
   alias GymRatsWeb.WorkoutView
   alias GymRats.Model.{Workout, Challenge, Membership, Account}
-  alias GymRats.Query.ChallengeQuery
   alias GymRats.{Notification, Repo}
 
   import Ecto.Query
