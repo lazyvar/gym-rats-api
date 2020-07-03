@@ -21,7 +21,7 @@ defmodule GymRatsWeb.MembershipController do
 
         case membership == nil do
           false ->
-            failure(conn, "You are already a part of this challenge.")
+            success(conn, ChallengeView.default(challenge))
 
           true ->
             membership =
