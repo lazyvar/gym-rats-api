@@ -21,7 +21,7 @@ defmodule GymRatsWeb.WorkoutController do
         |> Workout.changeset(params)
         |> Repo.insert!()
       end)
-    
+
     workout = workouts |> List.first()
     account = Account |> Repo.get!(account_id)
 
@@ -31,7 +31,7 @@ defmodule GymRatsWeb.WorkoutController do
       failure(conn, "No challenges provided.")
     else
       workout = Map.put(workout, :account, account)
-      
+
       success(conn, WorkoutView.with_account(workout))
     end
   end

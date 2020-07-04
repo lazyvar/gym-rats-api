@@ -87,13 +87,13 @@ defmodule GymRatsWeb.MembershipControllerTest do
           params
         )
 
-        assert %{
-          "data" => %{
-            "name" => "Challenge accepted!",
-            "profile_picture_url" => "i.reddit.com/woop"
-          },
-          "status" => "success"
-        } = json_response(conn, 200)
+      assert %{
+               "data" => %{
+                 "name" => "Challenge accepted!",
+                 "profile_picture_url" => "i.reddit.com/woop"
+               },
+               "status" => "success"
+             } = json_response(conn, 200)
     end
   end
 

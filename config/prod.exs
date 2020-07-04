@@ -36,9 +36,10 @@ config :sentry,
   included_environments: [:prod],
   environment_name: :prod
 
-config :pigeon, workers: [
-  {GymRats.Pigeon, :apns_config}
-]
+config :pigeon,
+  workers: [
+    {GymRats.Pigeon, :apns_config}
+  ]
 
 config :gym_rats, GymRats.Mailer,
   adapter: Bamboo.MailgunAdapter,
