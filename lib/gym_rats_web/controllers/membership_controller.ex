@@ -40,6 +40,7 @@ defmodule GymRatsWeb.MembershipController do
         end
     end
   end
+
   def create(conn, _params, _account_id), do: failure(conn, "Code missing.")
 
   def show(conn, %{"id" => challenge_id}, account_id) do
@@ -56,7 +57,6 @@ defmodule GymRatsWeb.MembershipController do
         success(conn, %{owner: membership.owner})
     end
   end
-
 
   def delete(conn, %{"id" => challenge_id}, account_id) do
     membership =

@@ -35,6 +35,6 @@ defmodule GymRatsWeb.AccountController do
   def show(conn, _params, account_id) do
     account = Account |> Repo.get!(account_id) |> Account.put_token()
 
-    success(conn, AccountView.for_current_user(account))  
+    success(conn, AccountView.for_current_user(account))
   end
 end
