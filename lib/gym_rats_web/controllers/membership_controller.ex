@@ -21,7 +21,7 @@ defmodule GymRatsWeb.MembershipController do
 
         case membership == nil do
           false ->
-            failure(conn, "You are already a part of this challenge.")
+            success(conn, ChallengeView.default(challenge))
 
           true ->
             membership =
@@ -41,6 +41,8 @@ defmodule GymRatsWeb.MembershipController do
     end
   end
 
+  def create(conn, _params, _account_id), do: failure(conn, "Code missing.")
+
   def show(conn, %{"id" => challenge_id}, account_id) do
     membership =
       Membership
@@ -55,8 +57,6 @@ defmodule GymRatsWeb.MembershipController do
         success(conn, %{owner: membership.owner})
     end
   end
-
-  def create(conn, _params, _account_id), do: failure(conn, "Code missing.")
 
   def delete(conn, %{"id" => challenge_id}, account_id) do
     membership =

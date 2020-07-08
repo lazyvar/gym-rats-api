@@ -68,7 +68,7 @@ defmodule GymRatsWeb.MembershipControllerTest do
                json_response(conn, 422)
     end
 
-    test "cant join twice" do
+    test "fool me once cant get fooled again" do
       account = insert(:account) |> Account.put_token()
       challenge = insert(:challenge)
 
@@ -87,8 +87,13 @@ defmodule GymRatsWeb.MembershipControllerTest do
           params
         )
 
-      assert %{"error" => "You are already a part of this challenge.", "status" => "failure"} =
-               json_response(conn, 422)
+      assert %{
+               "data" => %{
+                 "name" => "Challenge accepted!",
+                 "profile_picture_url" => "i.reddit.com/woop"
+               },
+               "status" => "success"
+             } = json_response(conn, 200)
     end
   end
 

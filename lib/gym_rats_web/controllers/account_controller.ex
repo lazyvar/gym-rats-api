@@ -5,7 +5,7 @@ defmodule GymRatsWeb.AccountController do
   alias GymRatsWeb.AccountView
   alias GymRats.Repo
 
-  def update_self(conn, params, account_id) do
+  def update(conn, params, account_id) do
     account = Account |> Repo.get(account_id)
 
     illegal_params =
@@ -25,10 +25,16 @@ defmodule GymRatsWeb.AccountController do
     case account do
       {:ok, account} ->
         account = account |> Account.put_token()
-        success(conn, AccountView.with_token(account))
+        success(conn, AccountView.for_current_user(account))
 
       {:error, account} ->
         failure(conn, account)
     end
+  end
+
+  def show(conn, _params, account_id) do
+    account = Account |> Repo.get!(account_id) |> Account.put_token()
+
+    success(conn, AccountView.for_current_user(account))
   end
 end

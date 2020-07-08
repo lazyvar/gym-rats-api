@@ -14,7 +14,10 @@ defmodule GymRatsWeb.Router do
   scope "/", GymRatsWeb do
     pipe_through [:api, :protected]
 
-    put "/accounts/self", AccountController, :update_self
+    get "/account", AccountController, :show
+    put "/account", AccountController, :update
+
+    put "/accounts/self", AccountController, :update # <- deprecated
 
     resources "/accounts", AccountController, only: [] do
       resources "/workouts", Account.WorkoutController, only: [:index]
@@ -30,7 +33,6 @@ defmodule GymRatsWeb.Router do
       end
 
       resources "/messages", Challenge.MessageController, only: [:index]
-      resources "/permissions", Challenge.PermissionController, only: [:index]
       resources "/workouts", Challenge.WorkoutController, only: [:index]
     end
 

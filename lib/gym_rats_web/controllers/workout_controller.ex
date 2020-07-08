@@ -3,13 +3,12 @@ defmodule GymRatsWeb.WorkoutController do
 
   alias GymRatsWeb.WorkoutView
   alias GymRats.Model.{Workout, Challenge, Membership, Account}
-  alias GymRats.Query.ChallengeQuery
-  alias GymRats.Repo
+  alias GymRats.{Notification, Repo}
 
   import Ecto.Query
 
   def create(conn, params, account_id) do
-    {challenges, params} = params |> Map.pop("challenges")
+    {challenges, params} = params |> Map.pop("challenges", [])
 
     workouts =
       Challenge
@@ -25,9 +24,16 @@ defmodule GymRatsWeb.WorkoutController do
 
     workout = workouts |> List.first()
     account = Account |> Repo.get!(account_id)
-    workout = Map.put(workout, :account, account)
 
-    success(conn, WorkoutView.with_account(workout))
+    workouts |> Notification.send_workouts()
+
+    if workout == nil do
+      failure(conn, "No challenges provided.")
+    else
+      workout = Map.put(workout, :account, account)
+
+      success(conn, WorkoutView.with_account(workout))
+    end
   end
 
   def show(conn, %{"id" => id}, _account_id) do
