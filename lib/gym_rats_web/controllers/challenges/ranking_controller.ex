@@ -5,6 +5,7 @@ defmodule GymRatsWeb.Challenge.RankingController do
   alias GymRatsWeb.RankingView
 
   import Ecto.Query
+  import Logger
 
   def index(conn, %{"score_by" => score_by, "challenge_id" => challenge_id}, account_id) do
     membership =
@@ -28,8 +29,9 @@ defmodule GymRatsWeb.Challenge.RankingController do
         rankings =
           rows
           |> Enum.map(fn [score | [gym_rats_user_id | []]] ->
+            score = :erlang.float_to_binary(score, [decimals: 0])
             account = Account |> Repo.get!(gym_rats_user_id)
-            %{score: score, account: account}
+            %{score: "#{score}", account: account}
           end)
 
         success(conn, RankingView.default(rankings))
