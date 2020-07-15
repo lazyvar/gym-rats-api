@@ -17,7 +17,7 @@ defmodule GymRatsWeb.Router do
     get "/account", AccountController, :show
     put "/account", AccountController, :update
 
-    put "/accounts/self", AccountController, :update # <- deprecated
+    put "/accounts/self", AccountController, :update  # <- deprecated
 
     resources "/accounts", AccountController, only: [] do
       resources "/workouts", Account.WorkoutController, only: [:index]
@@ -33,6 +33,7 @@ defmodule GymRatsWeb.Router do
       end
 
       resources "/messages", Challenge.MessageController, only: [:index]
+      resources "/rankings", Challenge.RankingController, only: [:index]
       resources "/workouts", Challenge.WorkoutController, only: [:index]
     end
 

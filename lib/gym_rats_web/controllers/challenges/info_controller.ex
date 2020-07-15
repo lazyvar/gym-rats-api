@@ -45,6 +45,14 @@ defmodule GymRatsWeb.Challenge.InfoController do
 
       leader = Account |> Repo.get!(leader_id)
 
+      if is_float(leader_score) do
+        leader_score = :erlang.float_to_binary(leader_score, [decimals: 0])
+      end
+
+      if is_float(current_account_score) do
+        current_account_score = :erlang.float_to_binary(current_account_score, [decimals: 0])
+      end
+
       success(conn, %{
         member_count: member_count,
         workout_count: workout_count,
