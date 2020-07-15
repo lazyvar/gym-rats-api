@@ -29,7 +29,10 @@ defmodule GymRatsWeb.Challenge.RankingController do
         rankings =
           rows
           |> Enum.map(fn [score | [gym_rats_user_id | []]] ->
-            score = :erlang.float_to_binary(score, [decimals: 0])
+            if is_float(score) do
+              score = :erlang.float_to_binary(score, [decimals: 2])
+            end
+
             account = Account |> Repo.get!(gym_rats_user_id)
             %{score: "#{score}", account: account}
           end)
