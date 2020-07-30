@@ -48,6 +48,6 @@ deploy_production:
     - git push -f gigalixir HEAD:refs/heads/master
   environment:
     name: production
-    url: https://www..gymratsapi.com
+    url: https://www.gymratsapi.com
   only:
     - production
