@@ -36,7 +36,7 @@ deploy_pre_production:
     - git push -f gigalixir HEAD:refs/heads/master
   environment:
     name: pre-production
-    url: https://pre.gymratsapi.com
+    url: https://gym-rats-api-pre-production.gigalixirapp.com
   only:
     - master
 
