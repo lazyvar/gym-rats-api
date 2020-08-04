@@ -50,13 +50,18 @@ defmodule GymRatsWeb.Challenge.RankingController do
   defp score_by_rankings(challenge_id, score_by) do
     query = """
       SELECT 
-        SUM(COALESCE(CAST(#{score_by} as float), 0)) as total,
-        gym_rats_user_id
+        SUM(COALESCE(CAST(workout.#{score_by} as float), 0)) as total,
+        account.id
       FROM 
-        workouts
+        gym_rats_users account
+      LEFT JOIN
+        (SELECT * FROM workouts WHERE challenge_id = #{challenge_id}) workout
+      ON
+        workout.id = account.id
       WHERE
-        challenge_id = #{challenge_id}
-      GROUP BY gym_rats_user_id
+        account.id IN (SELECT gym_rats_user_id FROM memberships WHERE challenge_id = #{challenge_id})
+      GROUP BY 
+        account.id
       ORDER BY
         total DESC
     """
@@ -65,13 +70,18 @@ defmodule GymRatsWeb.Challenge.RankingController do
   defp workout_rankings(challenge_id) do
     query = """
       SELECT 
-        COUNT(*) as total, 
-        gym_rats_user_id
+        COUNT(workout) as total, 
+        account.id
       FROM 
-        workouts
+        gym_rats_users account
+      LEFT JOIN
+        (SELECT * FROM workouts WHERE challenge_id = #{challenge_id}) workout
+      ON
+        workout.id = account.id
       WHERE
-        challenge_id = #{challenge_id}
-      GROUP BY gym_rats_user_id
+        account.id IN (SELECT gym_rats_user_id FROM memberships WHERE challenge_id = #{challenge_id})
+      GROUP BY 
+        account.id
       ORDER BY
         total DESC
     """
