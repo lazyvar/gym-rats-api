@@ -3,6 +3,7 @@ defmodule GymRatsWeb.Challenge.RankingController do
 
   alias GymRats.Model.{Challenge, Account, Membership}
   alias GymRatsWeb.RankingView
+  alias GymRats.NumberFormatter
 
   import Ecto.Query
   import Logger
@@ -31,9 +32,14 @@ defmodule GymRatsWeb.Challenge.RankingController do
           |> Enum.map(fn [score | [gym_rats_user_id | []]] ->
             score =
               case score_by do
-                "workouts" -> score
-                "distance" -> :erlang.float_to_binary(score, decimals: 1) |> format_float
-                _ -> round(score) |> format_int
+                "workouts" ->
+                  score
+
+                "distance" ->
+                  :erlang.float_to_binary(score, decimals: 1) |> NumberFormatter.format()
+
+                _ ->
+                  round(score) |> NumberFormatter.format()
               end
 
             account = Account |> Repo.get!(gym_rats_user_id)
@@ -48,28 +54,6 @@ defmodule GymRatsWeb.Challenge.RankingController do
     challenge = Challenge |> Repo.get!(challenge_id)
 
     index(conn, %{"score_by" => challenge.score_by, "challenge_id" => challenge_id}, account_id)
-  end
-
-  defp format_int(number) do
-    number
-    |> Integer.to_char_list()
-    |> Enum.reverse()
-    |> Enum.chunk_every(3, 3, [])
-    |> Enum.join(",")
-    |> String.reverse()
-  end
-
-  def format_float(number) do
-    number
-    |> to_string
-    |> String.replace(~r/\d+(?=\.)|\A\d+\z/, fn(int) ->
-      int
-      |> String.graphemes
-      |> Enum.reverse
-      |> Enum.chunk_every(3, 3, [])
-      |> Enum.join(",")
-      |> String.reverse
-    end)
   end
 
   defp score_by_rankings(challenge_id, score_by) do
