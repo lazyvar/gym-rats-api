@@ -46,7 +46,7 @@ defmodule GymRatsWeb.Challenge.InfoController do
       leader = Account |> Repo.get!(leader_id)
 
       leader_score = leader_score |> format_score(challenge)
-      current_account_score = current_account_score |> format_score(challenge)
+      current_account_score = (current_account_score || 0.0) |> format_score(challenge)
             
       success(conn, %{
         member_count: member_count,
