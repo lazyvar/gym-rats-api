@@ -32,7 +32,8 @@ defmodule GymRatsWeb.Challenge.RankingController do
             score =
               case score_by do
                 "workouts" -> score
-                _ -> round(score) |> format
+                "distance" -> :erlang.float_to_binary(score, decimals: 1) |> format_float
+                _ -> round(score) |> format_int
               end
 
             account = Account |> Repo.get!(gym_rats_user_id)
@@ -49,13 +50,26 @@ defmodule GymRatsWeb.Challenge.RankingController do
     index(conn, %{"score_by" => challenge.score_by, "challenge_id" => challenge_id}, account_id)
   end
 
-  defp format(number) do
+  defp format_int(number) do
     number
     |> Integer.to_char_list()
     |> Enum.reverse()
     |> Enum.chunk_every(3, 3, [])
     |> Enum.join(",")
     |> String.reverse()
+  end
+
+  def format_float(number) do
+    number
+    |> to_string
+    |> String.replace(~r/\d+(?=\.)|\A\d+\z/, fn(int) ->
+      int
+      |> String.graphemes
+      |> Enum.reverse
+      |> Enum.chunk_every(3, 3, [])
+      |> Enum.join(",")
+      |> String.reverse
+    end)
   end
 
   defp score_by_rankings(challenge_id, score_by) do
