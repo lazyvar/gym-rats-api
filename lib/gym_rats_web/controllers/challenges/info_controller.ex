@@ -45,14 +45,9 @@ defmodule GymRatsWeb.Challenge.InfoController do
 
       leader = Account |> Repo.get!(leader_id)
 
-      if is_float(leader_score) do
-        leader_score = :erlang.float_to_binary(leader_score, decimals: 0)
-      end
-
-      if is_float(current_account_score) do
-        current_account_score = :erlang.float_to_binary(current_account_score, decimals: 0)
-      end
-
+      leader_score = leader_score |> format_score(challenge)
+      current_account_score = current_account_score |> format_score(challenge)
+            
       success(conn, %{
         member_count: member_count,
         workout_count: workout_count,
@@ -77,45 +72,69 @@ defmodule GymRatsWeb.Challenge.InfoController do
     end
   end
 
+  defp format_score(score, challenge) do
+    case challenge.score_by do
+      "workouts" -> score
+      "distance" -> :erlang.float_to_binary(score, decimals: 1) |> format_float
+      _ -> round(score) |> format_int
+    end
+  end
+
   defp workouts_leader_query(challenge) do
     """
-      SELECT 
-        COUNT(*) as total, 
-        gym_rats_user_id
-      FROM 
-        workouts
-      WHERE
-        challenge_id = #{challenge.id}
-      GROUP BY gym_rats_user_id
-      ORDER BY
-        total DESC
-      LIMIT 1
+    SELECT 
+      COUNT(workout) as total,
+      account.id
+    FROM 
+      gym_rats_users account
+    LEFT JOIN
+      (SELECT * FROM workouts WHERE challenge_id = #{challenge.id}) workout
+    ON
+      workout.gym_rats_user_id = account.id
+    WHERE
+      account.id 
+      IN (
+        SELECT gym_rats_user_id FROM memberships WHERE challenge_id = #{challenge.id}
+      )
+    GROUP BY 
+      account.id
+    ORDER BY
+      total DESC
+    LIMIT 1
     """
   end
 
   defp workouts_for_account(challenge, account_id) do
     """
-      SELECT 
-        COUNT(*) as total
-      FROM 
-        workouts
-      WHERE
-        challenge_id = #{challenge.id}
-      AND
-        gym_rats_user_id = #{account_id}
+    SELECT 
+      COUNT(*) as total
+    FROM 
+      workouts
+    WHERE
+      challenge_id = #{challenge.id}
+    AND
+      gym_rats_user_id = #{account_id}
     """
   end
 
   defp leader_query(challenge) do
     """
       SELECT 
-        SUM(COALESCE(CAST(#{challenge.score_by} as float), 0)) as total, 
-        gym_rats_user_id
+        SUM(COALESCE(CAST(workout.#{challenge.score_by} as float), 0)) as total,
+        account.id
       FROM 
-        workouts
+        gym_rats_users account
+      LEFT JOIN
+        (SELECT * FROM workouts WHERE challenge_id = #{challenge.id}) workout
+      ON
+        workout.gym_rats_user_id = account.id
       WHERE
-        challenge_id = #{challenge.id}
-      GROUP BY gym_rats_user_id
+        account.id 
+        IN (
+          SELECT gym_rats_user_id FROM memberships WHERE challenge_id = #{challenge.id}
+        )
+      GROUP BY 
+        account.id
       ORDER BY
         total DESC
       LIMIT 1
@@ -133,5 +152,27 @@ defmodule GymRatsWeb.Challenge.InfoController do
       AND
         gym_rats_user_id = #{account_id}
     """
+  end
+
+  defp format_int(number) do
+    number
+    |> Integer.to_char_list()
+    |> Enum.reverse()
+    |> Enum.chunk_every(3, 3, [])
+    |> Enum.join(",")
+    |> String.reverse()
+  end
+
+  def format_float(number) do
+    number
+    |> to_string
+    |> String.replace(~r/\d+(?=\.)|\A\d+\z/, fn(int) ->
+      int
+      |> String.graphemes
+      |> Enum.reverse
+      |> Enum.chunk_every(3, 3, [])
+      |> Enum.join(",")
+      |> String.reverse
+    end)
   end
 end
