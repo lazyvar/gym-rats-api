@@ -29,9 +29,11 @@ defmodule GymRatsWeb.Challenge.RankingController do
         rankings =
           rows
           |> Enum.map(fn [score | [gym_rats_user_id | []]] ->
-            if is_float(score) do
-              score = :erlang.float_to_binary(score, [decimals: 2])
-            end
+            score =
+              case score_by do
+                "workouts" -> score
+                _ -> round(score) |> format
+              end
 
             account = Account |> Repo.get!(gym_rats_user_id)
             %{score: "#{score}", account: account}
@@ -47,6 +49,15 @@ defmodule GymRatsWeb.Challenge.RankingController do
     index(conn, %{"score_by" => challenge.score_by, "challenge_id" => challenge_id}, account_id)
   end
 
+  defp format(number) do
+    number
+    |> Integer.to_char_list()
+    |> Enum.reverse()
+    |> Enum.chunk_every(3, 3, [])
+    |> Enum.join(",")
+    |> String.reverse()
+  end
+
   defp score_by_rankings(challenge_id, score_by) do
     query = """
       SELECT 
@@ -59,7 +70,10 @@ defmodule GymRatsWeb.Challenge.RankingController do
       ON
         workout.id = account.id
       WHERE
-        account.id IN (SELECT gym_rats_user_id FROM memberships WHERE challenge_id = #{challenge_id})
+        account.id 
+        IN (
+          SELECT gym_rats_user_id FROM memberships WHERE challenge_id = #{challenge_id}
+        )
       GROUP BY 
         account.id
       ORDER BY
@@ -79,7 +93,10 @@ defmodule GymRatsWeb.Challenge.RankingController do
       ON
         workout.id = account.id
       WHERE
-        account.id IN (SELECT gym_rats_user_id FROM memberships WHERE challenge_id = #{challenge_id})
+        account.id 
+        IN (
+          SELECT gym_rats_user_id FROM memberships WHERE challenge_id = #{challenge_id}
+        )
       GROUP BY 
         account.id
       ORDER BY

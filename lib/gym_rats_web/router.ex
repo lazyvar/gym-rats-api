@@ -17,7 +17,11 @@ defmodule GymRatsWeb.Router do
     get "/account", AccountController, :show
     put "/account", AccountController, :update
 
-    put "/accounts/self", AccountController, :update  # <- deprecated
+    # deprecated do
+
+    put "/accounts/self", AccountController, :update
+
+    # end
 
     resources "/accounts", AccountController, only: [] do
       resources "/workouts", Account.WorkoutController, only: [:index]
