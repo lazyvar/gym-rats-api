@@ -68,7 +68,7 @@ defmodule GymRatsWeb.Challenge.RankingController do
       LEFT JOIN
         (SELECT * FROM workouts WHERE challenge_id = #{challenge_id}) workout
       ON
-        workout.id = account.id
+        workout.gym_rats_user_id = account.id
       WHERE
         account.id 
         IN (
@@ -91,7 +91,7 @@ defmodule GymRatsWeb.Challenge.RankingController do
       LEFT JOIN
         (SELECT * FROM workouts WHERE challenge_id = #{challenge_id}) workout
       ON
-        workout.id = account.id
+        workout.gym_rats_user_id = account.id
       WHERE
         account.id 
         IN (
