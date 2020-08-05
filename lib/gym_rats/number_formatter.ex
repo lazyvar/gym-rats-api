@@ -7,7 +7,7 @@ defmodule GymRats.NumberFormatter do
   end
 
   def format(number) when is_binary(number) do
-    String.to_float(number)
+    format(String.to_float(number))
   end
 
   def format(number) when is_integer(number) do

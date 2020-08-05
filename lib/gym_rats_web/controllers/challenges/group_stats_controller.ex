@@ -23,12 +23,14 @@ defmodule GymRatsWeb.Challenge.GroupStatsController do
 
         early_riser = Account |> Repo.get(early_riser)
         challenge = Challenge |> Repo.get(challenge_id)
-
-        total_score =
-          String.to_float(total_score(challenge_id)) |> NumberFormatter.format_score(challenge)
+        total_workouts = total_workouts(challenge_id)
+        total_score = case challenge.score_by do
+          "workouts" -> total_workouts
+          _ -> total_score(challenge)
+        end
 
         success(conn, %{
-          total_workouts: total_workouts(challenge_id),
+          total_workouts: total_workouts,
           total_score: "#{total_score}",
           most_early_bird_workouts: %{
             account: AccountView.default(early_riser),
@@ -45,13 +47,13 @@ defmodule GymRatsWeb.Challenge.GroupStatsController do
     |> Repo.one()
   end
 
-  defp total_score(challenge_id) do
+  defp total_score(challenge) do
     query =
-      from w in Workout,
-        where: w.challenge_id == ^challenge_id,
-        select: coalesce(sum(type(w.points, :float)), 0)
-
-    query |> Repo.one() |> NumberFormatter.format()
+        from w in Workout,
+          where: w.challenge_id == ^challenge.id,
+          select: coalesce(sum(type(field(w, ^String.to_atom(challenge.score_by)), :float)), 0)
+  
+    query |> Repo.one() |> NumberFormatter.format_score(challenge)
   end
 
   defp most_early_bird_workouts(challenge_id, utc_offset) do
@@ -66,11 +68,5 @@ defmodule GymRatsWeb.Challenge.GroupStatsController do
         limit: 1
 
     query |> Repo.one()
-  end
-
-  defp haleiuigh do
-    # total_workouts:
-    # total_score:
-    # most_early_bird_workouts:
   end
 end
