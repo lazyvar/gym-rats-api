@@ -24,10 +24,12 @@ defmodule GymRatsWeb.Challenge.GroupStatsController do
         early_riser = Account |> Repo.get(early_riser)
         challenge = Challenge |> Repo.get(challenge_id)
         total_workouts = total_workouts(challenge_id)
-        total_score = case challenge.score_by do
-          "workouts" -> total_workouts
-          _ -> total_score(challenge)
-        end
+
+        total_score =
+          case challenge.score_by do
+            "workouts" -> total_workouts
+            _ -> total_score(challenge)
+          end
 
         success(conn, %{
           total_workouts: total_workouts,
@@ -49,10 +51,10 @@ defmodule GymRatsWeb.Challenge.GroupStatsController do
 
   defp total_score(challenge) do
     query =
-        from w in Workout,
-          where: w.challenge_id == ^challenge.id,
-          select: coalesce(sum(type(field(w, ^String.to_atom(challenge.score_by)), :float)), 0)
-  
+      from w in Workout,
+        where: w.challenge_id == ^challenge.id,
+        select: coalesce(sum(type(field(w, ^String.to_atom(challenge.score_by)), :float)), 0)
+
     query |> Repo.one() |> NumberFormatter.format_score(challenge)
   end
 

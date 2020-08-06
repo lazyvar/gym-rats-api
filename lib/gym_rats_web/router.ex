@@ -47,7 +47,7 @@ defmodule GymRatsWeb.Router do
     delete "/devices", DeviceController, :delete_all
     resources "/memberships", MembershipController, only: [:create, :delete, :show]
 
-    resources "/workouts", WorkoutController, only: [:create, :delete, :show] do
+    resources "/workouts", WorkoutController, only: [:create, :delete, :show, :update] do
       resources "/comments", Workout.CommentController, only: [:create, :index]
     end
   end

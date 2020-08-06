@@ -19,20 +19,28 @@ defmodule GymRatsWeb.WorkoutController do
       |> Enum.map(fn c ->
         %Workout{challenge_id: c.id, gym_rats_user_id: account_id}
         |> Workout.changeset(params)
-        |> Repo.insert!()
+        |> Repo.insert()
       end)
 
     workout = workouts |> List.first()
-    account = Account |> Repo.get!(account_id)
-
-    workouts |> Notification.send_workouts()
 
     if workout == nil do
       failure(conn, "No challenges provided.")
     else
-      workout = Map.put(workout, :account, account)
+      case workout do
+        {:ok, workout} ->
+          account = Account |> Repo.get!(account_id)
+          workout = Map.put(workout, :account, account)
 
-      success(conn, WorkoutView.with_account(workout))
+          workouts
+          |> Enum.map(fn {:ok, w} -> w end)
+          |> Notification.send_workouts()
+
+          success(conn, WorkoutView.with_account(workout))
+
+        {:error, workout} ->
+          failure(conn, workout)
+      end
     end
   end
 
@@ -74,4 +82,30 @@ defmodule GymRatsWeb.WorkoutController do
   end
 
   def delete(conn, _params, _account_id), do: failure(conn, "Missing workout id.")
+
+  def update(conn, %{"id" => workout_id} = params, account_id) do
+    workout_id = String.to_integer(workout_id)
+    workout = Workout |> Repo.get(workout_id)
+
+    case workout do
+      nil ->
+        failure(conn, "Workout does not exist.")
+
+      _ ->
+        case workout.gym_rats_user_id do
+          ^account_id ->
+            illegal_params = ~w(id created_at updated_at challenge_id gym_rats_user_id)
+            params = params |> Map.drop(illegal_params)
+            workout = workout |> Workout.changeset(params) |> Repo.update()
+
+            case workout do
+              {:ok, workout} -> success(conn, WorkoutView.default(workout))
+              {:error, error} -> failure(conn, error)
+            end
+
+          _ ->
+            failure(conn, "You do not have permission to do that.")
+        end
+    end
+  end
 end
