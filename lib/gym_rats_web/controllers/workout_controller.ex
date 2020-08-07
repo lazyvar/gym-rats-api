@@ -85,7 +85,7 @@ defmodule GymRatsWeb.WorkoutController do
 
   def update(conn, %{"id" => workout_id} = params, account_id) do
     workout_id = String.to_integer(workout_id)
-    workout = Workout |> Repo.get(workout_id)
+    workout = Workout |> preload(:account) |> Repo.get(workout_id)
 
     case workout do
       nil ->
@@ -99,7 +99,7 @@ defmodule GymRatsWeb.WorkoutController do
             workout = workout |> Workout.changeset(params) |> Repo.update()
 
             case workout do
-              {:ok, workout} -> success(conn, WorkoutView.default(workout))
+              {:ok, workout} -> success(conn, WorkoutView.with_account(workout))
               {:error, error} -> failure(conn, error)
             end
 
