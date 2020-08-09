@@ -17,7 +17,11 @@ defmodule GymRatsWeb.Router do
     get "/account", AccountController, :show
     put "/account", AccountController, :update
 
-    put "/accounts/self", AccountController, :update  # <- deprecated
+    # deprecated do
+
+    put "/accounts/self", AccountController, :update
+
+    # end
 
     resources "/accounts", AccountController, only: [] do
       resources "/workouts", Account.WorkoutController, only: [:index]
@@ -26,6 +30,7 @@ defmodule GymRatsWeb.Router do
     resources "/challenges", ChallengeController, only: [:create, :index, :update, :show] do
       get "/chat_notifications/count", Challenge.ChatNotificationController, :count
       post "/chat_notifications/seen", Challenge.ChatNotificationController, :seen
+      get "/group_stats", Challenge.GroupStatsController, :group_stats
       get "/info", Challenge.InfoController, :info
 
       resources "/members", Challenge.MemberController, only: [:index] do
@@ -42,7 +47,7 @@ defmodule GymRatsWeb.Router do
     delete "/devices", DeviceController, :delete_all
     resources "/memberships", MembershipController, only: [:create, :delete, :show]
 
-    resources "/workouts", WorkoutController, only: [:create, :delete, :show] do
+    resources "/workouts", WorkoutController, only: [:create, :delete, :show, :update] do
       resources "/comments", Workout.CommentController, only: [:create, :index]
     end
   end

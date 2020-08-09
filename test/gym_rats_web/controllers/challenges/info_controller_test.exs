@@ -65,8 +65,8 @@ defmodule GymRatsWeb.Challenge.InfoControllerTest do
                "data" => %{
                  "member_count" => 3,
                  "workout_count" => 14,
-                 "leader_score" => "310.0",
-                 "current_account_score" => "303.0"
+                 "leader_score" => "310",
+                 "current_account_score" => "303"
                }
              } = json_response(conn, 200)
 

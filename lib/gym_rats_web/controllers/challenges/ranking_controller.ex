@@ -3,6 +3,7 @@ defmodule GymRatsWeb.Challenge.RankingController do
 
   alias GymRats.Model.{Challenge, Account, Membership}
   alias GymRatsWeb.RankingView
+  alias GymRats.NumberFormatter
 
   import Ecto.Query
   import Logger
@@ -29,9 +30,17 @@ defmodule GymRatsWeb.Challenge.RankingController do
         rankings =
           rows
           |> Enum.map(fn [score | [gym_rats_user_id | []]] ->
-            if is_float(score) do
-              score = :erlang.float_to_binary(score, [decimals: 2])
-            end
+            score =
+              case score_by do
+                "workouts" ->
+                  score
+
+                "distance" ->
+                  :erlang.float_to_binary(score, decimals: 1) |> NumberFormatter.format()
+
+                _ ->
+                  round(score) |> NumberFormatter.format()
+              end
 
             account = Account |> Repo.get!(gym_rats_user_id)
             %{score: "#{score}", account: account}
@@ -50,13 +59,21 @@ defmodule GymRatsWeb.Challenge.RankingController do
   defp score_by_rankings(challenge_id, score_by) do
     query = """
       SELECT 
-        SUM(COALESCE(CAST(#{score_by} as float), 0)) as total,
-        gym_rats_user_id
+        SUM(COALESCE(CAST(workout.#{score_by} as float), 0)) as total,
+        account.id
       FROM 
-        workouts
+        gym_rats_users account
+      LEFT JOIN
+        (SELECT * FROM workouts WHERE challenge_id = #{challenge_id}) workout
+      ON
+        workout.gym_rats_user_id = account.id
       WHERE
-        challenge_id = #{challenge_id}
-      GROUP BY gym_rats_user_id
+        account.id 
+        IN (
+          SELECT gym_rats_user_id FROM memberships WHERE challenge_id = #{challenge_id}
+        )
+      GROUP BY 
+        account.id
       ORDER BY
         total DESC
     """
@@ -65,13 +82,21 @@ defmodule GymRatsWeb.Challenge.RankingController do
   defp workout_rankings(challenge_id) do
     query = """
       SELECT 
-        COUNT(*) as total, 
-        gym_rats_user_id
+        COUNT(workout) as total, 
+        account.id
       FROM 
-        workouts
+        gym_rats_users account
+      LEFT JOIN
+        (SELECT * FROM workouts WHERE challenge_id = #{challenge_id}) workout
+      ON
+        workout.gym_rats_user_id = account.id
       WHERE
-        challenge_id = #{challenge_id}
-      GROUP BY gym_rats_user_id
+        account.id 
+        IN (
+          SELECT gym_rats_user_id FROM memberships WHERE challenge_id = #{challenge_id}
+        )
+      GROUP BY 
+        account.id
       ORDER BY
         total DESC
     """
