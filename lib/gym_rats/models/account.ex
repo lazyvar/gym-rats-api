@@ -17,6 +17,7 @@ defmodule GymRats.Model.Account do
     field :workout_notifications_enabled, :boolean
     field :comment_notifications_enabled, :boolean
     field :chat_message_notifications_enabled, :boolean
+    field :subscribed, :boolean
 
     has_many :workouts, Workout, foreign_key: :gym_rats_user_id
     has_many :comments, Comment, foreign_key: :gym_rats_user_id
@@ -31,7 +32,7 @@ defmodule GymRats.Model.Account do
   end
 
   @required ~w(full_name email)a
-  @optional ~w(reset_password_token reset_password_token_expiration profile_picture_url workout_notifications_enabled comment_notifications_enabled chat_message_notifications_enabled)a
+  @optional ~w(reset_password_token reset_password_token_expiration profile_picture_url workout_notifications_enabled comment_notifications_enabled chat_message_notifications_enabled subscribed)a
 
   def changeset(account, attrs) do
     account
