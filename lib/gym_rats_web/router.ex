@@ -60,6 +60,11 @@ defmodule GymRatsWeb.Router do
     resources "/tokens", Open.TokenController, only: [:create]
   end
 
+  scope "/", GymRatsWeb do
+    get "/unsubscribe", EmailController, :unsubscribe
+    get "/subscribe", EmailController, :subscribe
+  end
+
   if Application.get_env(:gym_rats, :environment) == :dev do
     forward "/sent_emails", Bamboo.SentEmailViewerPlug
   end
