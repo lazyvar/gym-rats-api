@@ -18,7 +18,12 @@ defmodule GymRatsWeb.EmailController do
         |> Account.changeset(%{subscribed: false})
         |> Repo.update()
 
-        html(conn, "Unsubscribe successful. Click <a href=\"https://www.gymratsapi.com/subscribe?email=#{email}\" >here</a> to resubscribe.")
+        html(
+          conn,
+          "Unsubscribe successful. Click <a href=\"https://www.gymratsapi.com/subscribe?email=#{
+            email
+          }\" >here</a> to resubscribe."
+        )
       end
     end
   end
@@ -38,7 +43,12 @@ defmodule GymRatsWeb.EmailController do
         |> Account.changeset(%{subscribed: false})
         |> Repo.update()
 
-        html(conn, "Subscribe successful. Click <a href=\"https://www.gymratsapi.com/unsubscribe?email=#{email}\" >here</a> to unsubscribe.")
+        html(
+          conn,
+          "Subscribe successful. Click <a href=\"https://www.gymratsapi.com/unsubscribe?email=#{
+            email
+          }\" >here</a> to unsubscribe."
+        )
       end
     end
   end

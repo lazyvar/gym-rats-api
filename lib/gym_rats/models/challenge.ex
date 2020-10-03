@@ -18,6 +18,7 @@ defmodule GymRats.Model.Challenge do
 
     has_many :workouts, Workout
     has_many :memberships, Membership
+    has_many :teams, Team
 
     many_to_many(:accounts, Account,
       join_through: "memberships",
