@@ -6,7 +6,6 @@ defmodule GymRatsWeb.Challenge.RankingController do
   alias GymRats.NumberFormatter
 
   import Ecto.Query
-  import Logger
 
   def index(conn, %{"score_by" => score_by, "challenge_id" => challenge_id}, account_id) do
     membership =
@@ -57,7 +56,7 @@ defmodule GymRatsWeb.Challenge.RankingController do
   end
 
   defp score_by_rankings(challenge_id, score_by) do
-    query = """
+    """
       SELECT 
         SUM(COALESCE(CAST(workout.#{score_by} as float), 0)) as total,
         account.id
@@ -80,7 +79,7 @@ defmodule GymRatsWeb.Challenge.RankingController do
   end
 
   defp workout_rankings(challenge_id) do
-    query = """
+    """
       SELECT 
         COUNT(workout) as total, 
         account.id
