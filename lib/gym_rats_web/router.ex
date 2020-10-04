@@ -39,6 +39,7 @@ defmodule GymRatsWeb.Router do
 
       resources "/messages", Challenge.MessageController, only: [:index]
       resources "/rankings", Challenge.RankingController, only: [:index]
+      resources "/team_rankings", Challenge.TeamRankingController, only: [:index]
       resources "/teams", Challenge.TeamController, only: [:index]
       resources "/workouts", Challenge.WorkoutController, only: [:index]
     end
