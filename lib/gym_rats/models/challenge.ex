@@ -4,7 +4,7 @@ defmodule GymRats.Model.Challenge do
   import Ecto.Changeset
 
   alias GymRats.Repo.ChallengeRepo
-  alias GymRats.Model.{Challenge, Membership, Account, Workout}
+  alias GymRats.Model.{Challenge, Membership, Account, Workout, Team}
 
   schema "challenges" do
     field :code, :string
