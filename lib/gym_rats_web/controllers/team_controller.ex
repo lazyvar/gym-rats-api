@@ -52,26 +52,39 @@ defmodule GymRatsWeb.TeamController do
 
     case team do
       nil ->
-        failure(conn, "This challenge does not exist.")
+        failure(conn, "This team does not exist.")
 
       _ ->
-        team_membership =
-          TeamMembership
-          |> where([m], m.account_id == ^account_id and m.team_id == ^id)
+        membership =
+          Membership
+          |> where(
+            [m],
+            m.gym_rats_user_id == ^account_id and m.challenge_id == ^team.challenge_id
+          )
           |> Repo.one()
 
-        case team_membership do
+        case membership do
           nil ->
-            failure(conn, "You are not a member of that team.")
+            failure(conn, "You are not a member of that challenge.")
 
-          _ ->
-            illegal_params = ~w(id challenge_id inserted_at updated_at)
-            params = params |> Map.drop(illegal_params)
-            team = team |> Team.changeset(params) |> Repo.update()
+            team_membership =
+              TeamMembership
+              |> where([m], m.account_id == ^account_id and m.team_id == ^id)
+              |> Repo.one()
 
-            case team do
-              {:ok, team} -> success(conn, TeamView.default(team))
-              {:error, team} -> failure(conn, team)
+            case team_membership do
+              nil ->
+                failure(conn, "You are not a member of that team.")
+
+              _ ->
+                illegal_params = ~w(id challenge_id inserted_at updated_at)
+                params = params |> Map.drop(illegal_params)
+                team = team |> Team.changeset(params) |> Repo.update()
+
+                case team do
+                  {:ok, team} -> success(conn, TeamView.default(team))
+                  {:error, team} -> failure(conn, team)
+                end
             end
         end
     end
