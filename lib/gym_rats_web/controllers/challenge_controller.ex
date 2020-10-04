@@ -7,7 +7,7 @@ defmodule GymRatsWeb.ChallengeController do
 
   import Ecto.Query
 
-  def index(conn, %{"code" => code}, account_id) do
+  def index(conn, %{"code" => code}, _account_id) do
     challenge =
       Challenge
       |> where([c], c.code == ^code)
