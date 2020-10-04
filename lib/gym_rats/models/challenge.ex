@@ -15,6 +15,7 @@ defmodule GymRats.Model.Challenge do
     field :time_zone, :string
     field :description, :string
     field :score_by, :string
+    field :teams_enabled, :boolean
 
     has_many :workouts, Workout
     has_many :memberships, Membership
@@ -29,7 +30,7 @@ defmodule GymRats.Model.Challenge do
   end
 
   @required ~w(name code start_date end_date time_zone)a
-  @optional ~w(profile_picture_url code description score_by)a
+  @optional ~w(profile_picture_url code description score_by teams_enabled)a
 
   def changeset(challenge, attrs) do
     challenge
