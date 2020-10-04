@@ -5,8 +5,6 @@ defmodule GymRatsWeb.Challenge.WorkoutController do
   alias GymRats.Model.Workout
   alias GymRats.Repo
 
-  require Logger
-
   import Ecto.Query
 
   def index(conn, %{"challenge_id" => challenge_id} = params, _account_id) do
