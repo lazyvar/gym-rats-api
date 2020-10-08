@@ -27,28 +27,32 @@ defmodule GymRatsWeb.TeamMembershipController do
             failure(conn, "You are not a member of that challenge.")
 
           _ ->
-            team_membership =
+            team_memberships =
               TeamMembership
-              |> where([m], m.team_id == ^team.id and m.account_id == ^account_id)
-              |> Repo.one()
+              |> join(:left, [tm], t in assoc(tm, :team))
+              |> where(
+                [tm, t],
+                tm.account_id == ^account_id and t.challenge_id == ^team.challenge_id
+              )
+              |> Repo.all()
+
+            if team_memberships != nil do
+              Enum.each(team_memberships, fn tm ->
+                tm |> Repo.delete!()
+              end)
+            end
+
+            team_membership =
+              %TeamMembership{}
+              |> TeamMembership.changeset(%{
+                team_id: team.id,
+                account_id: account_id
+              })
+              |> Repo.insert()
 
             case team_membership do
-              nil ->
-                team_membership =
-                  %TeamMembership{}
-                  |> TeamMembership.changeset(%{
-                    team_id: team.id,
-                    account_id: account_id
-                  })
-                  |> Repo.insert()
-
-                case team_membership do
-                  {:ok, _} -> success(conn, TeamView.default(team))
-                  {:error, team_membership} -> failure(conn, team_membership)
-                end
-
-              _ ->
-                success(conn, TeamView.default(team))
+              {:ok, _} -> success(conn, TeamView.default(team))
+              {:error, team_membership} -> failure(conn, team_membership)
             end
         end
     end
