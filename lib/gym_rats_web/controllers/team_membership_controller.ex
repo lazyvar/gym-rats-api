@@ -60,6 +60,21 @@ defmodule GymRatsWeb.TeamMembershipController do
 
   def create(conn, _params, _account_id), do: failure(conn, "Invalid format.")
 
+  def show(conn, %{"id" => team_id}, account_id) do
+    team_membership =
+      TeamMembership
+      |> where([tm], tm.team_id == ^team_id and tm.account_id == ^account_id)
+      |> Repo.one()
+
+    case team_membership do
+      nil ->
+        failure(conn, "Team membership does not exist.")
+
+      _ ->
+        success(conn, %{})
+    end
+  end
+
   def delete(conn, %{"id" => team_id}, account_id) do
     team_membership =
       TeamMembership

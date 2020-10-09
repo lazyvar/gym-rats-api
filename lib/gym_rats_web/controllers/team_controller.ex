@@ -21,6 +21,21 @@ defmodule GymRatsWeb.TeamController do
 
         case Repo.insert(changeset) do
           {:ok, team} ->
+            team_memberships =
+              TeamMembership
+              |> join(:left, [tm], t in assoc(tm, :team))
+              |> where(
+                [tm, t],
+                tm.account_id == ^account_id and t.challenge_id == ^challenge_id
+              )
+              |> Repo.all()
+
+            if team_memberships != nil do
+              Enum.each(team_memberships, fn tm ->
+                tm |> Repo.delete!()
+              end)
+            end
+
             team_membership =
               %TeamMembership{}
               |> TeamMembership.changeset(%{
