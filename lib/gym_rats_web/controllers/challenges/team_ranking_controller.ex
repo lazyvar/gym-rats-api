@@ -1,7 +1,7 @@
 defmodule GymRatsWeb.Challenge.TeamRankingController do
   use GymRatsWeb, :protected_controller
 
-  alias GymRats.Model.{Challenge, Team, Membership}
+  alias GymRats.Model.{Challenge, Team, Membership, TeamMembership}
   alias GymRatsWeb.TeamRankingView
   alias GymRats.NumberFormatter
 
@@ -41,7 +41,7 @@ defmodule GymRatsWeb.Challenge.TeamRankingController do
                   round(score) |> NumberFormatter.format()
               end
 
-            team = Team |> Repo.get!(team_id)
+            team = Team |> preload(:members) |> Repo.get!(team_id)
             %{score: "#{score}", team: team}
           end)
 
@@ -72,6 +72,8 @@ defmodule GymRatsWeb.Challenge.TeamRankingController do
         w.gym_rats_user_id = tm.account_id
       GROUP BY 
         t.id
+      HAVING 
+        COUNT(tm) > 0
       ORDER BY
         total DESC
     """
@@ -94,6 +96,8 @@ defmodule GymRatsWeb.Challenge.TeamRankingController do
         w.gym_rats_user_id = tm.account_id
       GROUP BY 
         t.id
+      HAVING
+        COUNT(tm) > 0
       ORDER BY
         total DESC
     """

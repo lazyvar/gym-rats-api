@@ -12,6 +12,6 @@ defmodule GymRatsWeb.TeamRankingView do
   def default(ranking) do
     ranking |> keep(@default_attrs)
 
-    Map.put(ranking, :team, TeamView.default(Map.get(ranking, :team)))
+    Map.put(ranking, :team, TeamView.with_members(Map.get(ranking, :team)))
   end
 end

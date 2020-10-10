@@ -67,7 +67,7 @@ defmodule GymRatsWeb.Team.RankingController do
     FROM 
       (SELECT * FROM teams where id = #{team_id}) t
     LEFT JOIN
-      team_memberships tm 
+      team_memberships tm
     ON 
       t.id = tm.team_id
     LEFT JOIN

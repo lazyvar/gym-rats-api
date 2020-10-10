@@ -30,6 +30,7 @@ defmodule GymRatsWeb.Challenge.TeamController do
           |> order_by(desc: :id)
           |> preload(:members)
           |> Repo.all()
+          |> Enum.filter(fn t -> length(t.members) > 0 end)
 
         success(conn, TeamView.with_members(teams))
     end
