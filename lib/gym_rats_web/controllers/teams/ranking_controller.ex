@@ -6,6 +6,7 @@ defmodule GymRatsWeb.Team.RankingController do
   alias GymRats.NumberFormatter
 
   import Ecto.Query
+  import Logger
 
   def index(conn, %{"score_by" => score_by, "team_id" => team_id}, account_id) do
     team = Team |> Repo.get!(team_id)
@@ -29,26 +30,32 @@ defmodule GymRatsWeb.Team.RankingController do
 
         %{:rows => rows} = Repo |> Ecto.Adapters.SQL.query!(rankings_query, [])
 
-        rankings =
-          rows
-          |> Enum.map(fn [score | [gym_rats_user_id | []]] ->
-            score =
-              case score_by do
-                "workouts" ->
-                  score
+        case rows do
+          [[0, nil]] ->
+            success(conn, [])
 
-                "distance" ->
-                  :erlang.float_to_binary(score, decimals: 1) |> NumberFormatter.format()
+          _ ->
+            rankings =
+              rows
+              |> Enum.map(fn [score | [gym_rats_user_id | []]] ->
+                score =
+                  case score_by do
+                    "workouts" ->
+                      score
 
-                _ ->
-                  round(score) |> NumberFormatter.format()
-              end
+                    "distance" ->
+                      :erlang.float_to_binary(score, decimals: 1) |> NumberFormatter.format()
 
-            account = Account |> Repo.get!(gym_rats_user_id)
-            %{score: "#{score}", account: account}
-          end)
+                    _ ->
+                      round(score) |> NumberFormatter.format()
+                  end
 
-        success(conn, RankingView.default(rankings))
+                account = Account |> Repo.get!(gym_rats_user_id)
+                %{score: "#{score}", account: account}
+              end)
+
+            success(conn, RankingView.default(rankings))
+        end
     end
   end
 
