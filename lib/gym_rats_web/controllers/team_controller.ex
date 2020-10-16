@@ -82,6 +82,7 @@ defmodule GymRatsWeb.TeamController do
           nil ->
             failure(conn, "You are not a member of that challenge.")
 
+          _ ->
             team_membership =
               TeamMembership
               |> where([m], m.account_id == ^account_id and m.team_id == ^id)
