@@ -8,11 +8,6 @@ defmodule GymRatsWeb.Challenge.InfoController do
   import Ecto.Query
 
   def info(conn, %{"challenge_id" => challenge_id}, account_id) do
-    team_membership =
-      TeamMembership
-      |> where([tm], tm.account_id == ^account_id)
-      |> Repo.one()
-
     member_count =
       Account
       |> join(:left, [a], c in assoc(a, :memberships))
@@ -28,6 +23,19 @@ defmodule GymRatsWeb.Challenge.InfoController do
       |> Repo.one()
 
     challenge = Challenge |> Repo.get!(challenge_id)
+
+    team_memberships =
+      TeamMembership
+      |> where([tm], tm.account_id == ^account_id)
+      |> Repo.all()
+
+    teams = Team |> where([t], t.challenge_id == ^challenge_id) |> Repo.all()
+
+    team_membership =
+      team_memberships
+      |> Enum.find(fn tm ->
+        teams |> Enum.any?(fn t -> t.id == tm.team_id end)
+      end)
 
     leader_q =
       case challenge.score_by do
@@ -63,8 +71,14 @@ defmodule GymRatsWeb.Challenge.InfoController do
       %{:rows => [[leader_score | [leader_id | _]]]} =
         Ecto.Adapters.SQL.query!(Repo, leader_q, [])
 
-      %{:rows => [[team_leader_score | [team_leader_id | _]]]} =
+      {team_leader_score, team_leader_id} = if length(teams) > 0 do
+        %{:rows => [[team_leader_score | [team_leader_id | _]]]} =
         Ecto.Adapters.SQL.query!(Repo, team_leader_q, [])
+
+        {team_leader_score, team_leader_id}
+      else
+        {nil, nil}
+      end
 
       %{:rows => [[current_account_score] | _]} =
         Ecto.Adapters.SQL.query!(Repo, current_account_q, [])
@@ -78,7 +92,7 @@ defmodule GymRatsWeb.Challenge.InfoController do
             %{:rows => [[current_team_score] | _]} =
               Ecto.Adapters.SQL.query!(Repo, current_team_q, [])
 
-            current_team_score
+            (current_team_score || 0.0) |> NumberFormatter.format_score(challenge)
         end
 
       leader = Account |> Repo.get!(leader_id)
@@ -93,6 +107,8 @@ defmodule GymRatsWeb.Challenge.InfoController do
 
       current_account_score =
         (current_account_score || 0.0) |> NumberFormatter.format_score(challenge)
+
+      team_leader_score = (team_leader_score || 0.0) |> NumberFormatter.format_score(challenge)
 
       current_team =
         case team_membership do
