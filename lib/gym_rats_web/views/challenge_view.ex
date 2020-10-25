@@ -1,7 +1,7 @@
 defmodule GymRatsWeb.ChallengeView do
   import GymRatsWeb.JSONView
 
-  @default_attrs ~w(id name code profile_picture_url start_date end_date score_by description)a
+  @default_attrs ~w(id name code profile_picture_url start_date end_date score_by description teams_enabled)a
 
   def default(challenges) when is_list(challenges) do
     challenges

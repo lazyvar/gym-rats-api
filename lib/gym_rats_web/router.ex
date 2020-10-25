@@ -39,6 +39,8 @@ defmodule GymRatsWeb.Router do
 
       resources "/messages", Challenge.MessageController, only: [:index]
       resources "/rankings", Challenge.RankingController, only: [:index]
+      resources "/team_rankings", Challenge.TeamRankingController, only: [:index]
+      resources "/teams", Challenge.TeamController, only: [:index]
       resources "/workouts", Challenge.WorkoutController, only: [:index]
     end
 
@@ -46,6 +48,12 @@ defmodule GymRatsWeb.Router do
     resources "/devices", DeviceController, only: [:create]
     delete "/devices", DeviceController, :delete_all
     resources "/memberships", MembershipController, only: [:create, :delete, :show]
+    resources "/team_memberships", TeamMembershipController, only: [:create, :show, :delete]
+
+    resources "/teams", TeamController, only: [:create, :update] do
+      resources "/rankings", Team.RankingController, only: [:index]
+      get "/stats", Team.StatsController, :stats
+    end
 
     resources "/workouts", WorkoutController, only: [:create, :delete, :show, :update] do
       resources "/comments", Workout.CommentController, only: [:create, :index]

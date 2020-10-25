@@ -124,8 +124,13 @@ defmodule GymRatsWeb.MembershipControllerTest do
           "/memberships/#{challenge.id}"
         )
 
-      assert %{"error" => "Membership does not exist.", "status" => "failure"} =
-               json_response(conn, 422)
+      assert %{
+               "data" => %{
+                 "name" => "Challenge accepted!",
+                 "profile_picture_url" => "i.reddit.com/woop"
+               },
+               "status" => "success"
+             } = json_response(conn, 200)
     end
   end
 end
