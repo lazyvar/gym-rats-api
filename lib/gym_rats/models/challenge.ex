@@ -4,7 +4,7 @@ defmodule GymRats.Model.Challenge do
   import Ecto.Changeset
 
   alias GymRats.Repo.ChallengeRepo
-  alias GymRats.Model.{Challenge, Membership, Account, Workout}
+  alias GymRats.Model.{Challenge, Membership, Account, Workout, Team}
 
   schema "challenges" do
     field :code, :string
@@ -15,9 +15,11 @@ defmodule GymRats.Model.Challenge do
     field :time_zone, :string
     field :description, :string
     field :score_by, :string
+    field :teams_enabled, :boolean
 
     has_many :workouts, Workout
     has_many :memberships, Membership
+    has_many :teams, Team
 
     many_to_many(:accounts, Account,
       join_through: "memberships",
@@ -28,7 +30,7 @@ defmodule GymRats.Model.Challenge do
   end
 
   @required ~w(name code start_date end_date time_zone)a
-  @optional ~w(profile_picture_url code description score_by)a
+  @optional ~w(profile_picture_url code description score_by teams_enabled)a
 
   def changeset(challenge, attrs) do
     challenge

@@ -1,8 +1,8 @@
-defmodule GymRatsWeb.Challenge.RankingController do
+defmodule GymRatsWeb.Challenge.TeamRankingController do
   use GymRatsWeb, :protected_controller
 
-  alias GymRats.Model.{Challenge, Account, Membership}
-  alias GymRatsWeb.RankingView
+  alias GymRats.Model.{Challenge, Team, Membership, TeamMembership}
+  alias GymRatsWeb.TeamRankingView
   alias GymRats.NumberFormatter
 
   import Ecto.Query
@@ -28,7 +28,7 @@ defmodule GymRatsWeb.Challenge.RankingController do
 
         rankings =
           rows
-          |> Enum.map(fn [score | [gym_rats_user_id | []]] ->
+          |> Enum.map(fn [score | [team_id | []]] ->
             score =
               case score_by do
                 "workouts" ->
@@ -41,11 +41,11 @@ defmodule GymRatsWeb.Challenge.RankingController do
                   round(score) |> NumberFormatter.format()
               end
 
-            account = Account |> Repo.get!(gym_rats_user_id)
-            %{score: "#{score}", account: account}
+            team = Team |> preload(:members) |> Repo.get!(team_id)
+            %{score: "#{score}", team: team}
           end)
 
-        success(conn, RankingView.default(rankings))
+        success(conn, TeamRankingView.default(rankings))
     end
   end
 
@@ -58,21 +58,22 @@ defmodule GymRatsWeb.Challenge.RankingController do
   defp score_by_rankings(challenge_id, score_by) do
     """
       SELECT 
-        SUM(COALESCE(CAST(workout.#{score_by} as float), 0)) as total,
-        account.id
+        SUM(COALESCE(CAST(w.#{score_by} as float), 0)) as total,
+        t.id
       FROM 
-        gym_rats_users account
+        (SELECT * FROM teams where challenge_id = #{challenge_id}) t
       LEFT JOIN
-        (SELECT * FROM workouts WHERE challenge_id = #{challenge_id}) workout
+        team_memberships tm 
+      ON 
+        t.id = tm.team_id
+      LEFT JOIN
+        (SELECT * FROM workouts WHERE challenge_id = #{challenge_id}) w
       ON
-        workout.gym_rats_user_id = account.id
-      WHERE
-        account.id 
-        IN (
-          SELECT gym_rats_user_id FROM memberships WHERE challenge_id = #{challenge_id}
-        )
+        w.gym_rats_user_id = tm.account_id
       GROUP BY 
-        account.id
+        t.id
+      HAVING 
+        COUNT(tm) > 0
       ORDER BY
         total DESC
     """
@@ -81,21 +82,22 @@ defmodule GymRatsWeb.Challenge.RankingController do
   defp workout_rankings(challenge_id) do
     """
       SELECT 
-        COUNT(workout) as total, 
-        account.id
+        COUNT(w) as total,
+        t.id
       FROM 
-        gym_rats_users account
+        (SELECT * FROM teams where challenge_id = #{challenge_id}) t
       LEFT JOIN
-        (SELECT * FROM workouts WHERE challenge_id = #{challenge_id}) workout
+        team_memberships tm 
+      ON 
+        t.id = tm.team_id
+      LEFT JOIN
+        (SELECT * FROM workouts WHERE challenge_id = #{challenge_id}) w
       ON
-        workout.gym_rats_user_id = account.id
-      WHERE
-        account.id 
-        IN (
-          SELECT gym_rats_user_id FROM memberships WHERE challenge_id = #{challenge_id}
-        )
+        w.gym_rats_user_id = tm.account_id
       GROUP BY 
-        account.id
+        t.id
+      HAVING
+        COUNT(tm) > 0
       ORDER BY
         total DESC
     """
