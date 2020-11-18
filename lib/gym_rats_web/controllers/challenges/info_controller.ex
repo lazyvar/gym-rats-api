@@ -37,6 +37,12 @@ defmodule GymRatsWeb.Challenge.InfoController do
         teams |> Enum.any?(fn t -> t.id == tm.team_id end)
       end)
 
+    teams =
+      teams
+      |> Enum.filter(fn t ->
+        team_memberships |> Enum.any?(fn tm -> t.id == tm.team_id end)
+      end)
+
     leader_q =
       case challenge.score_by do
         "workouts" -> workouts_leader_query(challenge)
@@ -71,14 +77,15 @@ defmodule GymRatsWeb.Challenge.InfoController do
       %{:rows => [[leader_score | [leader_id | _]]]} =
         Ecto.Adapters.SQL.query!(Repo, leader_q, [])
 
-      {team_leader_score, team_leader_id} = if length(teams) > 0 do
-        %{:rows => [[team_leader_score | [team_leader_id | _]]]} =
-        Ecto.Adapters.SQL.query!(Repo, team_leader_q, [])
+      {team_leader_score, team_leader_id} =
+        if length(teams) > 0 do
+          %{:rows => [[team_leader_score | [team_leader_id | _]]]} =
+            Ecto.Adapters.SQL.query!(Repo, team_leader_q, [])
 
-        {team_leader_score, team_leader_id}
-      else
-        {nil, nil}
-      end
+          {team_leader_score, team_leader_id}
+        else
+          {nil, nil}
+        end
 
       %{:rows => [[current_account_score] | _]} =
         Ecto.Adapters.SQL.query!(Repo, current_account_q, [])
