@@ -27,22 +27,20 @@ defmodule GymRats.Model.Workout do
 
   @required ~w(gym_rats_user_id challenge_id title)a
   @optional ~w(
-    steps points steps calories description distance duration google_place_id 
+    steps points steps calories description distance duration google_place_id
     photo_url apple_device_name apple_source_name apple_workout_uuid activity_type
+  )a
+
+  @activity_types ~w(
+    walking running cycling hiit yoga hiking baseketball climbing crossTraining
+    dance elliptical functionalStrengthTraining traditionalStrengthTraining
+    coreTraining swimming volleyball other
   )a
 
   def changeset(workout, attrs) do
     workout
     |> cast(attrs, @required ++ @optional)
     |> validate_required(@required)
-    |> validate_inclusion(:activity_type, [
-      "walking",
-      "running",
-      "cycling",
-      "hiit",
-      "yoga",
-      "hiking",
-      "other"
-    ])
+    |> validate_inclusion(:activity_type, @activity_types)
   end
 end
