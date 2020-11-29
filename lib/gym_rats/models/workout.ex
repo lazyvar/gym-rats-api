@@ -5,6 +5,7 @@ defmodule GymRats.Model.Workout do
   alias GymRats.Model.{Account, Challenge}
 
   schema "workouts" do
+    field :occurred_at, :utc_datetime_usec
     field :calories, :integer
     field :description, :string
     field :distance, :string
