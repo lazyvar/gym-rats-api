@@ -28,6 +28,7 @@ defmodule GymRats.Model.Workout do
   end
 
   @required ~w(gym_rats_user_id challenge_id title)a
+
   @optional ~w(
     steps points steps calories description distance duration google_place_id occurred_at
     photo_url apple_device_name apple_source_name apple_workout_uuid activity_type
@@ -37,7 +38,7 @@ defmodule GymRats.Model.Workout do
     walking running cycling hiit yoga hiking baseketball climbing crossTraining
     dance elliptical functionalStrengthTraining traditionalStrengthTraining
     coreTraining swimming volleyball other
-  )a
+  )
 
   def changeset(workout, attrs) do
     workout
@@ -51,9 +52,7 @@ defmodule GymRats.Model.Workout do
     changeset
   end
 
-  defp add_occurred_at_if_missing(
-         %Ecto.Changeset{data: %GymRats.Model.Workout{occurred_at: nil}} = changeset
-       ) do
+  defp add_occurred_at_if_missing(%Ecto.Changeset{data: %GymRats.Model.Workout{occurred_at: nil}} = changeset) do
     changeset |> put_change(:occurred_at, DateTime.utc_now())
   end
 
