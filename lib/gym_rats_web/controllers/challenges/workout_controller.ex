@@ -15,7 +15,7 @@ defmodule GymRatsWeb.Challenge.WorkoutController do
       |> join(:left, [w], c in assoc(w, :challenge))
       |> where([w, c], w.challenge_id == ^challenge_id)
       |> paginate(params["page"])
-      |> order_by(desc: :created_at)
+      |> order_by(desc: :occurred_at)
       |> preload(:account)
       |> Repo.all()
 
