@@ -23,6 +23,7 @@ defmodule GymRats.Factory do
     %GymRats.Model.Workout{
       account: build(:account),
       challenge: build(:challenge),
+      occurred_at: DateTime.utc_now,
       title: "Swoll.",
       description: "You already know.",
       steps: 1000,
