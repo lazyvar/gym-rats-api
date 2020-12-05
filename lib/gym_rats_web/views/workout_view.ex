@@ -1,7 +1,7 @@
 defmodule GymRatsWeb.WorkoutView do
   import GymRatsWeb.JSONView
 
-  alias GymRatsWeb.AccountView
+  alias GymRatsWeb.{AccountView, WorkoutMediumView}
 
   @default_attrs ~w(
     id gym_rats_user_id created_at challenge_id title steps points occurred_at
@@ -17,13 +17,17 @@ defmodule GymRatsWeb.WorkoutView do
     workout |> keep(@default_attrs)
   end
 
-  def with_account(workouts) when is_list(workouts) do
-    workouts |> Enum.map(fn w -> with_account(w) end)
+  def with_account_and_media(workouts) when is_list(workouts) do
+    workouts |> Enum.map(fn w -> with_account_and_media(w) end)
   end
 
-  def with_account(workout) do
-    workout = workout |> keep([:account | @default_attrs])
+  def with_account_and_media(workout) do
+    workout = workout |> keep([:account, :media | @default_attrs])
+    account = AccountView.default(Map.get(workout, :account))
+    media = WorkoutMediumView.default(Map.get(workout, :media))
 
-    Map.put(workout, :account, AccountView.default(Map.get(workout, :account)))
+    workout
+    |> Map.put(:account, account)
+    |> Map.put(:media, media)
   end
 end

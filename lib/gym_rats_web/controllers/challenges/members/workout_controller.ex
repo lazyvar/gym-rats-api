@@ -10,9 +10,9 @@ defmodule GymRatsWeb.Challenge.Member.WorkoutController do
     workouts =
       Workout
       |> where([w], w.gym_rats_user_id == ^member_id and w.challenge_id == ^challenge_id)
-      |> preload(:account)
+      |> preload([:account, :media])
       |> Repo.all()
 
-    success(conn, WorkoutView.with_account(workouts))
+    success(conn, WorkoutView.with_account_and_media(workouts))
   end
 end

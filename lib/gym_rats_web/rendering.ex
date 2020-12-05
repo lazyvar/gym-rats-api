@@ -4,9 +4,9 @@ defmodule GymRatsWeb.Rendering do
   import Plug.Conn
 
   @moduledoc """
-  Rendering methods for success and failure responses. 
+  Rendering methods for success and failure responses.
 
-  ## Example 
+  ## Example
   {
     "status": "success",
     "data": { ... }
@@ -16,7 +16,7 @@ defmodule GymRatsWeb.Rendering do
   import Phoenix.Controller, only: [json: 2]
 
   @doc """
-  Sends a successful response using json/2. 
+  Sends a successful response using json/2.
   Wraps the given data and sets status to "success"
 
   ## Examples
@@ -29,7 +29,7 @@ defmodule GymRatsWeb.Rendering do
   end
 
   @doc """
-  Sends a failure response using json/2. 
+  Sends a failure response using json/2.
   Wraps the given error and sets status to "failure"
 
   ## Examples
@@ -42,7 +42,7 @@ defmodule GymRatsWeb.Rendering do
   end
 
   @doc """
-  Sends a failure response using json/2. 
+  Sends a failure response using json/2.
   Maps the list of errors on changeset to human readable form.
 
   ## Examples

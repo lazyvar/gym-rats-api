@@ -3,7 +3,7 @@ defmodule GymRats.Model.Workout do
 
   import Ecto.Changeset
 
-  alias GymRats.Model.{Account, Challenge}
+  alias GymRats.Model.{Account, Challenge, WorkoutMedium}
 
   schema "workouts" do
     field :occurred_at, :utc_datetime_usec
@@ -23,6 +23,8 @@ defmodule GymRats.Model.Workout do
 
     belongs_to :account, Account, foreign_key: :gym_rats_user_id
     belongs_to :challenge, Challenge
+
+    has_many :media, WorkoutMedium
 
     timestamps(inserted_at: :created_at, type: :utc_datetime_usec)
   end
@@ -44,6 +46,7 @@ defmodule GymRats.Model.Workout do
     workout
     |> cast(attrs, @required ++ @optional)
     |> add_occurred_at_if_missing
+    |> cast_assoc(:media)
     |> validate_required(@required)
     |> validate_inclusion(:activity_type, @activity_types)
   end
@@ -52,7 +55,9 @@ defmodule GymRats.Model.Workout do
     changeset
   end
 
-  defp add_occurred_at_if_missing(%Ecto.Changeset{data: %GymRats.Model.Workout{occurred_at: nil}} = changeset) do
+  defp add_occurred_at_if_missing(
+         %Ecto.Changeset{data: %GymRats.Model.Workout{occurred_at: nil}} = changeset
+       ) do
     changeset |> put_change(:occurred_at, DateTime.utc_now())
   end
 
