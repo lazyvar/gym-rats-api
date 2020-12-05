@@ -10,9 +10,9 @@ defmodule GymRatsWeb.Account.WorkoutController do
     workouts =
       Workout
       |> where([w], w.gym_rats_user_id == ^account_id)
-      |> preload(:account)
+      |> preload([:account, :media])
       |> Repo.all()
 
-    success(conn, WorkoutView.with_account(workouts))
+    success(conn, WorkoutView.with_account_and_media(workouts))
   end
 end

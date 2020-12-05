@@ -1,7 +1,7 @@
 defmodule GymRatsWeb.Challenge.TeamRankingController do
   use GymRatsWeb, :protected_controller
 
-  alias GymRats.Model.{Challenge, Team, Membership, TeamMembership}
+  alias GymRats.Model.{Challenge, Team, Membership}
   alias GymRatsWeb.TeamRankingView
   alias GymRats.NumberFormatter
 
@@ -57,22 +57,22 @@ defmodule GymRatsWeb.Challenge.TeamRankingController do
 
   defp score_by_rankings(challenge_id, score_by) do
     """
-      SELECT 
+      SELECT
         SUM(COALESCE(CAST(w.#{score_by} as float), 0)) as total,
         t.id
-      FROM 
+      FROM
         (SELECT * FROM teams where challenge_id = #{challenge_id}) t
       LEFT JOIN
-        team_memberships tm 
-      ON 
+        team_memberships tm
+      ON
         t.id = tm.team_id
       LEFT JOIN
         (SELECT * FROM workouts WHERE challenge_id = #{challenge_id}) w
       ON
         w.gym_rats_user_id = tm.account_id
-      GROUP BY 
+      GROUP BY
         t.id
-      HAVING 
+      HAVING
         COUNT(tm) > 0
       ORDER BY
         total DESC
@@ -81,20 +81,20 @@ defmodule GymRatsWeb.Challenge.TeamRankingController do
 
   defp workout_rankings(challenge_id) do
     """
-      SELECT 
+      SELECT
         COUNT(w) as total,
         t.id
-      FROM 
+      FROM
         (SELECT * FROM teams where challenge_id = #{challenge_id}) t
       LEFT JOIN
-        team_memberships tm 
-      ON 
+        team_memberships tm
+      ON
         t.id = tm.team_id
       LEFT JOIN
         (SELECT * FROM workouts WHERE challenge_id = #{challenge_id}) w
       ON
         w.gym_rats_user_id = tm.account_id
-      GROUP BY 
+      GROUP BY
         t.id
       HAVING
         COUNT(tm) > 0
