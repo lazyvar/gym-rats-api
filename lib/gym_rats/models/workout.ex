@@ -39,7 +39,7 @@ defmodule GymRats.Model.Workout do
   @activity_types ~w(
     walking running cycling hiit yoga hiking baseketball climbing cross_training
     dance elliptical functional_strength_training traditional_strength_training
-    core_training swimming volleyball rowing stairs cooldown other
+    core_training swimming volleyball rowing stairs cooldown steps other
   )
 
   def changeset(workout, attrs) do
