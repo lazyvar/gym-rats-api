@@ -19,10 +19,18 @@ defmodule GymRats.Factory do
     )
   end
 
+  def workout_medium_factory do
+    %GymRats.Model.WorkoutMedium{
+      url: "firebase.com/pics/dfv9-12",
+      medium_type: "image/jpg"
+    }
+  end
+
   def workout_factory do
     %GymRats.Model.Workout{
       account: build(:account),
       challenge: build(:challenge),
+      occurred_at: DateTime.utc_now(),
       title: "Swoll.",
       description: "You already know.",
       steps: 1000,

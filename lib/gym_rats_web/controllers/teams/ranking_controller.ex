@@ -6,7 +6,6 @@ defmodule GymRatsWeb.Team.RankingController do
   alias GymRats.NumberFormatter
 
   import Ecto.Query
-  import Logger
 
   def index(conn, %{"score_by" => score_by, "team_id" => team_id}, account_id) do
     team = Team |> Repo.get!(team_id)
@@ -68,20 +67,20 @@ defmodule GymRatsWeb.Team.RankingController do
 
   defp score_by_rankings(challenge_id, team_id, score_by) do
     """
-    SELECT 
+    SELECT
       SUM(COALESCE(CAST(w.#{score_by} as float), 0)) as total,
       tm.account_id
-    FROM 
+    FROM
       (SELECT * FROM teams where id = #{team_id}) t
     LEFT JOIN
       team_memberships tm
-    ON 
+    ON
       t.id = tm.team_id
     LEFT JOIN
       (SELECT * FROM workouts WHERE challenge_id = #{challenge_id}) w
     ON
       w.gym_rats_user_id = tm.account_id
-    GROUP BY 
+    GROUP BY
       tm.account_id
     ORDER BY
       total DESC
@@ -90,20 +89,20 @@ defmodule GymRatsWeb.Team.RankingController do
 
   defp workout_rankings(challenge_id, team_id) do
     """
-    SELECT 
+    SELECT
       COUNT(w) as total,
       tm.account_id
-    FROM 
+    FROM
       (SELECT * FROM teams where id = #{team_id}) t
     LEFT JOIN
-      team_memberships tm 
-    ON 
+      team_memberships tm
+    ON
       t.id = tm.team_id
     LEFT JOIN
       (SELECT * FROM workouts WHERE challenge_id = #{challenge_id}) w
     ON
       w.gym_rats_user_id = tm.account_id
-    GROUP BY 
+    GROUP BY
       tm.account_id
     ORDER BY
       total DESC

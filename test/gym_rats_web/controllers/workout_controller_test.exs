@@ -10,6 +10,182 @@ defmodule GymRatsWeb.WorkoutControllerTest do
   @endpoint GymRatsWeb.Endpoint
 
   describe "create/3" do
+    test "safeguards activity type" do
+      challenge = insert(:active_challenge, %{})
+      account = insert(:account) |> Account.put_token()
+      insert(:membership, account: account, challenge: challenge)
+
+      params = [
+        title: "Swell",
+        description: "Lifting things up, putting them down.",
+        steps: 1000,
+        activity_type: "volleyball",
+        duration: 90,
+        distance: "33.3",
+        google_place_id: "x5134b1",
+        challenges: [challenge.id]
+      ]
+
+      conn =
+        post(
+          build_conn() |> put_req_header("authorization", account.token),
+          "/workouts",
+          params
+        )
+
+      response = json_response(conn, 200)
+
+      assert response["data"]["activity_type"] == "other"
+      assert response["data"]["activity_type_version_two"] == "volleyball"
+
+      params = [
+        title: "Swell",
+        description: "Lifting things up, putting them down.",
+        steps: 1000,
+        activity_type: "running",
+        duration: 90,
+        distance: "33.3",
+        google_place_id: "x5134b1",
+        challenges: [challenge.id]
+      ]
+
+      conn =
+        post(
+          build_conn() |> put_req_header("authorization", account.token),
+          "/workouts",
+          params
+        )
+
+      response = json_response(conn, 200)
+
+      assert response["data"]["activity_type"] == "running"
+      assert response["data"]["activity_type_version_two"] == "running"
+
+      params = [
+        title: "Swell",
+        description: "Lifting things up, putting them down.",
+        steps: 1000,
+        activity_type: "other",
+        duration: 90,
+        distance: "33.3",
+        google_place_id: "x5134b1",
+        challenges: [challenge.id]
+      ]
+
+      conn =
+        post(
+          build_conn() |> put_req_header("authorization", account.token),
+          "/workouts",
+          params
+        )
+
+      response = json_response(conn, 200)
+
+      assert response["data"]["activity_type"] == "other"
+      assert response["data"]["activity_type_version_two"] == "other"
+
+      params = [
+        title: "Swell",
+        description: "Lifting things up, putting them down.",
+        steps: 1000,
+        duration: 90,
+        distance: "33.3",
+        google_place_id: "x5134b1",
+        challenges: [challenge.id]
+      ]
+
+      conn =
+        post(
+          build_conn() |> put_req_header("authorization", account.token),
+          "/workouts",
+          params
+        )
+
+      response = json_response(conn, 200)
+
+      assert response["data"]["activity_type"] == nil
+      assert response["data"]["activity_type_version_two"] == nil
+
+      params = [
+        title: "Swell",
+        description: "Lifting things up, putting them down.",
+        steps: 1000,
+        duration: 90,
+        activity_type: "dance",
+        distance: "33.3",
+        google_place_id: "x5134b1",
+        challenges: [challenge.id]
+      ]
+
+      conn =
+        post(
+          build_conn() |> put_req_header("authorization", account.token),
+          "/workouts",
+          params
+        )
+
+      response = json_response(conn, 200)
+
+      assert response["data"]["activity_type"] == "other"
+      assert response["data"]["activity_type_version_two"] == "dance"
+
+      params = [
+        title: "Swell",
+        description: "Lifting things up, putting them down.",
+        steps: 1000,
+        duration: 90,
+        activity_type: "cycling",
+        distance: "33.3",
+        google_place_id: "x5134b1",
+        challenges: [challenge.id]
+      ]
+
+      conn =
+        post(
+          build_conn() |> put_req_header("authorization", account.token),
+          "/workouts",
+          params
+        )
+
+      response = json_response(conn, 200)
+
+      assert response["data"]["activity_type"] == "cycling"
+      assert response["data"]["activity_type_version_two"] == "cycling"
+    end
+
+    test "multiple media upload" do
+      media1 = %{url: "https://www.image.com/jpg", medium_type: "image/jpg"}
+      media2 = %{url: "https://www.image.com/jpg", medium_type: "image/jpg"}
+      media3 = %{url: "https://www.video.com/mp3", medium_type: "video/mp4"}
+
+      challenge = insert(:active_challenge, %{})
+      account = insert(:account) |> Account.put_token()
+      insert(:membership, account: account, challenge: challenge)
+
+      params = [
+        title: "Swell",
+        description: "Lifting things up, putting them down.",
+        steps: 1000,
+        duration: 90,
+        distance: "33.3",
+        google_place_id: "x5134b1",
+        media: [media1, media2, media3],
+        challenges: [challenge.id]
+      ]
+
+      conn =
+        post(
+          build_conn() |> put_req_header("authorization", account.token),
+          "/workouts",
+          params
+        )
+
+      response = json_response(conn, 200)
+
+      assert is_list(response["data"]["media"])
+      assert response["data"]["photo_url"] == "https://www.image.com/jpg"
+    end
+
     test "no challenges results in failure" do
       account = insert(:account) |> Account.put_token()
 

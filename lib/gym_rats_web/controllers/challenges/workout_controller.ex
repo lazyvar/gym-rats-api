@@ -15,11 +15,11 @@ defmodule GymRatsWeb.Challenge.WorkoutController do
       |> join(:left, [w], c in assoc(w, :challenge))
       |> where([w, c], w.challenge_id == ^challenge_id)
       |> paginate(params["page"])
-      |> order_by(desc: :created_at)
-      |> preload(:account)
+      |> order_by(desc: :occurred_at)
+      |> preload([:account, :media])
       |> Repo.all()
 
-    success(conn, WorkoutView.with_account(workouts))
+    success(conn, WorkoutView.with_account_and_media(workouts))
   end
 
   def index(conn, _params, _account_id), do: failure(conn, "Missing challenge id and page.")

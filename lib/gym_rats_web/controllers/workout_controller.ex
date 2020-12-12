@@ -2,13 +2,16 @@ defmodule GymRatsWeb.WorkoutController do
   use GymRatsWeb, :protected_controller
 
   alias GymRatsWeb.WorkoutView
-  alias GymRats.Model.{Workout, Challenge, Membership, Account}
+  alias GymRats.Model.{Workout, Challenge, Membership, WorkoutMedium}
   alias GymRats.{Notification, Repo}
 
   import Ecto.Query
 
   def create(conn, params, account_id) do
     {challenges, params} = params |> Map.pop("challenges", [])
+
+    photo_url = List.first(params["media"] || []) |> WorkoutMedium.photo_url()
+    params = params |> Map.put("photo_url", params["photo_url"] || photo_url)
 
     workouts =
       Challenge
@@ -29,14 +32,13 @@ defmodule GymRatsWeb.WorkoutController do
     else
       case workout do
         {:ok, workout} ->
-          account = Account |> Repo.get!(account_id)
-          workout = Map.put(workout, :account, account)
+          workout = Workout |> preload([:account, :media]) |> Repo.get!(workout.id)
 
           workouts
           |> Enum.map(fn {:ok, w} -> w end)
           |> Notification.send_workouts()
 
-          success(conn, WorkoutView.with_account(workout))
+          success(conn, WorkoutView.with_account_and_media(workout))
 
         {:error, workout} ->
           failure(conn, workout)
@@ -45,11 +47,14 @@ defmodule GymRatsWeb.WorkoutController do
   end
 
   def show(conn, %{"id" => id}, _account_id) do
-    workout = Workout |> preload(:account) |> Repo.get(id)
+    workout =
+      Workout
+      |> preload([:account, :media])
+      |> Repo.get(id)
 
     case workout do
       nil -> failure(conn, "A workout with id (#{id}) does not exist.")
-      _ -> success(conn, WorkoutView.with_account(workout))
+      _ -> success(conn, WorkoutView.with_account_and_media(workout))
     end
   end
 
@@ -85,7 +90,11 @@ defmodule GymRatsWeb.WorkoutController do
 
   def update(conn, %{"id" => workout_id} = params, account_id) do
     workout_id = String.to_integer(workout_id)
-    workout = Workout |> preload(:account) |> Repo.get(workout_id)
+
+    workout =
+      Workout
+      |> preload([:account, :media])
+      |> Repo.get(workout_id)
 
     case workout do
       nil ->
@@ -99,7 +108,7 @@ defmodule GymRatsWeb.WorkoutController do
             workout = workout |> Workout.changeset(params) |> Repo.update()
 
             case workout do
-              {:ok, workout} -> success(conn, WorkoutView.with_account(workout))
+              {:ok, workout} -> success(conn, WorkoutView.with_account_and_media(workout))
               {:error, error} -> failure(conn, error)
             end
 
