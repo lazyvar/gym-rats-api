@@ -32,7 +32,10 @@ defmodule GymRatsWeb.WorkoutController do
     else
       case workout do
         {:ok, workout} ->
-          workout = Workout |> preload([:account, :media]) |> Repo.get!(workout.id)
+          workout =
+            Workout
+            |> preload([:account, media: ^from(m in WorkoutMedium, order_by: [asc: m.id])])
+            |> Repo.get!(workout.id)
 
           workouts
           |> Enum.map(fn {:ok, w} -> w end)
@@ -49,7 +52,7 @@ defmodule GymRatsWeb.WorkoutController do
   def show(conn, %{"id" => id}, _account_id) do
     workout =
       Workout
-      |> preload([:account, :media])
+      |> preload([:account, media: ^from(m in WorkoutMedium, order_by: [asc: m.id])])
       |> Repo.get(id)
 
     case workout do
@@ -93,7 +96,7 @@ defmodule GymRatsWeb.WorkoutController do
 
     workout =
       Workout
-      |> preload([:account, :media])
+      |> preload([:account, media: ^from(m in WorkoutMedium, order_by: [asc: m.id])])
       |> Repo.get(workout_id)
 
     case workout do
