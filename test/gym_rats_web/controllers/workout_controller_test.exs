@@ -10,6 +10,130 @@ defmodule GymRatsWeb.WorkoutControllerTest do
   @endpoint GymRatsWeb.Endpoint
 
   describe "create/3" do
+    test "rejects commas" do
+      challenge = insert(:active_challenge, %{})
+      account = insert(:account) |> Account.put_token()
+      insert(:membership, account: account, challenge: challenge)
+
+      params = [
+        title: "Swell",
+        description: "Lifting things up, putting them down.",
+        steps: 1000,
+        duration: 90,
+        distance: "33,3",
+        google_place_id: "x5134b1",
+        challenges: [challenge.id]
+      ]
+
+      conn =
+        post(
+          build_conn() |> put_req_header("authorization", account.token),
+          "/workouts",
+          params
+        )
+
+      response = json_response(conn, 422)
+
+      assert response["error"] == "Distance has invalid format"
+    end
+
+    test "rejects double periods" do
+      challenge = insert(:active_challenge, %{})
+      account = insert(:account) |> Account.put_token()
+      insert(:membership, account: account, challenge: challenge)
+
+      params = [
+        title: "Swell",
+        description: "Lifting things up, putting them down.",
+        steps: 1000,
+        duration: 90,
+        distance: "12..3",
+        google_place_id: "x5134b1",
+        challenges: [challenge.id]
+      ]
+
+      conn =
+        post(
+          build_conn() |> put_req_header("authorization", account.token),
+          "/workouts",
+          params
+        )
+
+      response = json_response(conn, 422)
+
+      assert response["error"] == "Distance has invalid format"
+    end
+
+    test "accepts some stuff" do
+      challenge = insert(:active_challenge, %{})
+      account = insert(:account) |> Account.put_token()
+      insert(:membership, account: account, challenge: challenge)
+
+      params = [
+        title: "Swell",
+        description: "Lifting things up, putting them down.",
+        steps: 1000,
+        duration: 90,
+        distance: "12.",
+        google_place_id: "x5134b1",
+        challenges: [challenge.id]
+      ]
+
+      conn =
+        post(
+          build_conn() |> put_req_header("authorization", account.token),
+          "/workouts",
+          params
+        )
+
+      response = json_response(conn, 200)
+
+      assert response["data"]["distance"] == "12."
+
+      params = [
+        title: "Swell",
+        description: "Lifting things up, putting them down.",
+        steps: 1000,
+        duration: 90,
+        distance: ".0",
+        google_place_id: "x5134b1",
+        challenges: [challenge.id]
+      ]
+
+      conn =
+        post(
+          build_conn() |> put_req_header("authorization", account.token),
+          "/workouts",
+          params
+        )
+
+      response = json_response(conn, 200)
+
+      assert response["data"]["distance"] == ".0"
+
+
+      params = [
+        title: "Swell",
+        description: "Lifting things up, putting them down.",
+        steps: 1000,
+        duration: 90,
+        distance: "1.5",
+        google_place_id: "x5134b1",
+        challenges: [challenge.id]
+      ]
+
+      conn =
+        post(
+          build_conn() |> put_req_header("authorization", account.token),
+          "/workouts",
+          params
+        )
+
+      response = json_response(conn, 200)
+
+      assert response["data"]["distance"] == "1.5"
+    end
+
     test "safeguards activity type" do
       challenge = insert(:active_challenge, %{})
       account = insert(:account) |> Account.put_token()

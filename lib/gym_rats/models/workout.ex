@@ -47,6 +47,7 @@ defmodule GymRats.Model.Workout do
     |> cast(attrs, @required ++ @optional)
     |> add_occurred_at_if_missing
     |> cast_assoc(:media)
+    |> validate_format(:distance, ~r/^\d*\.{0,1}\d*$/)
     |> validate_required(@required)
     |> validate_inclusion(:activity_type, @activity_types)
   end
