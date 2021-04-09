@@ -2,7 +2,7 @@ defmodule GymRatsWeb.Challenge.WorkoutController do
   use GymRatsWeb, :protected_controller
 
   alias GymRatsWeb.WorkoutView
-  alias GymRats.Model.Workout
+  alias GymRats.Model.{Workout, WorkoutMedium}
   alias GymRats.Repo
 
   import Ecto.Query
@@ -16,7 +16,7 @@ defmodule GymRatsWeb.Challenge.WorkoutController do
       |> where([w, c], w.challenge_id == ^challenge_id)
       |> paginate(params["page"])
       |> order_by(desc: :occurred_at)
-      |> preload([:account, :media])
+      |> preload([:account, media: ^from(m in WorkoutMedium, order_by: [asc: m.id])])
       |> Repo.all()
 
     success(conn, WorkoutView.with_account_and_media(workouts))

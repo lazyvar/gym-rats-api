@@ -111,7 +111,6 @@ defmodule GymRatsWeb.WorkoutControllerTest do
 
       assert response["data"]["distance"] == ".0"
 
-
       params = [
         title: "Swell",
         description: "Lifting things up, putting them down.",
