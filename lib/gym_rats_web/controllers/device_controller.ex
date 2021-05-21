@@ -15,12 +15,14 @@ defmodule GymRatsWeb.DeviceController do
     devices = devices |> List.delete_at(0)
 
     unless Enum.empty?(devices) do
-      devices |> Repo.delete_all()
+      devices |> Enum.each(fn d ->
+        d |> Repo.delete()
+      end)
     end
 
     case device do
       {:ok, device} -> success(conn, DeviceView.default(device))
-      {:error, _} -> failure(conn, "Something went wrong.")
+      {:error, device} -> failure(conn, device)
     end
   end
 
