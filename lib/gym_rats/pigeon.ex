@@ -8,4 +8,8 @@ defmodule GymRats.Pigeon do
       name: :apns_default
     )
   end
+
+  def fcm_config do
+    Pigeon.FCM.Config.new(name: :fcm_default, key: System.get_env("FCM_SERVER_KEY"))
+  end
 end

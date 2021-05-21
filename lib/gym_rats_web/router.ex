@@ -16,6 +16,8 @@ defmodule GymRatsWeb.Router do
 
     get "/account", AccountController, :show
     put "/account", AccountController, :update
+    resources "/android_devices", AndroidDeviceController, only: [:create]
+    delete "/android_devices", AndroidDeviceController, :delete_all
 
     # deprecated do
 
