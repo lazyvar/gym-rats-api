@@ -38,7 +38,7 @@ config :sentry,
 
 config :pigeon,
   workers: [
-    {GymRats.Pigeon, :apns_confi},
+    {GymRats.Pigeon, :apns_config},
     {GymRats.Pigeon, :fcm_config}
   ]
 
