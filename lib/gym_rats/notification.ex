@@ -166,11 +166,10 @@ defmodule GymRats.Notification do
       notification =
         FCM.Notification.new(android_device.token)
         |> put_notification(%{
-          "title" => title,
-          "subtitle" => subtitle,
+          "title" => subtitle,
           "body" => body
         })
-        |> put_data(%{"gr" => "gr_payload"})
+        |> put_data(%{"gr" => gr_payload})
 
       Pigeon.FCM.push(notification, on_response: fn response -> Logger.info(inspect(response)) end)
     end
