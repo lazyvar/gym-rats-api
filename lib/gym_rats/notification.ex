@@ -1,11 +1,12 @@
 defmodule GymRats.Notification do
-  alias Pigeon.APNS
-  alias GymRats.Model.{Workout, Device, Account, Challenge, ChatNotification}
+  alias Pigeon.{APNS, FCM}
+  alias GymRats.Model.{Workout, AndroidDevice, Device, Account, Challenge, ChatNotification}
   alias GymRats.Repo
   alias GymRatsWeb.Presence
 
   import Ecto.Query
   import Pigeon.APNS.Notification
+  import Pigeon.FCM.Notification
 
   require Logger
 
@@ -144,6 +145,7 @@ defmodule GymRats.Notification do
 
   defp send_notification_to_account_sync(title, subtitle, body, gr_payload, account_id) do
     device = Device |> where([d], d.gym_rats_user_id == ^account_id) |> Repo.one()
+    android_device = AndroidDevice |> where([d], d.account_id == ^account_id) |> Repo.one()
     account = Account |> Repo.get!(account_id)
 
     if device != nil && notification_type_enabled(gr_payload["notification_type"], account) do
@@ -157,6 +159,19 @@ defmodule GymRats.Notification do
         |> put_custom(%{"gr" => gr_payload})
 
       Pigeon.APNS.push(apns, on_response: fn response -> Logger.info(inspect(response)) end)
+    end
+
+    if android_device != nil &&
+         notification_type_enabled(gr_payload["notification_type"], account) do
+      notification =
+        FCM.Notification.new(android_device.token)
+        |> put_notification(%{
+          "title" => subtitle,
+          "body" => body
+        })
+        |> put_data(%{"gr" => gr_payload})
+
+      Pigeon.FCM.push(notification, on_response: fn response -> Logger.info(inspect(response)) end)
     end
 
     if gr_payload["notification_type"] == "chat_message" do

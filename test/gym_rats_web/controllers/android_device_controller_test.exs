@@ -1,4 +1,4 @@
-defmodule GymRatsWeb.DeviceControllerTest do
+defmodule GymRatsWeb.AndroidDeviceControllerTest do
   use GymRatsWeb.ConnCase
 
   alias GymRats.Model.{Account}
@@ -15,7 +15,7 @@ defmodule GymRatsWeb.DeviceControllerTest do
       conn =
         post(
           build_conn() |> put_req_header("authorization", account.token),
-          "/devices",
+          "/android_devices",
           params
         )
 
